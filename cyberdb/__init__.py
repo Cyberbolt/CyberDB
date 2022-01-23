@@ -86,13 +86,34 @@ class DBServer:
         self._db[type_name][obj_name] = obj
         # 添加变量注册
         register(obj_name, self._db[type_name][obj_name])
-        
+
+    def delete_table(self, type_name: str, name: str):
+        '''
+            删除表
+            type_name: 类型名
+            name: 表名
+        '''
+        if type(type_name) != type(''):
+            raise RuntimeError('Please use str for the type name.')
+        if type(name) != type(''):
+            raise RuntimeError('Please use str for the table name.')
+        if type_name not in self._db:
+            raise RuntimeError('The type_name you entered is incorrect.')
+        if name not in self._db[type_name]:
+            raise RuntimeError('The obj_name you entered is incorrect.')
+        del self._db[type_name][name]
+
+    def delete_type(self, type_name: str):
+        if type(type_name) != type(''):
+            raise RuntimeError('Please use str for the type name.')
+        del self._db[type_name]
+
     def save_db(self, file_name: str='cyberdb_file/backup/data.cdb'):
         '''
             安全备份数据库, 文件格式 cdb (仅支持内置数据结构 CyberDict 和 CyberList)
         '''
         # 获取数据库表实例数据
-        data = self.get_db()
+        data = self.get_data()
         # 保存到硬盘
         joblib.dump(data, 'cyberdb_file/backup/data_temp.cdb')
         shutil.move('cyberdb_file/backup/data_temp.cdb', file_name)
