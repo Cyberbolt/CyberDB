@@ -113,6 +113,22 @@ class DBServer:
                 register(name, self._db[type][name])
         return self._db
 
+    def get_db(self):
+        '''
+            获取数据库内容
+        '''
+        # 获取数据库表实例数据
+        data = {}
+        for type in self._db:
+            data[type] = {}
+            for name in self._db[type]:
+                loc = locals()
+                self.manager.connect()
+                exec('table = self.manager.{}()'.format(name))
+                table = loc['table']
+                data[type][name] = table.show()
+        return data
+
     def __server_init(self, password: str=None):
         '''
             初始化服务器配置
@@ -240,7 +256,7 @@ class DBClient:
                 self._db[type][name] = table
         return self._db
     
-    def get_forms(self):
+    def get_tables(self):
         '''
             获取该连接的所有表
         '''
