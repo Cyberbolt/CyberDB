@@ -248,16 +248,8 @@ class DBClient:
                 exec('table = self.manager.{}()'.format(name))
                 table = loc['table']
                 self._db[type][name] = table
-        # 构建本次连接的实例
-        db_con = Demo()
-        for type in self._db:
-            loc = locals()
-            exec('db_con.{} = Demo()'.format(type))
-            for name in self._db[type]:
-                v = self._db[type][name]
-                exec('db_con.{}.{} = v'.format(type, name))
-        self._db_con = db_con
-        return self._db_con
+        # 返回本次连接的实例
+        return self.get_db()
     
     def get_db(self):
         '''
