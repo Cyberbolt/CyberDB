@@ -11,3 +11,14 @@ def generate(data):
     elif data.get_type() == type(CyberList()):
         for i in range(data.get_length()):
             yield data.loc(i)
+
+
+class Demo(object):
+    '''
+        动态构建对象
+    '''
+    def __getitem__(self, attr):
+        loc = locals()
+        exec('result = self.{}'.format(attr))
+        result = loc['result']
+        return result

@@ -9,18 +9,8 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 from cyberdb.cyberdict import CyberDict
 from cyberdb.cyberlist import CyberList
-from cyberdb.tool import generate
+from cyberdb.tool import generate, Demo
 
-
-class Demo(object):
-    '''
-        动态构建对象
-    '''
-    def __getitem__(self, attr):
-        loc = locals()
-        exec('result = self.{}'.format(attr))
-        result = loc['result']
-        return result
 
 class ServerManager(BaseManager):
     pass
