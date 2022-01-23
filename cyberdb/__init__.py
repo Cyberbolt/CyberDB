@@ -86,18 +86,10 @@ class DBServer:
         
     def save_db(self, file_name: str='cyberdb_file/backup/data.cdb'):
         '''
-            安全备份数据库，文件格式 cdb
+            安全备份数据库, 文件格式 cdb (仅支持内置数据结构 CyberDict 和 CyberList)
         '''
         # 获取数据库表实例数据
-        data = {}
-        for type in self._db:
-            data[type] = {}
-            for name in self._db[type]:
-                loc = locals()
-                self.manager.connect()
-                exec('table = self.manager.{}()'.format(name))
-                table = loc['table']
-                data[type][name] = table.show()
+        data = self.get_db()
         # 保存到硬盘
         joblib.dump(data, 'cyberdb_file/backup/data_temp.cdb')
         shutil.move('cyberdb_file/backup/data_temp.cdb', file_name)
@@ -111,7 +103,7 @@ class DBServer:
         for type in self._db:
             for name in self._db[type]:
                 register(name, self._db[type][name])
-        return self._db
+        print('File {} loaded successfully.'.format(file_name))
 
     def get_db(self):
         '''
@@ -120,13 +112,13 @@ class DBServer:
         # 获取数据库表实例数据
         data = {}
         for type in self._db:
-            data[type] = {}
-            for name in self._db[type]:
-                loc = locals()
-                self.manager.connect()
-                exec('table = self.manager.{}()'.format(name))
-                table = loc['table']
-                data[type][name] = table.show()
+            if type == 'CyberDict' or type == 'CyberList':
+                data[type] = {}
+                for name in self._db[type]:
+                    loc = locals()
+                    exec('table = self.manager.{}()'.format(name))
+                    table = loc['table']
+                    data[type][name] = table.show()
         return data
 
     def __server_init(self, password: str=None):
@@ -146,14 +138,15 @@ class DBServer:
 
     def __generate_tables(self):
         '''
-            生成表格数据
+            生成表格数据(配置文件信息)
         '''
         tables = {}
         for type in self._db:
             tables[type] = {}
             for name in self._db[type]:
                 tables[type][name] = None
-        joblib.dump(tables, 'cyberdb_file/config.cdb')
+        joblib.dump(tables, 'cyberdb_file/config_temp.cdb')
+        shutil.move('cyberdb_file/config_temp.cdb', 'cyberdb_file/config.cdb')
 
     def start(self, host: str='127.0.0.1', password: str=None, port: int=9980):
         '''
@@ -174,6 +167,7 @@ class DBServer:
         p.daemon = True
         p.start()
         self._process['server'] = p
+        self.manager.connect()
 
     def stop(self):
         '''
@@ -200,7 +194,7 @@ class DBServer:
         self._process['backup'] = p
         print('The backup cycle: {}s'.format(period))
 
-    def show_tables(self):
+    def show_tables_list(self):
         '''
             显示数据库表
         '''
@@ -241,31 +235,47 @@ class DBClient:
         for type in self._db:
             for name in self._db[type]:
                 ClientManager.register(name)
-        manager = ClientManager(address=(
+        self.manager = ClientManager(address=(
             host, # 地址
             port), # 端口
             authkey=password.encode() # 密码
         )
-        manager.connect()
+        self.manager.connect()
         # 获取数据库表实例
         for type in self._db:
             for name in self._db[type]:
                 loc = locals()
-                exec('table = manager.{}()'.format(name))
+                exec('table = self.manager.{}()'.format(name))
                 table = loc['table']
                 self._db[type][name] = table
         return self._db
     
-    def get_tables(self):
+    def get_connect(self):
         '''
-            获取该连接的所有表
+            获取该连接的实例(用于已经 connect 后再次获取连接实例)
         '''
         return self._db
 
-    def show_tables(self):
+    def show_tables_list(self):
         '''
             显示数据库表
         '''
         for type in self._db:
             for name in self._db[type]:
                 print('name:' + name, ' type:' + type)
+
+    def get_db(self):
+        '''
+            获取数据库内容(仅支持内置数据结构 CyberDict 和 CyberList)
+        '''
+        # 获取数据库表实例数据
+        data = {}
+        for type in self._db:
+            if type == 'CyberDict' or type == 'CyberList':
+                data[type] = {}
+                for name in self._db[type]:
+                    loc = locals()
+                    exec('table = self.manager.{}()'.format(name))
+                    table = loc['table']
+                    data[type][name] = table.show()
+        return data
