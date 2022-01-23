@@ -1,6 +1,6 @@
 # CyberDB
 
-CyberDB 是基于 Python 的内存数据库。你可以使用 Python 内置数据结构 Dictionaries、Lists 作为数据存储，并支持数据持久化。进程间通过 Socket TCP 通信，拥有极高的性能，也可用于分布式计算。此外，你可以基于该模块定制自己的数据结构，支持机器学习模型部署。
+CyberDB 是基于 Python 的内存数据库。你可以使用 Python 内置数据结构 Dictionaries、Lists 作为数据存储，并支持数据持久化。进程间通过 Socket TCP 通信，拥有极高的性能。此外，你可以基于该模块定制自己的数据结构，支持 Gunicorn 进程间通信、分布式计算、机器学习模型部署等。
 
 ### 安装方法
 
