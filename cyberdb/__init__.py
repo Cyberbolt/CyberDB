@@ -2,6 +2,7 @@ import os
 import shutil
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
+from unittest import result
 
 import joblib
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -10,6 +11,16 @@ from cyberdb.cyberdict import CyberDict
 from cyberdb.cyberlist import CyberList
 from cyberdb.tool import generate
 
+
+class Demo(object):
+    '''
+        动态构建对象
+    '''
+    def __getitem__(self, attr):
+        loc = locals()
+        exec('result = self.{}'.format(attr))
+        result = loc['result']
+        return result
 
 class ServerManager(BaseManager):
     pass
@@ -105,7 +116,7 @@ class DBServer:
                 register(name, self._db[type][name])
         print('File {} loaded successfully.'.format(file_name))
 
-    def get_db(self):
+    def get_data(self):
         '''
             获取数据库内容
         '''
@@ -248,13 +259,31 @@ class DBClient:
                 exec('table = self.manager.{}()'.format(name))
                 table = loc['table']
                 self._db[type][name] = table
-        return self._db
+        # 构建本次连接的实例
+        db_con = Demo()
+        for type in self._db:
+            loc = locals()
+            exec('db_con.{} = Demo()'.format(type))
+            for name in self._db[type]:
+                v = self._db[type][name]
+                exec('db_con.{}.{} = v'.format(type, name))
+        self._db_con = db_con
+        return self._db_con
     
-    def get_connect(self):
+    def get_db(self):
         '''
             获取该连接的实例(用于已经 connect 后再次获取连接实例)
         '''
-        return self._db
+        # 构建本次连接的实例
+        db_con = Demo()
+        for type in self._db:
+            loc = locals()
+            exec('db_con.{} = Demo()'.format(type))
+            for name in self._db[type]:
+                v = self._db[type][name]
+                exec('db_con.{}.{} = v'.format(type, name))
+        self._db_con = db_con
+        return self._db_con
 
     def show_tables_list(self):
         '''
@@ -264,7 +293,7 @@ class DBClient:
             for name in self._db[type]:
                 print('name:' + name, ' type:' + type)
 
-    def get_db(self):
+    def get_data(self):
         '''
             获取数据库内容(仅支持内置数据结构 CyberDict 和 CyberList)
         '''
