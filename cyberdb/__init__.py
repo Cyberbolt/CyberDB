@@ -8,6 +8,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 from cyberdb.cyberdict import CyberDict
 from cyberdb.cyberlist import CyberList
+from cyberdb.objdict import ObjDict
 from cyberdb.tool import generate
 
 
