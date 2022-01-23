@@ -27,6 +27,9 @@ def register(name, instance):
     ServerManager.register(name, callable=lambda: instance)
 
 
+TYPES = {'CyberDict', 'CyberList'}
+
+
 class DBServer:
 
     def __init__(self):
@@ -112,7 +115,7 @@ class DBServer:
         # 获取数据库表实例数据
         data = {}
         for type in self._db:
-            if type == 'CyberDict' or type == 'CyberList':
+            if type in TYPES:
                 data[type] = {}
                 for name in self._db[type]:
                     loc = locals()
@@ -281,7 +284,7 @@ class DBClient:
         # 获取数据库表实例数据
         data = {}
         for type in self._db:
-            if type == 'CyberDict' or type == 'CyberList':
+            if type in TYPES:
                 data[type] = {}
                 for name in self._db[type]:
                     loc = locals()
