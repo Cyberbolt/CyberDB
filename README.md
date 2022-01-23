@@ -59,7 +59,10 @@ server.set_backup(period=900)
 如果不调用此接口，将不会数据持久化
 如果想停止正在运行的备份，请调用 server.set_backup(period=None)
 '''
-print('')
+# 如果你的程序不会永久在后台运行，请增加以下命令让程序永久运行
+import time
+while True:
+    time.sleep(1000000000)
 ```
 
     CyberDB is starting...
@@ -90,7 +93,6 @@ db = client.connect(host='127.0.0.1', password='123123', port=9980)
 若使用 db = client.connect(password='123123')，将连接默认地址 127.0.0.1 
 和端口 9980
 '''
-print('')
 ```
 
     
@@ -247,7 +249,7 @@ list1.show()
 
 
 
-使用 update 方法修改 list1 的第 4 个值(下标为 3)，更改为全 0
+使用 update 方法修改 list1 的第 4 个值(下标为 3)，更改为全 1
 
 
 ```python
