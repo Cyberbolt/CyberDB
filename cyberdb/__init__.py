@@ -2,7 +2,6 @@ import os
 import shutil
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
-from unittest import result
 
 import joblib
 from apscheduler.schedulers.blocking import BlockingScheduler
