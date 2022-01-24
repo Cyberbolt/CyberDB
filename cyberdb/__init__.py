@@ -27,7 +27,7 @@ def register(name, instance):
     ServerManager.register(name, callable=lambda: instance)
 
 
-TYPES = {'CyberDict', 'CyberList'}
+TYPES = {'CyberDict', 'CyberList'} # TYPSE 必须满足 show 方法
 
 
 class DBServer:
@@ -102,11 +102,17 @@ class DBServer:
         if name not in self._db[type_name]:
             raise RuntimeError('The obj_name you entered is incorrect.')
         del self._db[type_name][name]
+        # 保存到硬盘
+        joblib.dump(self._db, 'cyberdb_file/backup/data_temp.cdb')
+        shutil.move('cyberdb_file/backup/data_temp.cdb', 'cyberdb_file/backup/data.cdb')
 
     def delete_type(self, type_name: str):
         if type(type_name) != type(''):
             raise RuntimeError('Please use str for the type name.')
         del self._db[type_name]
+        # 保存到硬盘
+        joblib.dump(self._db, 'cyberdb_file/backup/data_temp.cdb')
+        shutil.move('cyberdb_file/backup/data_temp.cdb', 'cyberdb_file/backup/data.cdb')
 
     def save_db(self, file_name: str='cyberdb_file/backup/data.cdb'):
         '''
