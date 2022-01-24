@@ -6,7 +6,7 @@ CyberDB 是基于 Python 的内存数据库。你可以使用 Python 内置数�
 
 1.进入命令窗口，创建虚拟环境，依次输入以下命令
 
-Linux和macOS:
+Linux 和 macOS:
 
 
 
@@ -40,6 +40,8 @@ pip install cyberdb
 #### 服务端
 
 
+首先单独开一个 py 文件，用于服务端初始化时创建数据库表，运行服务端后保存所建表到本地。（该文件只在建表时使用，后续将不会运行）
+
 
 ```python
 from cyberdb import DBServer
@@ -48,11 +50,36 @@ server = DBServer()
 server.create_cyberdict('dict1') # 创建名为 dict1 的数据库表
 server.create_cyberdict('dict2') # 创建名为 dict2 的数据库表
 server.create_cyberlist('list1') # 创建名为 list1 的数据库表
+server.start(password='123123') # 后台运行服务器
+'''
+本次运行只是初始化时保存表，密码可随意设置，之后不会用到
+'''
+server.save_db() # 保存服务器数据到本地
+server.stop() #停止运行服务器
+```
+
+    CyberDB is starting...
+    Server stopped.
+
+
+服务端运行后，会在项目根目录下创建 cyberdb_file 目录（请勿删除），生成**客户端配置文件** cyberdb_file/config.cdb (客户端运行依赖于此文件)，数据库持久化的默认文件为 cyberdb_file/backup/data.cdb 
+
+
+```python
+from cyberdb import DBServer
+
+server = DBServer()
+server.load_db() # 会自动加载 cyberdb_file/backup/data.cdb
 server.start(host='127.0.0.1', password='123123', port=9980)
 '''
 启动服务器，填写运行地址、密码和端口号
 若使用 server.start(password='123123')，则将以默认地址 127.0.0.1 和端口 9980 运行
-本示例未使用数据持久化，将在程序重启后清空数据库
+'''
+server.set_backup(period=900)
+'''
+设置数据库备份，默认时间 900s 一次，永久备份直至服务端停止运行
+如果不调用此接口，将不会数据持久化
+如果想停止正在运行的备份，请调用 server.set_backup(period=None)
 '''
 # 如果你的程序不会永久在后台运行，请增加以下命令让程序永久运行
 import time
@@ -60,18 +87,20 @@ while True:
     time.sleep(1000000000)
 ```
 
+    File cyberdb_file/backup/data.cdb loaded successfully.
     CyberDB is starting...
     The backup cycle: 900s
     
 
 
-服务端运行后，会在项目根目录下创建 cyberdb_file 目录（程序运行中请勿删除），生成**客户端配置文件** cyberdb_file/config.cdb ，数据库备份的默认文件为 cyberdb_file/backup/data.cdb (该文件将在设置的备份时间自动备份或更新)
+数据库备份的默认文件为 cyberdb_file/backup/data.cdb (该文件将在设置的备份时间自动备份或更新)
 
 #### 客户端
 
 将服务端的 cyberdb_file 拷贝至客户端的项目根目录中(如果使用同一个项目目录作为服务端和客户端，则不需要拷贝)
 
 连接数据库
+
 
 
 ```python
@@ -244,7 +273,7 @@ list1.show()
 
 
 
-使用 update 方法修改 list1 的第 4 个值(下标为 3)，更改为全 1
+使用 update 方法修改 list1 的第 4 个值(下标为 3)，更改为全 1。（update 只能作用于表格的第一维）
 
 
 ```python
@@ -263,7 +292,7 @@ list1.show()
 
 
 
-使用 update_form 方法修改 list1 的第 5 行第 5 个值(下标为 4, 4)为 1
+使用 update_form 方法修改 list1 的第 5 行第 5 个值(下标为 4, 4)为 1。（update_form 用于修改二维表格）
 
 
 ```python
@@ -297,7 +326,7 @@ list1.loc(3)
 
 
 
-使用 loc_form 定位表格的第 5 行第 5 列
+使用 loc_form 可定位二维表格，此处定位表格的第 5 行第 5 列
 
 
 ```python
@@ -339,8 +368,27 @@ list1.get_length()
 
 
 
+关于列表的迭代，虽然可以直接用 show 方法获取列表后迭代，但会占用较多的内存（如果 CyberList 很大）。CyberDB 内置提供了生成器，可以使用生成器迭代 CyberList，如下所示
+
+
+```python
+from cyberdb import generate
+
+for row in generate(list1):
+    print(row)
+```
+
+    [0, 0, 0, 0, 0]
+    [0, 0, 0, 0, 0]
+    [0, 0, 0, 0, 0]
+    [1, 1, 1, 1, 1]
+    [0, 0, 0, 0, 1]
+
+
+该方法同样适用于迭代 CyberDict 的 key
+
 #### 概括
 
-有了 CyberDB，便能充分利用内存性能，不同进程(甚至不同主机)能通过 Python 的数据结构通信。数据持久化、自定义数据结构、机器学习部署等教程请参考官方文档，感谢你的支持！
+有了 CyberDB，便能充分利用内存性能，不同进程(甚至不同主机)能通过 Python 的数据结构通信。自定义数据结构、机器学习部署等教程请参考官方文档，感谢你的支持！
 
 电光笔记官网 [https://www.cyberlight.xyz/](https://www.cyberlight.xyz/)
