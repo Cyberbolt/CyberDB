@@ -319,3 +319,13 @@ class DBClient:
                     table = loc['table']
                     data[type][name] = table.show()
         return data
+
+    def save_db(self, file_name: str='cyberdb_file/backup/data.cdb'):
+        '''
+            安全备份数据库至本地, 文件格式 cdb (仅支持内置数据结构 CyberDict 和 CyberList)
+        '''
+        # 获取数据库表实例数据
+        data = self.get_data()
+        # 保存到硬盘
+        joblib.dump(data, 'cyberdb_file/backup/data_temp.cdb')
+        shutil.move('cyberdb_file/backup/data_temp.cdb', file_name)
