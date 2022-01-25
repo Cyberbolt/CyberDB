@@ -4,10 +4,11 @@ CyberDB 是一个轻量级的 Python 内存数据库。它旨在利用 Python �
 
 ### 安装方法
 
+推荐 Python 版本: 3.8 及以上
+
 1.进入命令窗口，创建虚拟环境，依次输入以下命令
 
 Linux 和 macOS:
-
 
 
 ```python
