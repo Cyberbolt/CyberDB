@@ -163,6 +163,9 @@ class DBServer:
                 file_name -- 文件路径，默认路径 cyberdb_file/backup/data.cdb\n
             返回类型: None
         '''
+        file_suffix = file_name.rsplit('.')[1]
+        if file_suffix != 'cdb':
+            raise RuntimeError('The file suffix must be cdb.')
         self._db = joblib.load(file_name)
         # 添加变量注册
         for type in self._db:
