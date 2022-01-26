@@ -151,7 +151,7 @@ dict1.put(10, 'test')
 dict2.put(0, 'dict2')
 ```
 
-to get the corresponding value
+To get the corresponding value
 
 
 ```python
