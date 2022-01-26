@@ -31,7 +31,7 @@ pip install cyberdb
 
 If your server and client are running in two different project directories, please install CyberDB in the virtual environment of the server and client respectively.
 
-### 链接
+### Links
 
 - GitHub: [https://github.com/Cyberbolt/CyberDB](https://github.com/Cyberbolt/CyberDB) 
 - PyPI: [https://pypi.org/project/CyberDB/](https://pypi.org/project/CyberDB/)
