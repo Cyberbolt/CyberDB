@@ -284,7 +284,7 @@ class DBClient:
             raise RuntimeError('The file suffix must be cdb.')
         self._db = joblib.load(config_file)
 
-    def connect(self, host: str='127.0.0.1', password: str=None, port: int=9980, table_names: list=[]) -> DBCon:
+    def connect(self, host: str='127.0.0.1', password: str=None, port: int=9980) -> DBCon:
         '''
             (客户端)连接数据库
             host: 主机地址
