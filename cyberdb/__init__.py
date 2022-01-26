@@ -8,7 +8,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 from cyberdb.cyberdict import CyberDict
 from cyberdb.cyberlist import CyberList
-from cyberdb.tool import generate, Demo
+from cyberdb.tool import generate, DBCon
 
 
 class ServerManager(BaseManager):
@@ -46,8 +46,10 @@ class DBServer:
 
     def create_cyberdict(self, name: str):
         '''
-            创建 CyberDict
-            name: 表名
+            创建 CyberDict 表\n
+            参数:\n
+                name -- 表名称\n
+            返回类型: None
         '''
         if type(name) != type(''):
             raise RuntimeError('Please use str for the table name.')
@@ -59,8 +61,10 @@ class DBServer:
 
     def create_cyberlist(self, name: str):
         '''
-            创建 CyberList
-            name: 表名
+            创建 CyberList 表\n
+            参数:\n
+                name -- 表名称\n
+            返回类型: None
         '''
         if type(name) != type(''):
             raise RuntimeError('Please use str for the table name.')
@@ -72,10 +76,12 @@ class DBServer:
 
     def create_object(self, type_name: str, obj_name: str, obj: object):
         '''
-            创建自定义对象
-            type_name: 自定义类型名
-            obj_name: 对象名
-            obj: 对象
+            创建自定义对象\n
+            参数:\n
+                type_name -- 类型名\n
+                obj_name -- 对象名\n
+                obj -- 对象(object 及其子类的对象均可)\n
+            返回类型: None
         '''
         if type(type_name) != type(''):
             raise RuntimeError('Please use str for the type name.')
@@ -87,36 +93,62 @@ class DBServer:
         # 添加变量注册
         register(obj_name, self._db[type_name][obj_name])
 
-    def delete_table(self, type_name: str, name: str):
+    def start(self, host: str='127.0.0.1', password: str=None, port: int=9980):
         '''
-            删除表
-            type_name: 类型名
-            name: 表名
+            (服务端)后台运行数据库，并自动开启 multiprocessing 守护进程。该方法将自动生成客户端配置文件 cyberdb_file/config.cdb ，客户端运行必须依赖该文件。\n
+            参数:\n
+                host -- 服务端运行地址，默认 127.0.0.1\n
+                password -- 密码\n
+                port -- 服务端监听端口，默认 9980\n
+            返回类型: None
         '''
-        if type(type_name) != type(''):
-            raise RuntimeError('Please use str for the type name.')
-        if type(name) != type(''):
-            raise RuntimeError('Please use str for the table name.')
-        if type_name not in self._db:
-            raise RuntimeError('The type_name you entered is incorrect.')
-        if name not in self._db[type_name]:
-            raise RuntimeError('The obj_name you entered is incorrect.')
-        del self._db[type_name][name]
-        # 保存到硬盘
-        joblib.dump(self._db, 'cyberdb_file/backup/data_temp.cdb')
-        shutil.move('cyberdb_file/backup/data_temp.cdb', 'cyberdb_file/backup/data.cdb')
+        self.__server_init(password) # 服务器初始化
+        self.manager = ServerManager(address=(
+            host, # 地址
+            port), # 端口
+            authkey=password.encode() # 密码
+        ) # 保存本次连接的实例
+        print('CyberDB is starting...')
+        self.__generate_tables() # 生成本次服务的配置文件
+        p = Process(target=self.manager.get_server().serve_forever)
+        p.daemon = True
+        p.start()
+        self._process['server'] = p
+        self.manager.connect()
 
-    def delete_type(self, type_name: str):
-        if type(type_name) != type(''):
-            raise RuntimeError('Please use str for the type name.')
-        del self._db[type_name]
-        # 保存到硬盘
-        joblib.dump(self._db, 'cyberdb_file/backup/data_temp.cdb')
-        shutil.move('cyberdb_file/backup/data_temp.cdb', 'cyberdb_file/backup/data.cdb')
+    def stop(self):
+        '''
+            停止运行数据库
+        '''
+        self._process['server'].terminate()
+        print('Server stopped.')
+
+    def set_backup(self, period: int=900):
+        '''
+            设置备份周期，调用本方法，数据库将定时备份至 cyberdb_file/backup/data.cdb\n
+            参数:\n
+                period -- 备份周期，默认 900 秒\n
+            返回类型: None
+        '''
+        if self._process.get('backup'):
+            self._process['backup'].terminate()
+        if not period:
+            print('Backup closed.')
+            return
+        sched = BlockingScheduler(timezone="Asia/Shanghai") # 初始化时间, 此处时区不影响数据库运行
+        sched.add_job(self.save_db, 'interval', seconds=period) # 单位 秒
+        p = Process(target=sched.start)
+        p.daemon = True
+        p.start()
+        self._process['backup'] = p
+        print('The backup cycle: {}s'.format(period))
 
     def save_db(self, file_name: str='cyberdb_file/backup/data.cdb'):
         '''
-            安全备份数据库, 文件格式 cdb (仅支持内置数据结构 CyberDict 和 CyberList)
+            安全保存数据库文件，格式 cdb (仅支持内置数据结构 CyberDict 和 CyberList)。如需保存自定义数据结构，请参考本文档的教程。\n
+            参数: \n
+                file_name -- 需保存数据库文件的相对路径，默认路径 cyberdb_file/backup/data.cdb\n
+            返回类型: None
         '''
         # 获取数据库表实例数据
         data = self.get_data()
@@ -126,8 +158,14 @@ class DBServer:
 
     def load_db(self, file_name: str='cyberdb_file/backup/data.cdb'):
         '''
-            加载 cdb 格式的文件, 可通过返回值查看内容
+            加载 cdb 格式的数据库文件（一般为 set_backup 或 save_db 保存的文件）\n
+            参数:\n
+                file_name -- 文件路径，默认路径 cyberdb_file/backup/data.cdb\n
+            返回类型: None
         '''
+        file_suffix = file_name.rsplit('.')[1]
+        if file_suffix != 'cdb':
+            raise RuntimeError('The file suffix must be cdb.')
         self._db = joblib.load(file_name)
         # 添加变量注册
         for type in self._db:
@@ -135,9 +173,10 @@ class DBServer:
                 register(name, self._db[type][name])
         print('File {} loaded successfully.'.format(file_name))
 
-    def get_data(self):
+    def get_data(self) -> dict:
         '''
-            获取数据库内容
+            获取数据库内容，将返回数据库支持类型的所有数据(默认 CyberDict 和 CyberList)\n
+            返回类型: dict
         '''
         # 获取数据库表实例数据
         data = {}
@@ -178,59 +217,49 @@ class DBServer:
         joblib.dump(tables, 'cyberdb_file/config_temp.cdb')
         shutil.move('cyberdb_file/config_temp.cdb', 'cyberdb_file/config.cdb')
 
-    def start(self, host: str='127.0.0.1', password: str=None, port: int=9980):
-        '''
-            (服务端)后台运行服务器
-            host: 运行地址(默认: 127.0.0.1)
-            password: 密码
-            port: 端口(默认: 9980)
-        '''
-        self.__server_init(password) # 服务器初始化
-        self.manager = ServerManager(address=(
-            host, # 地址
-            port), # 端口
-            authkey=password.encode() # 密码
-        ) # 保存本次连接的实例
-        print('CyberDB is starting...')
-        self.__generate_tables() # 生成本次服务的配置文件
-        p = Process(target=self.manager.get_server().serve_forever)
-        p.daemon = True
-        p.start()
-        self._process['server'] = p
-        self.manager.connect()
-
-    def stop(self):
-        '''
-            停止运行服务器
-        '''
-        self._process['server'].terminate()
-        print('Server stopped.')
-
-    def set_backup(self, period: int=900):
-        '''
-            设置备份周期
-            period: 备份周期, 单位 秒。若 period 为 None，则不备份
-        '''
-        if self._process.get('backup'):
-            self._process['backup'].terminate()
-        if not period:
-            print('Backup closed.')
-            return
-        sched = BlockingScheduler(timezone="Asia/Shanghai") # 初始化时间, 此处时区不影响数据库运行
-        sched.add_job(self.save_db, 'interval', seconds=period) # 单位 秒
-        p = Process(target=sched.start)
-        p.daemon = True
-        p.start()
-        self._process['backup'] = p
-        print('The backup cycle: {}s'.format(period))
-
     def show_tables_list(self):
         '''
-            显示数据库表
+            打印数据库中所有表，格式 name:表名称 type:数据类型 
         '''
         for type in self._db:
             for name in self._db[type]:
                 print('name:' + name, ' type:' + type)
+
+    def delete_table(self, type_name: str, name: str):
+        '''
+            删除数据库中的表\n
+            参数:\n
+                type_name:数据类型名\n
+                name:表名\n
+            返回类型: None
+        '''
+        if type(type_name) != type(''):
+            raise RuntimeError('Please use str for the type name.')
+        if type(name) != type(''):
+            raise RuntimeError('Please use str for the table name.')
+        if type_name not in self._db:
+            raise RuntimeError('The type_name you entered is incorrect.')
+        if name not in self._db[type_name]:
+            raise RuntimeError('The obj_name you entered is incorrect.')
+        del self._db[type_name][name]
+        # 保存到硬盘
+        joblib.dump(self._db, 'cyberdb_file/backup/data_temp.cdb')
+        shutil.move('cyberdb_file/backup/data_temp.cdb', 'cyberdb_file/backup/data.cdb')
+
+    def delete_type(self, type_name: str):
+        '''
+            删除数据库的数据类型，此操作会同时删除该数据类型下的所有表\n
+            参数:\n
+                type_name:数据类型名\n
+            返回类型: None
+        '''
+        if type(type_name) != type(''):
+            raise RuntimeError('Please use str for the type name.')
+        del self._db[type_name]
+        # 保存到硬盘
+        joblib.dump(self._db, 'cyberdb_file/backup/data_temp.cdb')
+        shutil.move('cyberdb_file/backup/data_temp.cdb', 'cyberdb_file/backup/data.cdb')
+
 
 
 class DBClient:
@@ -245,17 +274,24 @@ class DBClient:
 
     def load_config(self, config_file: str='cyberdb_file/config.cdb'):
         '''
-            配置文件路径
+            加载配置文件(该文件由服务端运行时生成)\n
+            参数:\n
+                config_file -- 配置文件的路径，默认路径 cyberdb_file/config.cdb\n
+            返回类型: None
         '''
+        file_suffix = config_file.rsplit('.')[1]
+        if file_suffix != 'cdb':
+            raise RuntimeError('The file suffix must be cdb.')
         self._db = joblib.load(config_file)
 
-    def connect(self, host: str='127.0.0.1', password: str=None, port: int=9980, table_names: list=[]):
+    def connect(self, host: str='127.0.0.1', password: str=None, port: int=9980) -> DBCon:
         '''
-            (客户端)连接数据库
-            host: 主机地址
-            password: 密码
-            port: 端口
-            table_names: 需要连接的表名称的列表, 如 a、b、c 表输入 ['a', 'b', 'c']
+            (客户端)连接数据库，并获取本次连接的实例\n
+            参数:\n
+                host -- 主机地址，默认地址 127.0.0.1\n
+                password -- 连接密码\n
+                port -- 连接端口，默认端口 9980\n
+            返回类型: DBCon -- 本次连接的数据库实例
         '''
         if not password:
             raise RuntimeError('Password not found, please set password!')
@@ -281,15 +317,16 @@ class DBClient:
         # 返回本次连接的实例
         return self.get_db()
     
-    def get_db(self):
+    def get_db(self) -> DBCon:
         '''
-            获取该连接的实例(用于已经 connect 后再次获取连接实例)
+            获取本次连接的数据库实例（此操作不会再次连接数据库，需要用在 connect 方法之后）\n
+            返回类型: DBCon -- 本次连接的数据库实例
         '''
         # 构建本次连接的实例
-        db_con = Demo()
+        db_con = DBCon()
         for type in self._db:
             loc = locals()
-            exec('db_con.{} = Demo()'.format(type))
+            exec('db_con.{} = DBCon()'.format(type))
             for name in self._db[type]:
                 v = self._db[type][name]
                 exec('db_con.{}.{} = v'.format(type, name))
@@ -298,15 +335,16 @@ class DBClient:
 
     def show_tables_list(self):
         '''
-            显示数据库表
+            打印数据库中所有表，格式 name:表名称 type:数据类型 
         '''
         for type in self._db:
             for name in self._db[type]:
                 print('name:' + name, ' type:' + type)
 
-    def get_data(self):
+    def get_data(self) -> dict:
         '''
-            获取数据库内容(仅支持内置数据结构 CyberDict 和 CyberList)
+            获取数据库内容，将返回数据库支持类型的所有数据(默认 CyberDict 和 CyberList)\n
+            返回类型: dict
         '''
         # 获取数据库表实例数据
         data = {}

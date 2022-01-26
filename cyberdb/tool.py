@@ -11,10 +11,13 @@ def generate(data):
     elif data.get_type() == type(CyberList()):
         for i in range(data.get_length()):
             yield data.loc(i)
+    else:
+        raise RuntimeError('The data type is not CyberDict or CyberList.')
 
 
-class Demo(object):
+class DBCon(object):
     '''
+        数据库连接对象
         动态构建对象
     '''
     def __getitem__(self, attr):
