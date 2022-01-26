@@ -87,7 +87,7 @@ class CyberList(list):
         '''
             魔术方法 list[x] 的替代方案\n
             使用该方法应该自行考虑 Python 脚本注入等安全问题\n
-            参数:\n
+            参数:\n 
                 command -- 等同于 list[x] 中 x 表达式对应的字符串(command = str(x))\n
                 即 CyberList.box(command) = list[x]，其中 command = str(x)\n
             返回类型: list[x] 的返回类型
