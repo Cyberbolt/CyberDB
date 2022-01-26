@@ -173,9 +173,10 @@ class DBServer:
                 register(name, self._db[type][name])
         print('File {} loaded successfully.'.format(file_name))
 
-    def get_data(self):
+    def get_data(self) -> dict:
         '''
-            获取数据库内容
+            获取数据库内容，将返回数据库支持类型的所有数据(默认 CyberDict 和 CyberList)\n
+            返回类型: dict
         '''
         # 获取数据库表实例数据
         data = {}
@@ -218,7 +219,7 @@ class DBServer:
 
     def show_tables_list(self):
         '''
-            显示数据库表
+            打印数据库中所有表，格式 name:表名称 type:数据类型 
         '''
         for type in self._db:
             for name in self._db[type]:
@@ -226,9 +227,11 @@ class DBServer:
 
     def delete_table(self, type_name: str, name: str):
         '''
-            删除表
-            type_name: 类型名
-            name: 表名
+            删除数据库中的表\n
+            参数:\n
+                type_name:数据类型名\n
+                name:表名\n
+            返回类型: None
         '''
         if type(type_name) != type(''):
             raise RuntimeError('Please use str for the type name.')
@@ -244,6 +247,12 @@ class DBServer:
         shutil.move('cyberdb_file/backup/data_temp.cdb', 'cyberdb_file/backup/data.cdb')
 
     def delete_type(self, type_name: str):
+        '''
+            删除数据库的数据类型，此操作会同时删除该数据类型下的所有表\n
+            参数:\n
+                type_name:数据类型名\n
+            返回类型: None
+        '''
         if type(type_name) != type(''):
             raise RuntimeError('Please use str for the type name.')
         del self._db[type_name]
