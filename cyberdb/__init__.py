@@ -286,11 +286,12 @@ class DBClient:
 
     def connect(self, host: str='127.0.0.1', password: str=None, port: int=9980) -> DBCon:
         '''
-            (客户端)连接数据库
-            host: 主机地址
-            password: 密码
-            port: 端口
-            table_names: 需要连接的表名称的列表, 如 a、b、c 表输入 ['a', 'b', 'c']
+            (客户端)连接数据库，并获取本次连接的实例\n
+            参数:\n
+                host -- 主机地址，默认地址 127.0.0.1\n
+                password -- 连接密码\n
+                port -- 连接端口，默认端口 9980\n
+            返回类型: DBCon -- 本次连接的数据库实例
         '''
         if not password:
             raise RuntimeError('Password not found, please set password!')
@@ -316,9 +317,10 @@ class DBClient:
         # 返回本次连接的实例
         return self.get_db()
     
-    def get_db(self):
+    def get_db(self) -> DBCon:
         '''
-            获取该连接的实例(用于已经 connect 后再次获取连接实例)
+            获取本次连接的数据库实例（此操作不会再次连接数据库，需要用在 connect 方法之后）\n
+            返回类型: DBCon -- 本次连接的数据库实例
         '''
         # 构建本次连接的实例
         db_con = DBCon()
