@@ -261,7 +261,6 @@ class DBServer:
         shutil.move('cyberdb_file/backup/data_temp.cdb', 'cyberdb_file/backup/data.cdb')
 
 
-
 class DBClient:
 
     def __init__(self):
