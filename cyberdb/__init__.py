@@ -335,15 +335,16 @@ class DBClient:
 
     def show_tables_list(self):
         '''
-            显示数据库表
+            打印数据库中所有表，格式 name:表名称 type:数据类型 
         '''
         for type in self._db:
             for name in self._db[type]:
                 print('name:' + name, ' type:' + type)
 
-    def get_data(self):
+    def get_data(self) -> dict:
         '''
-            获取数据库内容(仅支持内置数据结构 CyberDict 和 CyberList)
+            获取数据库内容，将返回数据库支持类型的所有数据(默认 CyberDict 和 CyberList)\n
+            返回类型: dict
         '''
         # 获取数据库表实例数据
         data = {}
