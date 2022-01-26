@@ -8,7 +8,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 from cyberdb.cyberdict import CyberDict
 from cyberdb.cyberlist import CyberList
-from cyberdb.tool import generate, Demo
+from cyberdb.tool import generate, DBCon
 
 
 class ServerManager(BaseManager):
@@ -274,14 +274,17 @@ class DBClient:
 
     def load_config(self, config_file: str='cyberdb_file/config.cdb'):
         '''
-            配置文件路径
+            加载配置文件(该文件由服务端运行时生成)\n
+            参数:\n
+                config_file -- 配置文件的路径，默认路径 cyberdb_file/config.cdb\n
+            返回类型: None
         '''
         file_suffix = config_file.rsplit('.')[1]
         if file_suffix != 'cdb':
             raise RuntimeError('The file suffix must be cdb.')
         self._db = joblib.load(config_file)
 
-    def connect(self, host: str='127.0.0.1', password: str=None, port: int=9980, table_names: list=[]):
+    def connect(self, host: str='127.0.0.1', password: str=None, port: int=9980, table_names: list=[]) -> DBCon:
         '''
             (客户端)连接数据库
             host: 主机地址
@@ -318,10 +321,10 @@ class DBClient:
             获取该连接的实例(用于已经 connect 后再次获取连接实例)
         '''
         # 构建本次连接的实例
-        db_con = Demo()
+        db_con = DBCon()
         for type in self._db:
             loc = locals()
-            exec('db_con.{} = Demo()'.format(type))
+            exec('db_con.{} = DBCon()'.format(type))
             for name in self._db[type]:
                 v = self._db[type][name]
                 exec('db_con.{}.{} = v'.format(type, name))
