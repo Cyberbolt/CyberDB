@@ -360,7 +360,10 @@ class DBClient:
 
     def save_db(self, file_name: str='cyberdb_file/backup/data.cdb'):
         '''
-            安全备份数据库至本地, 文件格式 cdb (仅支持内置数据结构 CyberDict 和 CyberList)
+            安全保存数据库文件到客户端本地，格式 cdb (仅支持内置数据结构 CyberDict 和 CyberList)。如需保存自定义数据结构，请参考本文档的教程。\n
+            参数: \n
+                file_name -- 需保存数据库文件的相对路径，默认路径 cyberdb_file/backup/data.cdb\n
+            返回类型: None
         '''
         # 获取数据库表实例数据
         data = self.get_data()
