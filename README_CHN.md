@@ -12,16 +12,16 @@ Linux 和 macOS:
 
 
 ```python
-python3 -m venv venv #创建虚拟环境
-. venv/bin/activate #激活虚拟环境
+python3 -m venv venv # 创建虚拟环境
+. venv/bin/activate # 激活虚拟环境
 ```
 
 Windows:
 
 
 ```python
-python -m venv venv #创建虚拟环境
-venv\Scripts\activate #激活虚拟环境
+python -m venv venv # 创建虚拟环境
+venv\Scripts\activate # 激活虚拟环境
 ```
 
 2.安装 CyberDB，依次输入
@@ -34,7 +34,11 @@ pip install cyberdb
 
 如果你的服务端和客户端在两个不同的项目目录运行，请分别在服务端、客户端的虚拟环境中安装 CyberDB。
 
-### 快速使用
+### 链接
+
+- GitHub: [https://github.com/Cyberbolt/CyberDB](https://github.com/Cyberbolt/CyberDB) 
+- PyPI: [https://pypi.org/project/CyberDB/](https://pypi.org/project/CyberDB/)
+- 文档: 正在撰写中
 
 在该模块中，请使用 CyberDict 和 CyberList 替代 dict 和 list （CyberDict 和 CyberList 是一种基于 TCP 的类 Dictionaries、类 Lists 对象）。
 

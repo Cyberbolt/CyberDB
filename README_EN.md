@@ -9,16 +9,16 @@ CyberDB is a main memory database of Python. You can use  Dictionaries, Lists as
 Linux and macOS:
 
 ```python
-python3 -m venv venv #create virtual environment
-. venv/bin/activate #Activate the virtual environment
+python3 -m venv venv # create virtual environment
+. venv/bin/activate # Activate the virtual environment
 ```
 
 Windows:
 
 
 ```python
-python -m venv venv #create virtual environment
-venv\Scripts\activate #Activate the virtual environment
+python -m venv venv # create virtual environment
+venv\Scripts\activate # Activate the virtual environment
 ```
 
 2. Install CyberDB, enter in turn
@@ -30,6 +30,12 @@ pip install cyberdb
 ```
 
 If your server and client are running in two different project directories, please install CyberDB in the virtual environment of the server and client respectively.
+
+### 链接
+
+- GitHub: [https://github.com/Cyberbolt/CyberDB](https://github.com/Cyberbolt/CyberDB) 
+- PyPI: [https://pypi.org/project/CyberDB/](https://pypi.org/project/CyberDB/)
+- Documentation: In writing
 
 ### Use
 
