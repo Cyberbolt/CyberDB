@@ -276,6 +276,9 @@ class DBClient:
         '''
             配置文件路径
         '''
+        file_suffix = config_file.rsplit('.')[1]
+        if file_suffix != 'cdb':
+            raise RuntimeError('The file suffix must be cdb.')
         self._db = joblib.load(config_file)
 
     def connect(self, host: str='127.0.0.1', password: str=None, port: int=9980, table_names: list=[]):
