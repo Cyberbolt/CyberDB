@@ -40,6 +40,8 @@ pip install cyberdb
 - PyPI: [https://pypi.org/project/CyberDB/](https://pypi.org/project/CyberDB/)
 - 文档: 正在撰写中
 
+### 快速使用
+
 在该模块中，请使用 CyberDict 和 CyberList 替代 dict 和 list （CyberDict 和 CyberList 是一种基于 TCP 的类 Dictionaries、类 Lists 对象）。
 
 #### 服务端
