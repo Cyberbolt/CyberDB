@@ -4,6 +4,8 @@ CyberDB is a main memory database of Python. You can use  Dictionaries, Lists as
 
 ### Installation
 
+Python version: 3.8 and above
+
 1.Enter the command window, create a virtual environment, and enter the following commands in turn
 
 Linux and macOS:
