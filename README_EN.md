@@ -33,6 +33,12 @@ pip install cyberdb
 
 If your server and client are running in two different project directories, please install CyberDB in the virtual environment of the server and client respectively.
 
+### Links
+
+- GitHub: [https://github.com/Cyberbolt/CyberDB](https://github.com/Cyberbolt/CyberDB) 
+- PyPI: [https://pypi.org/project/CyberDB/](https://pypi.org/project/CyberDB/)
+- Documentation: In writing
+
 ### Use
 
 In this module, we can use CyberDict and CyberList instead of dict and list (a TCP-based Dictionaries-like, Lists-like object).
