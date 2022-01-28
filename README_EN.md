@@ -1,12 +1,12 @@
 # CyberDB
 
-CyberDB is a main memory database of Python. You can use  Dictionaries, Lists as data storage and it supports data persistence. Inter-process communication through Socket TCP has extremely high performance. In addition, you can customize your own data structure based on this module to support Gunicorn inter-process communication, distributed computing,  model deployment of machine learning, etc.
+CyberDB is a lightweight main memory database of Python. It can use Python's Dictionaries, Lists for data storage,build an efficient communication through Socket TCP, and provide data persistence. Developers can customize their own data structures based on this module, which is often used in Gunicorn inter-process communication, distributed computing, machine learning deployment and other fields.
 
 ### Installation
 
 Python version: 3.8 and above
 
-1.Enter the command window, create a virtual environment, and enter the following commands in turn
+1. Enter the command window, create a virtual environment, and enter the following commands in turn
 
 Linux and macOS:
 
@@ -23,7 +23,7 @@ python -m venv venv # create virtual environment
 venv\Scripts\activate # Activate the virtual environment
 ```
 
-2. Install CyberDB, enter in turn
+2. Install 'CyberDB', enter in turn
 
 
 ```python
@@ -31,7 +31,7 @@ pip install --upgrade pip
 pip install cyberdb
 ```
 
-If your server and client are running in two different project directories, please install CyberDB in the virtual environment of the server and client respectively.
+If your server and client are running in two different project directories, please install 'CyberDB' in the virtual environment of the server and client respectively.
 
 ### Links
 
@@ -41,14 +41,14 @@ If your server and client are running in two different project directories, plea
 
 ### Use
 
-In this module, we can use CyberDict and CyberList instead of dict and list (a TCP-based Dictionaries-like, Lists-like object).
+In this module,please use 'CyberDict' and 'CyberList' instead of 'dict' and list ('CyberDict' and 'CyberList' are TCP-based Dictionaries-like, Lists-like objects).
 
 #### Server
 
 Please enter the root directory of your project
 
 
-For the first run, please create a separate py file to create a database table when the server is initialized, and save the table information to the local after running the server. (This file is used when creating a table for the first time, and will not run in the future)
+For the first run, please create a separate 'py' file to create a database table when the server is initialized, and save the table information to the local after running the server. (This file is used when creating a table for the first time, and will not run in the future)
 
 
 ```python
@@ -69,7 +69,7 @@ server.stop() # to stop running the server
     CyberDB is starting...
     Server stopped.
 
-After the server runs, the cyberdb_file directory will be created in the project root directory (do not delete it), and the client configuration file cyberdb_file/config.cdb will be generated (client operation depends on this file). The default file for database persistence is cyberdb_file/backup /data.cdb 
+After the server runs, the 'cyberdb_file' directory will be created in the project root directory (do not delete it), and the client configuration file 'cyberdb_file/config.cdb' will be generated (client operation depends on this file). The default file for database persistence is 'cyberdb_file/backup /data.cdb' 
 
 Deploying the server
 
@@ -102,13 +102,13 @@ while True:
 
 
 
-The default file for database backup is cyberdb_file/backup/data.cdb (this file will be automatically backed up or updated at the set backup time)
+The default file for database backup is 'cyberdb_file/backup/data.cdb' (this file will be automatically backed up or updated at the set backup time)
 
 #### Client
 
 Please enter the root directory of your project
 
-Copying the cyberdb_file of the server to the project root directory of the client (if the same project directory is used as the server and the client, there is no need to copy)
+Copying the 'cyberdb_file' of the server to the project root directory of the client (if the same project directory is used as the server and the client, there is no need to copy)
 
 Connect to the database
 
@@ -118,7 +118,7 @@ client = DBClient()
 client.load_config('cyberdb_file/config.cdb') 
 '''
 Load the configuration file 'config.cdb'
-The default value of the configuration file path is 'cyberdb_file/config.cdb' . If the path here is the same, you do not need to fill in the parameters.
+The default value of the configuration file path is 'cyberdb_file/config.cdb' . If the path here is the same, you will not need to fill in the parameters.
 '''
 db = client.connect(host='127.0.0.1', password='123123', port=9980)
 '''
@@ -138,7 +138,7 @@ dict2 = db.CyberDict.dict2
 list1 = db.CyberList.list1
 ```
 
-This command can get the database table created by the server in the format of database's instance.datatype.tablename
+This command can get the database table created by the server in the format of database's 'instance.datatype.tablename'
 You can also use the following command to get
 
 
@@ -148,9 +148,9 @@ dict2 = db['CyberDict']['dict2']
 list1 = db['CyberList']['list1']
 ```
 
-The dict1, dict2, and list1 obtained here are all network objects. Calling the object method is to interact with the database remotely.
+The 'dict1', 'dict2', and 'list1' obtained here are all network objects. Calling the object method is to interact with the database remotely.
 
-Add key-value pairs in dict1 and dict2
+Add key-value pairs in 'dict1' and 'dict2'
 
 
 ```python
@@ -185,7 +185,7 @@ dict2.get(0)
 
 
 
-We use the ‘show’ method to see the table contents of dict1 and dict2
+We use the ‘show’ method to see the table contents of 'dict1' and 'dict2'
 
 
 ```python
@@ -211,11 +211,11 @@ dict2.show()
 
 
 
-The ‘show’ method here can directly extract the data in the table (dict here), and can perform any dict operation. Here the execution is: Copying the variate  from the database to the client. If your server and client use the same machine, it will occupy twice the memory. It is not recommended to use the ‘show’ method frequently on the same host.
+The ‘show’ method here can directly extract the data in the table ('dict' here), and can perform any 'dict' operation. Here the execution is: Copying the variate  from the database to the client. If your server and client use the same machine, it will occupy twice the memory. It is not recommended to use the ‘show’ method frequently on the same host.
 
-CyberDict and CyberList  support all public methods of dict and list (such as dict.get(key), dict.items(), list.append(v), list.pop(), etc.), using any public method is based on TCP data interaction. So there is no support for iteration, no support for private methods (Python magic methods),and no access to data using dict[key] and list[index] . CyberDB gives corresponding alternatives, please read this article carefully. (If you insist on using magic methods, the corresponding API is provided in CyberDB's official documentation)
+'CyberDict' and 'CyberList'  support all public methods of 'dict' and list (such as 'dict.get(key), dict.items(), list.append(v), list.pop()', etc.), using any public method is based on TCP data interaction. So there is no support for iteration, no support for private methods (Python magic methods),and no access to data using 'dict[key]' and list[index] . 'CyberDB' gives corresponding alternatives, please read this article carefully. (If you insist on using magic methods, the corresponding API is provided in 'CyberDB's' official documentation)
 
-Note: Use the ’show‘ method to copy the variate in the table to the client's local. The variate obtained by the ‘show’ method are complete dict or list objects, which can perform any operation of Python. like:
+Note: Use the ’show‘ method to copy the variate in the table to the client's local. The variate obtained by the ‘show’ method are complete dict or list objects, which can perform any operation of Python. Like:
 
 
 ```python
@@ -229,7 +229,7 @@ dict1.show()[10]
 
 
 
-We can get the length of CyberDict using the 'get_length' method
+We can get the length of 'CyberDict' using the 'get_length' method
 
 
 ```python
@@ -252,9 +252,9 @@ dict1.delete(10)
 
 'dict1.delete(10)' is equivalent to using 'del dict1[10]' locally
 
-Performing common operations on CyberList below
+Performing common operations on 'CyberList' below
 
-Increment list1 to a 5 * 5 all-zeros table
+Increment 'list1' to a 5 * 5 all-zeros table
 
 
 ```python
@@ -262,7 +262,7 @@ for i in range(5):
     list1.append([0 for i in range(5)])
 ```
 
-Using the 'show' method to get all the data of list1 (the 'show' method here is the same as CyberDict)
+Using the 'show' method to get all the data of 'list1' (the 'show' method here is the same as 'CyberDict')
 
 
 ```python
@@ -280,7 +280,7 @@ list1.show()
 
 
 
-Using the 'update' method to modify the 4th value (subscript 3) of list1 to all 1s. ('update' only works on the first dimension of the table)
+Using the 'update' method to modify the 4th value (subscript 3) of 'list1' to 1. ('update' only works on the first dimension of the table)
 
 
 ```python
@@ -299,7 +299,7 @@ list1.show()
 
 
 
-Using the 'update_form' method to modify the 5th value (subscript 4, 4) of the 5th row of list1 to 1. ('update_form' is used to modify the two-dimensional form)
+Using the 'update_form' method to modify the 5th value (subscript 4, 4) of the 5th row of 'list1' to 1. ('update_form' is used to modify the two-dimensional form)
 
 
 ```python
