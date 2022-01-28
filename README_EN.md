@@ -4,6 +4,8 @@ CyberDB is a main memory database of Python. You can use  Dictionaries, Lists as
 
 ### Installation
 
+Python version: 3.8 and above
+
 1.Enter the command window, create a virtual environment, and enter the following commands in turn
 
 Linux and macOS:
@@ -30,12 +32,6 @@ pip install cyberdb
 ```
 
 If your server and client are running in two different project directories, please install CyberDB in the virtual environment of the server and client respectively.
-
-### Links
-
-- GitHub: [https://github.com/Cyberbolt/CyberDB](https://github.com/Cyberbolt/CyberDB) 
-- PyPI: [https://pypi.org/project/CyberDB/](https://pypi.org/project/CyberDB/)
-- Documentation: In writing
 
 ### Use
 
