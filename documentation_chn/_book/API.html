@@ -245,6 +245,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.2.6" data-path="API.html">
+            
+                <a href="API.html#def-generate">
+            
+                    
+                    generate
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -494,6 +507,16 @@ CyberList.update_form(i, j, value) &#x7B49;&#x540C;&#x4E8E; list[i][j] = value
     command -- &#x7B49;&#x540C;&#x4E8E; list[x] &#x4E2D; x &#x8868;&#x8FBE;&#x5F0F;&#x5BF9;&#x5E94;&#x7684;&#x5B57;&#x7B26;&#x4E32;(command = str(x))
     &#x5373; CyberList.box(command) = list[x]&#xFF0C;&#x5176;&#x4E2D; command = str(x)
 &#x8FD4;&#x56DE;&#x7C7B;&#x578B;: list[x] &#x7684;&#x8FD4;&#x56DE;&#x7C7B;&#x578B;
+</code></pre><h3 id="def-generate">def generate</h3>
+<p>generate &#x662F; CyberDB &#x63D0;&#x4F9B;&#x7684;&#x751F;&#x6210;&#x5668;&#xFF0C;&#x7528;&#x4E8E;&#x8FED;&#x4EE3; CyberDict &#x6216; CyberList&#x3002;generate &#x6BCF;&#x6B21;&#x8FED;&#x4EE3;&#x901A;&#x8FC7; TCP &#x83B7;&#x53D6;&#x6570;&#x636E;&#xFF0C;&#x80FD;&#x663E;&#x8457;&#x63D0;&#x5347;&#x5185;&#x5B58;&#x5229;&#x7528;&#x7387;&#x3002;&#x5BF9; CyberDict&#xFF0C;generate &#x4F1A;&#x83B7;&#x53D6;&#x6240;&#x6709; key&#xFF0C;&#x6BCF;&#x6B21;&#x8FED;&#x4EE3;&#x65F6;&#x83B7;&#x53D6; value&#xFF1B;&#x5BF9; CyberList&#xFF0C;generate &#x53EA;&#x5728;&#x6BCF;&#x6B21;&#x8FED;&#x4EE3;&#x65F6;&#x83B7;&#x53D6;&#x5185;&#x5BB9;&#x3002;</p>
+<p><strong>generate(data)</strong></p>
+<pre><code># &#x82E5; data &#x4E3A; CyberDict &#x5BF9;&#x8C61;&#xFF0C;&#x6253;&#x5370;&#x6240;&#x6709; value
+for key in generate(data):
+    print(data[key])
+
+# &#x82E5; data &#x4E3A; CyberList &#x5BF9;&#x8C61;&#xFF0C;&#x6253;&#x5370;&#x6240;&#x6709;&#x503C;
+for v in generate(data):
+    print(v)
 </code></pre>
                                 
                                 </section>
@@ -537,7 +560,7 @@ CyberList.update_form(i, j, value) &#x7B49;&#x540C;&#x4E8E; list[i][j] = value
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"API","level":"1.2","depth":1,"next":{"title":"DBServer","level":"1.2.1","depth":2,"anchor":"#class-dbserver","path":"API.md","ref":"API.md#class-dbserver","articles":[]},"previous":{"title":"客户端","level":"1.1.2.2","depth":3,"anchor":"#客户端","path":"README.md","ref":"README.md#客户端","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"API.md","mtime":"2022-01-26T13:10:13.274Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-01-26T13:10:16.746Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"API","level":"1.2","depth":1,"next":{"title":"DBServer","level":"1.2.1","depth":2,"anchor":"#class-dbserver","path":"API.md","ref":"API.md#class-dbserver","articles":[]},"previous":{"title":"客户端","level":"1.1.2.2","depth":3,"anchor":"#客户端","path":"README.md","ref":"README.md#客户端","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"API.md","mtime":"2022-02-05T08:08:18.123Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-05T08:14:08.663Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

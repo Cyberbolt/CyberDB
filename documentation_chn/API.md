@@ -287,4 +287,20 @@ DBCon对象.CyberList.表名 获取的实例是基于 CyberList 的网络对象�
 	返回类型: list[x] 的返回类型
 
 
+### def generate
+
+generate 是 CyberDB 提供的生成器，用于迭代 CyberDict 或 CyberList。generate 每次迭代通过 TCP 获取数据，能显著提升内存利用率。对 CyberDict，generate 会获取所有 key，每次迭代时获取 value；对 CyberList，generate 只在每次迭代时获取内容。
+
+**generate(data)**
+	
+```
+# 若 data 为 CyberDict 对象，打印所有 value
+for key in generate(data):
+	print(data[key])
+
+# 若 data 为 CyberList 对象，打印所有值
+for v in generate(data):
+	print(v)
+```
+
 
