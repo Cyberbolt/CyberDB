@@ -1,0 +1,603 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>API · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="API.html" />
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    介绍
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.1" data-path="./">
+            
+                <a href="./#安装方法">
+            
+                    
+                    安装方法
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.2" data-path="./">
+            
+                <a href="./#快速使用">
+            
+                    
+                    快速使用
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.2.1" data-path="./">
+            
+                <a href="./#服务端">
+            
+                    
+                    服务端
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.2.2" data-path="./">
+            
+                <a href="./#客户端">
+            
+                    
+                    客户端
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2" data-path="API.html">
+            
+                <a href="API.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="API.html">
+            
+                <a href="API.html#class-dbserver">
+            
+                    
+                    DBServer
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="API.html">
+            
+                <a href="API.html#class-dbclient">
+            
+                    
+                    DBClient
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="API.html">
+            
+                <a href="API.html#数据库连接对象-dbcon">
+            
+                    
+                    数据库连接对象 DBCon
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="API.html">
+            
+                <a href="API.html#class-cyberdict">
+            
+                    
+                    CyberDict
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="API.html">
+            
+                <a href="API.html#class-cyberlist">
+            
+                    
+                    CyberList
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="API.html">
+            
+                <a href="API.html#def-generate">
+            
+                    
+                    generate
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >API</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="api">API</h1>
+<p>&#x8FD9;&#x90E8;&#x5206;&#x6587;&#x6863;&#x6DB5;&#x76D6;&#x4E86; CyberDB &#x7684;&#x6240;&#x6709;&#x63A5;&#x53E3;&#x3002;&#x5BF9;&#x4E8E; CyberDB &#x4F9D;&#x8D56;&#x4E8E;&#x5916;&#x90E8;&#x5E93;&#x7684;&#x90E8;&#x5206;&#xFF0C;&#x6211;&#x4EEC;&#x5728;&#x6B64;&#x5904;&#x8BB0;&#x5F55;&#x6700;&#x91CD;&#x8981;&#x7684;&#x90E8;&#x5206;&#x5E76;&#x63D0;&#x4F9B;&#x6307;&#x5411;&#x89C4;&#x8303;&#x6587;&#x6863;&#x7684;&#x94FE;&#x63A5;&#x3002;</p>
+<h3 id="class-dbserver">class DBServer</h3>
+<p>&#x8BE5;&#x7C7B;&#x53EF;&#x4EE5;&#x521B;&#x5EFA; CyberDB &#x670D;&#x52A1;&#x7AEF;&#x5B9E;&#x4F8B;&#xFF0C;&#x521D;&#x59CB;&#x5316;&#x4F1A;&#x81EA;&#x52A8;&#x751F;&#x6210; cyberdb_file &#x3001;cyberdb_file/backup &#x76EE;&#x5F55;&#xFF0C;&#x8BF7;&#x52FF;&#x5220;&#x9664;&#x3002;</p>
+<p><strong>create_cyberdict(self, name: str)</strong></p>
+<pre><code>&#x521B;&#x5EFA; CyberDict &#x8868;
+&#x53C2;&#x6570;:
+    name -- &#x8868;&#x540D;&#x79F0;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>create_cyberlist(self, name: str)</strong></p>
+<pre><code>&#x521B;&#x5EFA; CyberList &#x8868;
+&#x53C2;&#x6570;:
+    name -- &#x8868;&#x540D;&#x79F0;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>create_object(self, type_name: str, obj_name: str, obj: object)</strong></p>
+<pre><code>&#x521B;&#x5EFA;&#x81EA;&#x5B9A;&#x4E49;&#x5BF9;&#x8C61;
+&#x53C2;&#x6570;:
+    type_name -- &#x7C7B;&#x578B;&#x540D;
+    obj_name -- &#x5BF9;&#x8C61;&#x540D;
+    obj -- &#x5BF9;&#x8C61;(object &#x53CA;&#x5176;&#x5B50;&#x7C7B;&#x7684;&#x5BF9;&#x8C61;&#x5747;&#x53EF;)
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>start(self, host: str=&apos;127.0.0.1&apos;, password: str=None, port: int=9980)</strong></p>
+<pre><code>(&#x670D;&#x52A1;&#x7AEF;)&#x540E;&#x53F0;&#x8FD0;&#x884C;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x5E76;&#x81EA;&#x52A8;&#x5F00;&#x542F; multiprocessing &#x5B88;&#x62A4;&#x8FDB;&#x7A0B;&#x3002;&#x8BE5;&#x65B9;&#x6CD5;&#x5C06;&#x81EA;&#x52A8;&#x751F;&#x6210;&#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;&#x6587;
+&#x4EF6; cyberdb_file/config.cdb &#xFF0C;&#x5BA2;&#x6237;&#x7AEF;&#x8FD0;&#x884C;&#x5FC5;&#x987B;&#x4F9D;&#x8D56;&#x8BE5;&#x6587;&#x4EF6;&#x3002;
+&#x53C2;&#x6570;:
+    host -- &#x670D;&#x52A1;&#x7AEF;&#x8FD0;&#x884C;&#x5730;&#x5740;&#xFF0C;&#x9ED8;&#x8BA4; 127.0.0.1
+    password -- &#x5BC6;&#x7801;
+    port -- &#x670D;&#x52A1;&#x7AEF;&#x76D1;&#x542C;&#x7AEF;&#x53E3;&#xFF0C;&#x9ED8;&#x8BA4; 9980
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>stop(self)</strong></p>
+<pre><code>&#x505C;&#x6B62;&#x8FD0;&#x884C;&#x6570;&#x636E;&#x5E93;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>set_backup(self, period: int=900)</strong></p>
+<pre><code>&#x8BBE;&#x7F6E;&#x5907;&#x4EFD;&#x5468;&#x671F;&#xFF0C;&#x8C03;&#x7528;&#x672C;&#x65B9;&#x6CD5;&#xFF0C;&#x6570;&#x636E;&#x5E93;&#x5C06;&#x5B9A;&#x65F6;&#x5907;&#x4EFD;&#x81F3; cyberdb_file/backup/data.cdb
+&#x53C2;&#x6570;:
+    period -- &#x5907;&#x4EFD;&#x5468;&#x671F;&#xFF0C;&#x9ED8;&#x8BA4; 900 &#x79D2;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>save_db(self, file_name: str=&apos;cyberdb_file/backup/data.cdb&apos;)</strong></p>
+<pre><code>&#x5B89;&#x5168;&#x4FDD;&#x5B58;&#x6570;&#x636E;&#x5E93;&#x6587;&#x4EF6;&#xFF0C;&#x683C;&#x5F0F; cdb (&#x4EC5;&#x652F;&#x6301;&#x5185;&#x7F6E;&#x6570;&#x636E;&#x7ED3;&#x6784; CyberDict &#x548C; CyberList)&#x3002;&#x5982;&#x9700;&#x4FDD;&#x5B58;&#x81EA;&#x5B9A;
+&#x4E49;&#x6570;&#x636E;&#x7ED3;&#x6784;&#xFF0C;&#x8BF7;&#x53C2;&#x8003;&#x672C;&#x6587;&#x6863;&#x7684;&#x6559;&#x7A0B;&#x3002;
+&#x53C2;&#x6570;: 
+    file_name -- &#x9700;&#x4FDD;&#x5B58;&#x6570;&#x636E;&#x5E93;&#x6587;&#x4EF6;&#x7684;&#x8DEF;&#x5F84;&#xFF0C;&#x9ED8;&#x8BA4;&#x8DEF;&#x5F84; cyberdb_file/backup/data.cdb
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>load_db(self, file_name: str=&apos;cyberdb_file/backup/data.cdb&apos;)</strong></p>
+<pre><code>&#x52A0;&#x8F7D; cdb &#x683C;&#x5F0F;&#x7684;&#x6570;&#x636E;&#x5E93;&#x6587;&#x4EF6;&#xFF08;&#x4E00;&#x822C;&#x4E3A; set_backup &#x6216; save_db &#x4FDD;&#x5B58;&#x7684;&#x6587;&#x4EF6;&#xFF09;
+&#x53C2;&#x6570;:
+    file_name -- &#x6587;&#x4EF6;&#x8DEF;&#x5F84;&#xFF0C;&#x9ED8;&#x8BA4;&#x8DEF;&#x5F84; cyberdb_file/backup/data.cdb
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>get_data(self) -&gt; dict</strong></p>
+<pre><code>&#x83B7;&#x53D6;&#x6570;&#x636E;&#x5E93;&#x5185;&#x5BB9;&#xFF0C;&#x5C06;&#x8FD4;&#x56DE;&#x6570;&#x636E;&#x5E93;&#x652F;&#x6301;&#x7C7B;&#x578B;&#x7684;&#x6240;&#x6709;&#x6570;&#x636E;(&#x9ED8;&#x8BA4; CyberDict &#x548C; CyberList)
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: dict
+</code></pre><p><strong>show_tables_list(self)</strong></p>
+<pre><code>&#x6253;&#x5370;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x6240;&#x6709;&#x8868;&#xFF0C;&#x683C;&#x5F0F; name -- &#x8868;&#x540D;&#x79F0; type:&#x6570;&#x636E;&#x7C7B;&#x578B; 
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>delete_table(self, type_name: str, name: str)</strong></p>
+<pre><code>&#x5220;&#x9664;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x7684;&#x8868;
+&#x53C2;&#x6570;:
+    type_name --&#x6570;&#x636E;&#x7C7B;&#x578B;&#x540D;
+    name --&#x8868;&#x540D;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>delete_type(self, type_name: str)</strong></p>
+<pre><code>&#x5220;&#x9664;&#x6570;&#x636E;&#x5E93;&#x7684;&#x6570;&#x636E;&#x7C7B;&#x578B;&#xFF0C;&#x6B64;&#x64CD;&#x4F5C;&#x4F1A;&#x540C;&#x65F6;&#x5220;&#x9664;&#x8BE5;&#x6570;&#x636E;&#x7C7B;&#x578B;&#x4E0B;&#x7684;&#x6240;&#x6709;&#x8868;
+&#x53C2;&#x6570;:
+    type_name -- &#x6570;&#x636E;&#x7C7B;&#x578B;&#x540D;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><h3 id="class-dbclient">class DBClient</h3>
+<p>&#x8BE5;&#x7C7B;&#x53EF;&#x4EE5;&#x521B;&#x5EFA; CyberDB &#x5BA2;&#x6237;&#x7AEF;&#x5B9E;&#x4F8B;&#xFF0C;&#x82E5; cyberdb_file &#x3001;cyberdb_file/backup &#x76EE;&#x5F55;&#x4E0D;&#x5B58;&#x5728;&#xFF0C;&#x5B9E;&#x4F8B;&#x521D;&#x59CB;&#x5316;&#x65F6;&#x5C06;&#x81EA;&#x52A8;&#x751F;&#x6210;&#xFF08;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x5C06;&#x670D;&#x52A1;&#x7AEF;&#x751F;&#x6210;&#x7684; cyberdb_file &#x76EE;&#x5F55;&#x62F7;&#x8D1D;&#x81F3;&#x6B64;&#xFF09;&#x3002;</p>
+<p><strong>load_config(self, config_file: str=&apos;cyberdb_file/config.cdb&apos;)</strong></p>
+<pre><code>&#x52A0;&#x8F7D;&#x914D;&#x7F6E;&#x6587;&#x4EF6;(&#x8BE5;&#x6587;&#x4EF6;&#x7531;&#x670D;&#x52A1;&#x7AEF;&#x8FD0;&#x884C;&#x65F6;&#x751F;&#x6210;)
+&#x53C2;&#x6570;:
+    config_file -- &#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x7684;&#x8DEF;&#x5F84;&#xFF0C;&#x9ED8;&#x8BA4;&#x8DEF;&#x5F84; cyberdb_file/config.cdb
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>connect(self, host: str=&apos;127.0.0.1&apos;, password: str=None, port: int=9980) -&gt; DBCon:</strong></p>
+<pre><code>(&#x5BA2;&#x6237;&#x7AEF;)&#x8FDE;&#x63A5;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x5E76;&#x83B7;&#x53D6;&#x672C;&#x6B21;&#x8FDE;&#x63A5;&#x7684;&#x5B9E;&#x4F8B;
+&#x53C2;&#x6570;:
+    host -- &#x4E3B;&#x673A;&#x5730;&#x5740;&#xFF0C;&#x9ED8;&#x8BA4;&#x5730;&#x5740; 127.0.0.1
+    password -- &#x8FDE;&#x63A5;&#x5BC6;&#x7801;
+    port -- &#x8FDE;&#x63A5;&#x7AEF;&#x53E3;&#xFF0C;&#x9ED8;&#x8BA4;&#x7AEF;&#x53E3; 9980
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: DBCon -- &#x672C;&#x6B21;&#x8FDE;&#x63A5;&#x7684;&#x6570;&#x636E;&#x5E93;&#x5B9E;&#x4F8B;
+</code></pre><p><strong>get_db(self)</strong></p>
+<pre><code>&#x83B7;&#x53D6;&#x672C;&#x6B21;&#x8FDE;&#x63A5;&#x7684;&#x6570;&#x636E;&#x5E93;&#x5B9E;&#x4F8B;&#xFF08;&#x6B64;&#x64CD;&#x4F5C;&#x4E0D;&#x4F1A;&#x518D;&#x6B21;&#x8FDE;&#x63A5;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x9700;&#x8981;&#x7528;&#x5728; connect &#x65B9;&#x6CD5;&#x4E4B;&#x540E;&#xFF09;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: DBCon -- &#x672C;&#x6B21;&#x8FDE;&#x63A5;&#x7684;&#x6570;&#x636E;&#x5E93;&#x5B9E;&#x4F8B;
+</code></pre><p><strong>show_tables_list(self)</strong></p>
+<pre><code>&#x6253;&#x5370;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x6240;&#x6709;&#x8868;&#xFF0C;&#x683C;&#x5F0F; name -- &#x8868;&#x540D;&#x79F0; type:&#x6570;&#x636E;&#x7C7B;&#x578B; 
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>get_data(self)</strong></p>
+<pre><code>&#x83B7;&#x53D6;&#x6570;&#x636E;&#x5E93;&#x5185;&#x5BB9;&#xFF0C;&#x5C06;&#x8FD4;&#x56DE;&#x6570;&#x636E;&#x5E93;&#x652F;&#x6301;&#x7C7B;&#x578B;&#x7684;&#x6240;&#x6709;&#x6570;&#x636E;(&#x9ED8;&#x8BA4; CyberDict &#x548C; CyberList)
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: dict
+</code></pre><p><strong>save_db(self, file_name: str=&apos;cyberdb_file/backup/data.cdb&apos;)</strong></p>
+<pre><code>&#x5B89;&#x5168;&#x4FDD;&#x5B58;&#x6570;&#x636E;&#x5E93;&#x6587;&#x4EF6;&#x5230;&#x5BA2;&#x6237;&#x7AEF;&#x672C;&#x5730;&#xFF0C;&#x683C;&#x5F0F; cdb (&#x4EC5;&#x652F;&#x6301;&#x5185;&#x7F6E;&#x6570;&#x636E;&#x7ED3;&#x6784; CyberDict &#x548C; CyberList)&#x3002;
+&#x5982;&#x9700;&#x4FDD;&#x5B58;&#x81EA;&#x5B9A;&#x4E49;&#x6570;&#x636E;&#x7ED3;&#x6784;&#xFF0C;&#x8BF7;&#x53C2;&#x8003;&#x672C;&#x6587;&#x6863;&#x7684;&#x6559;&#x7A0B;&#x3002;
+&#x53C2;&#x6570;:
+    file_name -- &#x9700;&#x4FDD;&#x5B58;&#x6570;&#x636E;&#x5E93;&#x6587;&#x4EF6;&#x7684;&#x76F8;&#x5BF9;&#x8DEF;&#x5F84;&#xFF0C;&#x9ED8;&#x8BA4;&#x8DEF;&#x5F84; cyberdb_file/backup/data.cdb
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><h3 id="&#x6570;&#x636E;&#x5E93;&#x8FDE;&#x63A5;&#x5BF9;&#x8C61;-dbcon">&#x6570;&#x636E;&#x5E93;&#x8FDE;&#x63A5;&#x5BF9;&#x8C61; DBCon</h3>
+<p>&#x8C03;&#x7528; DBClient &#x7684; connect &#x65B9;&#x6CD5;&#xFF0C;&#x5C06;&#x8FD4;&#x56DE;&#x672C;&#x6B21;&#x8FDE;&#x63A5;&#x7684;&#x5B9E;&#x4F8B;&#x3002;&#x5BA2;&#x6237;&#x7AEF;&#x901A;&#x8FC7;&#x5B83;&#x53EF;&#x4EE5;&#x83B7;&#x53D6;&#x6BCF;&#x5F20;&#x8868;&#x7684;&#x5B9E;&#x4F8B;&#x3002;&#x83B7;&#x53D6;&#x65B9;&#x6CD5;</p>
+<pre><code>DBCon&#x5BF9;&#x8C61;.&#x6570;&#x636E;&#x7C7B;&#x578B;.&#x8868;&#x540D;
+&#x6216;
+DBCon&#x5BF9;&#x8C61;[&#x6570;&#x636E;&#x7C7B;&#x578B;][&#x8868;&#x540D;] # &#x6B64;&#x5904;&#x6570;&#x636E;&#x7C7B;&#x578B;&#x548C;&#x8868;&#x540D;&#x5747;&#x4E3A; str 
+
+&#x4F8B;&#x5982;&#xFF0C;&#x5DF2;&#x521B;&#x5EFA; CyberDict &#x7C7B;&#x578B;&#x7684; name1 &#x8868;&#xFF0C;&#x4F7F;&#x7528;&#x4EE5;&#x4E0B;&#x4EFB;&#x610F;&#x65B9;&#x6CD5;&#x83B7;&#x53D6;&#x8BE5;&#x8868;
+DBCon&#x5BF9;&#x8C61;.CyberDict.name1
+&#x6216;
+DBCon&#x5BF9;&#x8C61;[&apos;CyberDict&apos;][&apos;name1&apos;]
+</code></pre><p>&#x6B64;&#x5904;&#x83B7;&#x53D6;&#x7684;&#x8868;&#x5B9E;&#x4F8B;&#x4E3A;&#x7F51;&#x7EDC;&#x5BF9;&#x8C61;&#xFF0C;&#x8C03;&#x7528;&#x8BE5;&#x5BF9;&#x8C61;&#x7684;&#x4EFB;&#x4F55;&#x65B9;&#x6CD5;&#xFF0C;&#x90FD;&#x5C06;&#x901A;&#x8FC7; TCP &#x4E0E;&#x670D;&#x52A1;&#x7AEF;&#x4EA4;&#x4E92;&#x3002;CyberList &#x548C; CyberDict &#x652F;&#x6301; Python &#x6570;&#x636E;&#x7ED3;&#x6784; Dictionaries &#x548C; Lists &#x7684;&#x6240;&#x6709;&#x516C;&#x6709;&#x65B9;&#x6CD5;(&#x5982; dict.get(key), dict.items(), list.append(v), list.pop() &#x7B49;)&#x3002;&#x4E0D;&#x652F;&#x6301;&#x8FED;&#x4EE3;&#x3001;&#x4E0D;&#x652F;&#x6301;&#x79C1;&#x6709;&#x65B9;&#x6CD5;(Python &#x9B54;&#x672F;&#x65B9;&#x6CD5;)&#xFF0C;&#x4E0D;&#x80FD;&#x4F7F;&#x7528; dict[key] &#x548C; list[index] &#x8BBF;&#x95EE;&#x6570;&#x636E;(CyberDB &#x7ED9;&#x51FA;&#x4E86;&#x76F8;&#x5E94;&#x529E;&#x6CD5;&#x66FF;&#x4EE3;)&#x3002;</p>
+<p>&#x751F;&#x4EA7;&#x73AF;&#x5883;&#x4E2D;&#xFF0C;&#x5EFA;&#x8BAE;&#x6BCF;&#x6B21;&#x8BF7;&#x6C42;&#x6267;&#x884C;&#x524D;&#x91CD;&#x65B0;&#x8C03;&#x7528; connect &#x65B9;&#x6CD5;&#xFF0C;&#x83B7;&#x53D6; DBCon &#x7684;&#x5B9E;&#x4F8B;&#xFF0C;&#x4EE5;&#x786E;&#x4FDD;&#x8FDE;&#x63A5;&#x7684;&#x53EF;&#x9760;&#x6027;&#x3002;</p>
+<h3 id="class-cyberdict">class CyberDict</h3>
+<p>DBCon&#x5BF9;&#x8C61;.CyberDict.&#x8868;&#x540D; &#x83B7;&#x53D6;&#x7684;&#x5B9E;&#x4F8B;&#x662F;&#x57FA;&#x4E8E; CyberDict &#x7684;&#x7F51;&#x7EDC;&#x5BF9;&#x8C61;&#x3002;CyberDict &#x517C;&#x5BB9; <a href="https://docs.python.org/3.10/library/stdtypes.html#dict" target="_blank">Python dict</a> &#x7684;&#x6240;&#x6709;&#x516C;&#x6709;&#x65B9;&#x6CD5;&#xFF0C;&#x6B64;&#x5904;&#x53EA;&#x5217;&#x4E3E;&#x4E0D;&#x540C;&#x4E8E; dict &#x7684;&#x90E8;&#x5206;&#x3002;</p>
+<p><strong>show(self):</strong></p>
+<pre><code>&#x83B7;&#x53D6; CyberDict &#x7684;&#x539F;&#x59CB;&#x6570;&#x636E;&#xFF0C;&#x8FD4;&#x56DE;&#x7684;&#x5BF9;&#x8C61;&#x53EF;&#x4EE5;&#x5F53;&#x4F5C; Python dict &#x4F7F;&#x7528;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: CyberDict
+</code></pre><p><strong>loc(self, key)</strong></p>
+<pre><code>&#x6B64;&#x65B9;&#x6CD5;&#x53EF;&#x4EE5;&#x88AB; CyberDict.get(key) &#x66FF;&#x4EE3;
+&#x83B7;&#x53D6; CyberDict key &#x952E;&#x5BF9;&#x5E94;&#x7684;&#x503C;
+&#x53C2;&#x6570;:
+    key -- CyberDict &#x7684;&#x952E;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: &#x8BE5;&#x952E;&#x5B58;&#x50A8;&#x7684;&#x6570;&#x636E;
+</code></pre><p><strong>put(self, key, value)</strong></p>
+<pre><code>&#x6B64;&#x65B9;&#x6CD5;&#x7528;&#x4E8E;&#x66FF;&#x4EE3; dict[key] = value &#x65B0;&#x5EFA;&#x952E;&#x503C;&#x5BF9;&#x6216;&#x8D4B;&#x503C;
+&#x53C2;&#x6570;:
+    key -- CyberDict &#x7684;&#x65B0;&#x589E;&#x6216;&#x5DF2;&#x6709;&#x952E;
+    value -- CyberDict key &#x5BF9;&#x5E94;&#x7684;&#x65B0;&#x503C;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>delete(self, key)</strong></p>
+<pre><code>&#x6B64;&#x65B9;&#x6CD5;&#x7528;&#x4E8E;&#x66FF;&#x4EE3; del dict[key] &#x5220;&#x9664;&#x952E;&#x503C;&#x5BF9;
+&#x53C2;&#x6570;:
+    key -- CyberDict &#x9700;&#x5220;&#x9664;&#x7684;&#x952E;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>get_length(self)</strong></p>
+<pre><code>&#x6B64;&#x65B9;&#x6CD5;&#x7528;&#x4E8E;&#x66FF;&#x4EE3; len(dict) &#x83B7;&#x53D6;&#x5B57;&#x5178;&#x957F;&#x5EA6;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: int
+</code></pre><p><strong>get_type(self) -&gt; type</strong></p>
+<pre><code>&#x83B7;&#x53D6; CyberDict &#x5185;&#x7F6E;&#x6570;&#x636E;&#x7C7B;&#x578B;
+&#x7531;&#x4E8E;&#x5BA2;&#x6237;&#x7AEF;&#x83B7;&#x53D6;&#x7684; CyberDict &#x5BF9;&#x8C61;&#x4EC5;&#x4E3A;&#x7F51;&#x7EDC;&#x5BF9;&#x8C61;&#xFF0C;type(CyberDict) &#x548C;&#x6B64;&#x5904; get_type() &#x5E76;&#x4E0D;
+&#x76F8;&#x540C;&#x3002;&#x5982;&#x65E0;&#x5FC5;&#x8981;&#xFF0C;&#x65E0;&#x9700;&#x4F7F;&#x7528;&#x6B64;&#x65B9;&#x6CD5;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: type
+</code></pre><p><strong>box(self, command: str)</strong></p>
+<pre><code>&#x9B54;&#x672F;&#x65B9;&#x6CD5; dict[x] &#x7684;&#x66FF;&#x4EE3;&#x65B9;&#x6848;
+&#x4F7F;&#x7528;&#x8BE5;&#x65B9;&#x6CD5;&#x5E94;&#x8BE5;&#x81EA;&#x884C;&#x8003;&#x8651; Python &#x811A;&#x672C;&#x6CE8;&#x5165;&#x7B49;&#x5B89;&#x5168;&#x95EE;&#x9898;
+&#x53C2;&#x6570;:
+    command -- &#x7B49;&#x540C;&#x4E8E; dict[x] &#x4E2D; x &#x8868;&#x8FBE;&#x5F0F;&#x5BF9;&#x5E94;&#x7684;&#x5B57;&#x7B26;&#x4E32;(command = str(x))
+    &#x5373; CyberDict.box(command) = dict[x]&#xFF0C;&#x5176;&#x4E2D; command = str(x)
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: dict[x] &#x7684;&#x8FD4;&#x56DE;&#x7C7B;&#x578B;
+</code></pre><h3 id="class-cyberlist">class CyberList</h3>
+<p>DBCon&#x5BF9;&#x8C61;.CyberList.&#x8868;&#x540D; &#x83B7;&#x53D6;&#x7684;&#x5B9E;&#x4F8B;&#x662F;&#x57FA;&#x4E8E; CyberList &#x7684;&#x7F51;&#x7EDC;&#x5BF9;&#x8C61;&#x3002;CyberList &#x517C;&#x5BB9; <a href="https://docs.python.org/3.10/library/stdtypes.html#list" target="_blank">Python list</a> &#x7684;&#x6240;&#x6709;&#x516C;&#x6709;&#x65B9;&#x6CD5;&#xFF0C;&#x6B64;&#x5904;&#x53EA;&#x5217;&#x4E3E;&#x4E0D;&#x540C;&#x4E8E; dict &#x7684;&#x90E8;&#x5206;&#x3002;</p>
+<p><strong>show(self):</strong></p>
+<pre><code>&#x83B7;&#x53D6; CyberList &#x7684;&#x539F;&#x59CB;&#x6570;&#x636E;&#xFF0C;&#x8FD4;&#x56DE;&#x7684;&#x5BF9;&#x8C61;&#x53EF;&#x4EE5;&#x5F53;&#x4F5C; Python list &#x4F7F;&#x7528;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: CyberList
+</code></pre><p><strong>loc(self, i: int)</strong></p>
+<pre><code>&#x83B7;&#x53D6; CyberList &#x7684;&#x7B2C; i &#x4E2A;&#x503C;(&#x7B2C; 0 &#x4E2A;&#x503C;&#x4E3A;&#x8D77;&#x70B9;)
+&#x53C2;&#x6570;:
+    i -- CyberList &#x7684;&#x4E0B;&#x6807;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: CyberList[i] &#x5BF9;&#x5E94;&#x7684;&#x503C;&#x7C7B;&#x578B;
+</code></pre><p><strong>loc_form(self, i: int, j: int)</strong></p>
+<pre><code>&#x83B7;&#x53D6;&#x4E8C;&#x7EF4;&#x5D4C;&#x5957; CyberList &#x7684;&#x7B2C; i &#x884C;&#x7B2C; j &#x5217;&#x5BF9;&#x5E94;&#x7684;&#x503C;(&#x7B2C; 0 &#x884C;&#x7B2C; 0 &#x5217;&#x4E3A;&#x8D77;&#x70B9;)
+&#x53C2;&#x6570;:
+    i -- CyberList &#x7684;&#x4E00;&#x7EF4;&#x4E0B;&#x6807;
+    j -- CyberList &#x7684;&#x4E8C;&#x7EF4;&#x4E0B;&#x6807;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: CyberList[i][j] &#x5BF9;&#x5E94;&#x7684;&#x503C;
+</code></pre><p><strong>slice(self, i: int=None, j: int=None)</strong></p>
+<pre><code>&#x6B64;&#x65B9;&#x6CD5;&#x80FD;&#x66FF;&#x4EE3; Python &#x5207;&#x7247;&#x7684;&#x90E8;&#x5206;&#x529F;&#x80FD;
+CyberList.slice(i, j) &#x7B49;&#x540C;&#x4E8E; list[i:j]&#xFF0C;&#x4F46;&#x662F; i&#x3001;j &#x4E0D;&#x80FD;&#x4E3A; *
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: list[i:j] &#x7684;&#x8FD4;&#x56DE;&#x503C;&#x7C7B;&#x578B;
+</code></pre><p><strong>get(self, index: int)</strong></p>
+<pre><code>&#x6B64;&#x65B9;&#x6CD5;&#x53EF;&#x4EE5;&#x88AB; CyberList.loc(index) &#x66FF;&#x4EE3;
+&#x83B7;&#x53D6; CyberList &#x7684;&#x7B2C; index &#x4E2A;&#x503C;(&#x7B2C; 0 &#x4E2A;&#x503C;&#x4E3A;&#x8D77;&#x70B9;)
+&#x53C2;&#x6570;:
+    index -- CyberList &#x7684;&#x4E0B;&#x6807;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: CyberList[index] &#x5BF9;&#x5E94;&#x7684;&#x503C;&#x7C7B;&#x578B;
+</code></pre><p><strong>update(self, index: int, value)</strong></p>
+<pre><code>&#x4FEE;&#x6539; CyberList &#x7684;&#x7B2C; index &#x4E2A;&#x503C;(&#x7B2C; 0 &#x4E2A;&#x503C;&#x4E3A;&#x8D77;&#x70B9;)&#x4E3A; value
+CyberList.update(index, value) &#x7B49;&#x540C;&#x4E8E; list[index] = value
+&#x53C2;&#x6570;:
+    index -- CyberList &#x7684;&#x4E0B;&#x6807;
+    value -- &#x9700;&#x66F4;&#x6539;&#x7684; CyberList &#x503C;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>update_form(self, i: int, j: int, value)</strong></p>
+<pre><code>&#x4FEE;&#x6539;&#x4E8C;&#x7EF4;&#x5D4C;&#x5957; CyberList &#x7684;&#x7B2C; i &#x884C;&#x7B2C; j &#x5217;&#x7684;&#x503C;&#x4E3A; value
+CyberList.update_form(i, j, value) &#x7B49;&#x540C;&#x4E8E; list[i][j] = value
+&#x53C2;&#x6570;:
+    i -- CyberList &#x7684;&#x4E00;&#x7EF4;&#x4E0B;&#x6807;
+    j -- CyberList &#x7684;&#x4E8C;&#x7EF4;&#x4E0B;&#x6807;
+    value -- &#x9700;&#x66F4;&#x6539;&#x7684; CyberList &#x503C;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: None
+</code></pre><p><strong>get_length(self)</strong></p>
+<pre><code>&#x6B64;&#x65B9;&#x6CD5;&#x7528;&#x4E8E;&#x66FF;&#x4EE3; len(list) &#x83B7;&#x53D6;&#x5217;&#x8868;&#x957F;&#x5EA6;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: int
+</code></pre><p><strong>get_type(self) -&gt; type</strong></p>
+<pre><code>&#x83B7;&#x53D6; CyberList &#x5185;&#x7F6E;&#x6570;&#x636E;&#x7C7B;&#x578B;
+&#x7531;&#x4E8E;&#x5BA2;&#x6237;&#x7AEF;&#x83B7;&#x53D6;&#x7684; CyberList &#x5BF9;&#x8C61;&#x4EC5;&#x4E3A;&#x7F51;&#x7EDC;&#x5BF9;&#x8C61;&#xFF0C;type(CyberList) &#x548C;&#x6B64;&#x5904; get_type() &#x5E76;&#x4E0D;
+&#x76F8;&#x540C;&#x3002;&#x5982;&#x65E0;&#x5FC5;&#x8981;&#xFF0C;&#x65E0;&#x9700;&#x4F7F;&#x7528;&#x6B64;&#x65B9;&#x6CD5;
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: type
+</code></pre><p><strong>box(self, command: str)</strong></p>
+<pre><code>&#x9B54;&#x672F;&#x65B9;&#x6CD5; list[x] &#x7684;&#x66FF;&#x4EE3;&#x65B9;&#x6848;
+&#x4F7F;&#x7528;&#x8BE5;&#x65B9;&#x6CD5;&#x5E94;&#x8BE5;&#x81EA;&#x884C;&#x8003;&#x8651; Python &#x811A;&#x672C;&#x6CE8;&#x5165;&#x7B49;&#x5B89;&#x5168;&#x95EE;&#x9898;
+&#x53C2;&#x6570;:
+    command -- &#x7B49;&#x540C;&#x4E8E; list[x] &#x4E2D; x &#x8868;&#x8FBE;&#x5F0F;&#x5BF9;&#x5E94;&#x7684;&#x5B57;&#x7B26;&#x4E32;(command = str(x))
+    &#x5373; CyberList.box(command) = list[x]&#xFF0C;&#x5176;&#x4E2D; command = str(x)
+&#x8FD4;&#x56DE;&#x7C7B;&#x578B;: list[x] &#x7684;&#x8FD4;&#x56DE;&#x7C7B;&#x578B;
+</code></pre><h3 id="def-generate">def generate</h3>
+<p>generate &#x662F; CyberDB &#x63D0;&#x4F9B;&#x7684;&#x751F;&#x6210;&#x5668;&#xFF0C;&#x7528;&#x4E8E;&#x8FED;&#x4EE3; CyberDict &#x6216; CyberList&#x3002;generate &#x6BCF;&#x6B21;&#x8FED;&#x4EE3;&#x901A;&#x8FC7; TCP &#x83B7;&#x53D6;&#x6570;&#x636E;&#xFF0C;&#x80FD;&#x663E;&#x8457;&#x63D0;&#x5347;&#x5185;&#x5B58;&#x5229;&#x7528;&#x7387;&#x3002;&#x5BF9; CyberDict&#xFF0C;generate &#x4F1A;&#x83B7;&#x53D6;&#x6240;&#x6709; key&#xFF0C;&#x6BCF;&#x6B21;&#x8FED;&#x4EE3;&#x65F6;&#x83B7;&#x53D6; value&#xFF1B;&#x5BF9; CyberList&#xFF0C;generate &#x53EA;&#x5728;&#x6BCF;&#x6B21;&#x8FED;&#x4EE3;&#x65F6;&#x83B7;&#x53D6;&#x5185;&#x5BB9;&#x3002;</p>
+<p><strong>generate(data)</strong></p>
+<pre><code># &#x82E5; data &#x4E3A; CyberDict &#x5BF9;&#x8C61;&#xFF0C;&#x6253;&#x5370;&#x6240;&#x6709; value
+for key in generate(data):
+    print(data[key])
+
+# &#x82E5; data &#x4E3A; CyberList &#x5BF9;&#x8C61;&#xFF0C;&#x6253;&#x5370;&#x6240;&#x6709;&#x503C;
+for v in generate(data):
+    print(v)
+</code></pre>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./#客户端" class="navigation navigation-prev " aria-label="Previous page: 客户端">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="API.html#class-dbserver" class="navigation navigation-next " aria-label="Next page: DBServer">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"API","level":"1.2","depth":1,"next":{"title":"DBServer","level":"1.2.1","depth":2,"anchor":"#class-dbserver","path":"API.md","ref":"API.md#class-dbserver","articles":[]},"previous":{"title":"客户端","level":"1.1.2.2","depth":3,"anchor":"#客户端","path":"README.md","ref":"README.md#客户端","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"API.md","mtime":"2022-02-05T08:08:18.123Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-05T08:14:08.663Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
