@@ -1,7 +1,11 @@
 import socket
 import pickle
 import asyncio
-from multiprocessing import Process
+import threading
+
+from obj_encrypt import Secret
+
+from .signature import Signature
 
 
 class DBServer:
@@ -23,34 +27,65 @@ class DBServer:
             The server starts from the background.\n
                 max_con -- Maximum number of waiting connections.
         '''
+        if not password:
+            raise RuntimeError('The password cannot be empty.')
         self._s.bind((host, port))
         self._s.listen(max_con)
         self._data['config']['host'] = host
         self._data['config']['port'] = port
         self._data['config']['password'] = password
-        while True:
-            sock, addr = self._s.accept() # Accept a new connection.
-            data = sock.recv(1024)
-            print(pickle.loads(data))
+        self._secret = Secret(key=password) # Responsible for encrypting and decrypting objects.
+        # Run with a daemon thread.
+        t = threading.Thread(target=self.__listener)
+        t.daemon = True
+        t.start()
 
-    def listener_start(self):
+    def running(self, host: str='127.0.0.1', port: int=9980, password: str=None, 
+    max_con: int=300):
         '''
-            Start the listener process.
+            The server runs in the foreground.\n
+                max_con -- Maximum number of waiting connections.
         '''
-        p = Process(target=self.__listener)
-        p.daemon = True
-        p.start()
-        self.server_process = p
+        if not password:
+            raise RuntimeError('The password cannot be empty.')
+        self._s.bind((host, port))
+        self._s.listen(max_con)
+        self._data['config']['host'] = host
+        self._data['config']['port'] = port
+        self._data['config']['password'] = password
+        self._secret = Secret(key=password) # Responsible for encrypting and decrypting objects.
+        self._signature = Signature(salt=password.encode()) # for digital signature
+        self.__listener()
 
     def __listener(self):
         while True:
             sock, addr = self._s.accept() # Accept a new connection.
             data = sock.recv(1024)
-            print(data.decode())
+            r = self.__data_to_obj(data)
+            if r['code'] == 2:
+                print(r['errors-code'])
+            print(r)
 
-    async def daemon(self):
-        while True:
-            await asyncio.sleep(0.5)
-            if not self.server_process.is_alive():
-                self.server_process.terminate()
-                self.listener_start()
+    def __data_to_obj(self, data):
+        '''
+            Restores objects encrypted by TCP transmission.
+        '''
+        # Incorrect password will cause decryption to fail
+        try:
+            data = self._secret.decrypt(data)
+        except UnicodeDecodeError:
+            return {
+                'code': 2,
+                'errors-code': 'Incorrect password or data tampering.'
+            }
+        # Verify signature
+        if self._signature.encrypt(data['content']) != data['header']['signature']:
+            return {
+                'code': 2,
+                'errors-code': 'Incorrect password or data tampering.'
+            }
+        obj = self._secret.decrypt(data['content'])
+        return {
+            'code': 1,
+            'content': obj
+        }
