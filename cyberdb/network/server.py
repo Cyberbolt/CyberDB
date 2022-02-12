@@ -1,3 +1,4 @@
+import time
 import socket
 import pickle
 import asyncio
@@ -5,7 +6,9 @@ import threading
 
 from obj_encrypt import Secret
 
-from .signature import Signature
+from ..data import datas
+from ..extensions.signature import Signature
+from .route import Route
 
 
 class DBServer:
@@ -53,27 +56,51 @@ class DBServer:
         self._data['config']['host'] = host
         self._data['config']['port'] = port
         self._data['config']['password'] = password
-        self._secret = Secret(key=password) # Responsible for encrypting and decrypting objects.
-        self._signature = Signature(salt=password.encode()) # for digital signature
-        self.__listener()
+        secret = Secret(key=password) # Responsible for encrypting and decrypting objects.
+        signature = Signature(salt=password.encode()) # for digital signature
+        self._dp = datas.DataParsing(secret, signature) # Convert TCP data and encrypted objects to each other.
+        self._route = Route(self._dp) # TCP event mapping.
+        asyncio.run(self._listener())
 
-    def __listener(self):
+    async def _listener(self):
         while True:
-            sock, addr = self._s.accept() # Accept a new connection.
-            data = sock.recv(1024)
-            r = self.__data_to_obj(data)
-            if r['code'] == 2:
-                print(r['errors-code'])
-            print(r)
+            sock, addr = await self._s.accept() # Accept a new connection.
+            # Receive data in small chunks.
+            buffer = []
+            while True:
+                d = await sock.recv(1024)
+                print(d)
+                if d:
+                    buffer.append(d)
+                elif d == b'exit':
+                    break
+                else:
+                    break
+            data = b''.join(buffer) # Splice into complete data.
+            r = self._dp.data_to_obj(data)
+            if r['code'] == 1:
+                client_obj = r['content']
+                asyncio.create_task(self._route.route[client_obj['route']](sock, addr, client_obj))
 
-    def __data_to_obj(self, data):
+    def _data_to_obj(self, data):
         '''
-            Restores objects encrypted by TCP transmission.
+            Restore TCP encrypted data as an object.
         '''
         # Incorrect password will cause decryption to fail
         try:
             data = self._secret.decrypt(data)
         except UnicodeDecodeError:
+            return {
+                'code': 2,
+                'errors-code': 'Incorrect password or data tampering.'
+            }
+        # Check if the dictionary is intact.
+        if type(data) != type(dict()):
+            return {
+                'code': 2,
+                'errors-code': 'Incorrect password or data tampering.'
+            }
+        elif not data.get('content') or not data.get('header').get('signature'):
             return {
                 'code': 2,
                 'errors-code': 'Incorrect password or data tampering.'
@@ -89,3 +116,19 @@ class DBServer:
             'code': 1,
             'content': obj
         }
+
+    def _obj_to_data(self, obj):
+        '''
+            Convert object to TCP transmission data.
+        '''
+        data = {
+            'content': None,
+            'header': {
+                'signature': None
+            }
+        }
+        data['content'] = self._secret.encrypt(obj)
+        data['header']['signature'] = self._signature.encrypt(data['content'])
+        data = self._secret.encrypt(data)
+        return data
+
