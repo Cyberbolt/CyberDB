@@ -49,7 +49,8 @@ class DataParsing:
                 'code': 2,
                 'errors-code': errors_code[2]
             }
-        elif not data.get('content') or not data.get('header').get('signature'):
+        elif type(data.get('content')) != type(b'') or not data.get('header') or not \
+        data.get('header').get('signature'):
             return {
                 'code': 2,
                 'errors-code': errors_code[2]

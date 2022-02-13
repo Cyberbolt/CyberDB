@@ -9,6 +9,7 @@ from obj_encrypt import Secret
 from ..data import datas
 from ..extensions.signature import Signature
 from .route import Route
+from . import SComm
 
 
 class DBServer:
@@ -59,28 +60,19 @@ class DBServer:
         secret = Secret(key=password) # Responsible for encrypting and decrypting objects.
         signature = Signature(salt=password.encode()) # for digital signature
         self._dp = datas.DataParsing(secret, signature) # Convert TCP data and encrypted objects to each other.
-        self._route = Route(self._dp) # TCP event mapping.
         asyncio.run(self._listener())
 
     async def _listener(self):
         while True:
-            sock, addr = await self._s.accept() # Accept a new connection.
-            # Receive data in small chunks.
-            buffer = []
-            while True:
-                d = await sock.recv(1024)
-                print(d)
-                if d:
-                    buffer.append(d)
-                elif d == b'exit':
-                    break
-                else:
-                    break
-            data = b''.join(buffer) # Splice into complete data.
-            r = self._dp.data_to_obj(data)
-            if r['code'] == 1:
-                client_obj = r['content']
-                asyncio.create_task(self._route.route[client_obj['route']](sock, addr, client_obj))
+            sock, addr = self._s.accept() # Accept a new connection.
+            route = Route(self._dp, sock, addr) # TCP route of this connection
+            print(addr)
+            # route.find()
+            task1 = asyncio.create_task(route.find())
+            asyncio.to_thread()
+            await asyncio.sleep(10)
+            # await task1
+            print(999)
 
     def _data_to_obj(self, data):
         '''
