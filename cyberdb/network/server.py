@@ -31,16 +31,7 @@ class DBServer:
             The server starts from the background.\n
                 max_con -- Maximum number of waiting connections.
         '''
-        if not password:
-            raise RuntimeError('The password cannot be empty.')
-        self._s.bind((host, port))
-        self._s.listen(max_con)
-        self._data['config']['host'] = host
-        self._data['config']['port'] = port
-        self._data['config']['password'] = password
-        self._secret = Secret(key=password) # Responsible for encrypting and decrypting objects.
-        # Run with a daemon thread.
-        t = threading.Thread(target=self.__listener)
+        t = threading.Thread(target=self.running, args=(host, port, password, max_con))
         t.daemon = True
         t.start()
 
@@ -60,19 +51,19 @@ class DBServer:
         secret = Secret(key=password) # Responsible for encrypting and decrypting objects.
         signature = Signature(salt=password.encode()) # for digital signature
         self._dp = datas.DataParsing(secret, signature) # Convert TCP data and encrypted objects to each other.
-        asyncio.run(self._listener())
+        asyncio.run(self._main())
+        # while True:
+        #     time.sleep(1000000)
+
+    async def _main(self):
+        await asyncio.gather(*[self._listener() for i in range(50)])
 
     async def _listener(self):
         while True:
             sock, addr = self._s.accept() # Accept a new connection.
             route = Route(self._dp, sock, addr) # TCP route of this connection
             print(addr)
-            # route.find()
-            task1 = asyncio.create_task(route.find())
-            asyncio.to_thread()
-            await asyncio.sleep(10)
-            # await task1
-            print(999)
+            await route.find()
 
     def _data_to_obj(self, data):
         '''
