@@ -32,6 +32,8 @@ class DBClient:
             'token': self.token
         }
         data = self._dp.obj_to_data(client_obj)
+        # while True:
+        #     self._s.send(data)
         self._s.send(data)
         self._s.send(b'exit')
         data = self._s.recv(1024)
@@ -42,3 +44,6 @@ class DBClient:
         client_obj = r['content']
         print(r)
         self._s.close()
+
+    def send(self, data):
+        pass

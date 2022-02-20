@@ -21,28 +21,26 @@ class Route:
             '/connect': self.connect
         }
 
-    async def find(self):
-        # Send Token to client.
-        server_obj = {
-            'code': 1,
-            'token': self.token
-        }
-        data = self._dp.obj_to_data(server_obj)
-        r = self._dp.data_to_obj(data)
-        self._sock.send(data)
+    async def recv(self):
         # Receive data in small chunks.
         buffer = []
         while True:
-            d = self._sock.recv(1024)
-            if d:
-                if b'exit' in d:
-                    buffer.append(d)
-                    d.rstrip(b'exit')
-                    break
-                buffer.append(d)
-            else:
+            d = self._sock.recv(4096)
+            if d == b'exit':
                 break
+            elif d:
+                buffer.append(d)
+                data = self._dp.obj_to_data({
+                    'code': 1
+                })
+                self._sock.send(data)
         data = b''.join(buffer) # Splice into complete data.
+        return data
+
+    async def find(self):
+        # Send Token to client.
+        # Receive data in small chunks.
+        data = await self.recv()
         r = self._dp.data_to_obj(data)
         if r['code'] != 1:
             print('Coding exception.')

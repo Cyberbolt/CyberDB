@@ -1,6 +1,6 @@
+import re
 import time
 import socket
-import pickle
 import asyncio
 import threading
 
@@ -24,6 +24,7 @@ class DBServer:
             },
             'db': None
         }
+        self.ips = {'127.0.0.1'} # ip whitelist
 
     def start(self, host: str='127.0.0.1', port: int=9980, password: str=None, 
     max_con: int=300):
@@ -52,8 +53,6 @@ class DBServer:
         signature = Signature(salt=password.encode()) # for digital signature
         self._dp = datas.DataParsing(secret, signature) # Convert TCP data and encrypted objects to each other.
         asyncio.run(self._main())
-        # while True:
-        #     time.sleep(1000000)
 
     async def _main(self):
         await asyncio.gather(*[self._listener() for i in range(50)])
@@ -62,56 +61,17 @@ class DBServer:
         while True:
             sock, addr = self._s.accept() # Accept a new connection.
             route = Route(self._dp, sock, addr) # TCP route of this connection
-            print(addr)
+            # Check if the ip is in the whitelist.
+            if self.ips:
+                if addr[0] not in self.ips:
+                    self._s.close()
+                    continue
             await route.find()
 
-    def _data_to_obj(self, data):
-        '''
-            Restore TCP encrypted data as an object.
-        '''
-        # Incorrect password will cause decryption to fail
-        try:
-            data = self._secret.decrypt(data)
-        except UnicodeDecodeError:
-            return {
-                'code': 2,
-                'errors-code': 'Incorrect password or data tampering.'
-            }
-        # Check if the dictionary is intact.
-        if type(data) != type(dict()):
-            return {
-                'code': 2,
-                'errors-code': 'Incorrect password or data tampering.'
-            }
-        elif not data.get('content') or not data.get('header').get('signature'):
-            return {
-                'code': 2,
-                'errors-code': 'Incorrect password or data tampering.'
-            }
-        # Verify signature
-        if self._signature.encrypt(data['content']) != data['header']['signature']:
-            return {
-                'code': 2,
-                'errors-code': 'Incorrect password or data tampering.'
-            }
-        obj = self._secret.decrypt(data['content'])
-        return {
-            'code': 1,
-            'content': obj
-        }
-
-    def _obj_to_data(self, obj):
-        '''
-            Convert object to TCP transmission data.
-        '''
-        data = {
-            'content': None,
-            'header': {
-                'signature': None
-            }
-        }
-        data['content'] = self._secret.encrypt(obj)
-        data['header']['signature'] = self._signature.encrypt(data['content'])
-        data = self._secret.encrypt(data)
-        return data
+    def set_ip_whitelist(self, ips: list):
+        for ip in ips:
+            if not re.match(r'((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}', 
+            ip):
+                raise RuntimeError('Please enter a valid ipv4 address.')
+        self.ips = set(ips)
 
