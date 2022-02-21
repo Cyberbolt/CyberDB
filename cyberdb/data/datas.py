@@ -80,6 +80,6 @@ class DataParsing:
         data['content'] = self._secret.encrypt(obj)
         data['header']['signature'] = self._signature.encrypt(data['content'])
         data = self._secret.encrypt(data)
-        return data
+        return data + b'exit'
 
 

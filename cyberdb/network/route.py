@@ -21,26 +21,23 @@ class Route:
             '/connect': self.connect
         }
 
-    async def recv(self):
+    async def read(self):
         # Receive data in small chunks.
         buffer = []
         while True:
-            d = self._writer.recv(4096)
-            if d == b'exit':
+            try:
+                block = await self._reader.readuntil(separator=b'exit')
+                buffer.append(block)
                 break
-            elif d:
-                buffer.append(d)
-                data = self._dp.obj_to_data({
-                    'code': 1
-                })
-                self._writer.send(data)
+            except asyncio.LimitOverrunError:
+                pass
         data = b''.join(buffer) # Splice into complete data.
         return data
 
     async def find(self):
         # Send Token to client.
         # Receive data in small chunks.
-        data = await self._reader.read(1024)
+        data = await self.read()
         r = self._dp.data_to_obj(data)
 
         if r['code'] != 1:
@@ -50,7 +47,8 @@ class Route:
         client_obj = r['content']
         
         print(client_obj)
-        await self.route[client_obj['route']]() # Go to the corresponding routing function.
+        # Go to the corresponding routing function.
+        await self.route[client_obj['route']]()
 
     async def connect(self):
         server_obj = {
