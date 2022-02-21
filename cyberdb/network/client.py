@@ -1,5 +1,4 @@
-import time
-import socket
+import asyncio
 
 from obj_encrypt import Secret
 
@@ -9,41 +8,37 @@ from ..extensions.signature import Signature
 
 class DBClient:
     
-    def __init__(self):
-        self._s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # def __init__(self):
+    #     self._s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    def connect(self, host: str='127.0.0.1', port: int=9980, password: str=None):
+    def connect(self, host: str='127.0.0.1', port: int=9980, password: 
+        str=None):
         if not password:
             raise RuntimeError('The password cannot be empty.')
         secret = Secret(key=password) # Responsible for encrypting and decrypting objects.
         signature = Signature(salt=password.encode()) # for digital signature
         self._dp = datas.DataParsing(secret, signature)
-        self._s.connect((host, port))
-        # Receive the Token of this session.
-        data = self._s.recv(1024)
-        r = self._dp.data_to_obj(data)
-        if r['code'] != 1:
-            self._s.close()
-            raise RuntimeError(r['errors-code'])
-        server_obj = r['content']
-        self.token = server_obj['token']
+        asyncio.run(self.confirm_the_connection(host, port))
+
+    async def confirm_the_connection(self, host: str='127.0.0.1', 
+        port: int=9980):
+        self._reader, self._writer = await asyncio.open_connection(
+        host, port)
+
         client_obj = {
-            'route': '/connect', # 0 means the last message.
-            'token': self.token
+            'route': '/connect'
         }
         data = self._dp.obj_to_data(client_obj)
-        # while True:
-        #     self._s.send(data)
-        self._s.send(data)
-        self._s.send(b'exit')
-        data = self._s.recv(1024)
+
+        self._writer.write(data)
+        data = await self._reader.read(1024)
         r = self._dp.data_to_obj(data)
         if r['code'] != 1:
-            self._s.close()
+            self._writer.close()
             raise RuntimeError(r['errors-code'])
         client_obj = r['content']
         print(r)
-        self._s.close()
+        self._writer.close()
 
     def send(self, data):
         pass
