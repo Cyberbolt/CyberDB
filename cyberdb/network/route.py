@@ -1,5 +1,4 @@
 import time
-import socket
 import asyncio
 
 from ..data import datas
@@ -41,7 +40,7 @@ class Route:
     async def find(self):
         # Send Token to client.
         # Receive data in small chunks.\
-        data = await self._reader.read(1024)
+        data = await self._reader.read()
         r = self._dp.data_to_obj(data)
 
         if r['code'] != 1:
