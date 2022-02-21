@@ -23,7 +23,6 @@ class DBClient:
 
     async def confirm_the_connection(self, host: str='127.0.0.1', 
         port: int=9980):
-        print(1)
         self._reader, self._writer = await asyncio.open_connection(
         host, port)
 
@@ -34,8 +33,7 @@ class DBClient:
         self._writer.write(data)
         await self._writer.drain()
 
-        print(2)
-        data = await self._reader.read()
+        data = await self._reader.read(1024)
         r = self._dp.data_to_obj(data)
         if r['code'] != 1:
             self._writer.close()
