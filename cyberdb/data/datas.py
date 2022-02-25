@@ -1,3 +1,8 @@
+'''
+    Data used for TCP transmission
+'''
+
+
 from obj_encrypt import Secret
 
 from ..extensions.signature import Signature
@@ -80,6 +85,7 @@ class DataParsing:
         data['content'] = self._secret.encrypt(obj)
         data['header']['signature'] = self._signature.encrypt(data['content'])
         data = self._secret.encrypt(data)
+        # B 'exit' is the delimiter of the TCP stream.
         return data + b'exit'
 
 

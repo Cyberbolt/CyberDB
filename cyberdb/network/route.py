@@ -1,6 +1,7 @@
 import time
 import asyncio
 
+from . import read
 from ..data import datas
 from ..extensions import nonce
 
@@ -10,34 +11,22 @@ class Route:
         TCP event mapping.
     '''
     
-    def __init__(self, dp: datas.DataParsing, addr, reader: 
+    def __init__(self, db: dict, dp: datas.DataParsing, reader: 
         asyncio.streams.StreamReader, writer: asyncio.streams.StreamWriter):
+        self._db = db
         self._dp = dp
-        self._addr = addr
         self._reader = reader
         self._writer = writer
-        # Generates 32 random strings. Each socket connection corresponds to a key.
-        self.route = {
-            '/connect': self.connect
+        # TCP Jump path
+        self._map = {
+            '/connect': self.connect,
+            '/exam': self.exam,
         }
-
-    async def read(self):
-        # Receive data in small chunks.
-        buffer = []
-        while True:
-            try:
-                block = await self._reader.readuntil(separator=b'exit')
-                buffer.append(block)
-                break
-            except asyncio.LimitOverrunError:
-                pass
-        data = b''.join(buffer) # Splice into complete data.
-        return data
 
     async def find(self):
         # Send Token to client.
         # Receive data in small chunks.
-        data = await self.read()
+        data = await read(self._reader, self._writer)
         r = self._dp.data_to_obj(data)
 
         if r['code'] != 1:
@@ -48,7 +37,7 @@ class Route:
         
         print(client_obj)
         # Go to the corresponding routing function.
-        await self.route[client_obj['route']]()
+        await self._map[client_obj['route']]()
 
     async def connect(self):
         server_obj = {
@@ -59,3 +48,6 @@ class Route:
         self._writer.write(data)
         await self._writer.drain()
         self._writer.close()
+
+    async def exam(self):
+        pass

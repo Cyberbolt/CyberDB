@@ -1,25 +1,16 @@
-import socket
-
-from ..extensions import nonce
+import asyncio
 
 
-class SComm:
-    '''
-        Server Communication
-        TCP communication between the client and the server.
-    '''
-
-    def __init__(self):
-        self.token = nonce.generate(32) # Generates 32 random strings.
-    
-    async def serve(self, sock: socket.socket, addr):
-        buffer = []
-        while True:
-            d = await sock.recv(1024)
-            print(d)
-            if d:
-                buffer.append(d)
-            elif d == b'exit':
-                break
-            else:
-                break
+async def read(reader: asyncio.streams.StreamReader, 
+    writer: asyncio.streams.StreamWriter):
+    # Receive data in small chunks.
+    buffer = []
+    while True:
+        try:
+            block = await reader.readuntil(separator=b'exit')
+            buffer.append(block)
+            break
+        except asyncio.LimitOverrunError:
+            block = await reader.read()
+    data = b''.join(buffer) # Splice into complete data.
+    return data
