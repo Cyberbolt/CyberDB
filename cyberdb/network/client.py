@@ -1,4 +1,4 @@
-import time
+import threading
 import asyncio
 
 from obj_encrypt import Secret
@@ -64,6 +64,10 @@ class DBClient:
 
     def connect(self, host: str='127.0.0.1', port: int=9980, password: 
         str=None):
+        '''
+            Connect to the CyberDB server via TCP, this method will run 
+            synchronously.
+        '''
         if not password:
             raise RuntimeError('The password cannot be empty.')
         
@@ -74,10 +78,18 @@ class DBClient:
         self._dp = datas.DataParsing(secret, signature)
         self._con_pool = ConPool(host, port)
 
-        asyncio.run(self.confirm_the_connection(host, port))
+        # Synchronously test whether the connection is successful.
+        self._result = None # Check whether the connection is successful
+        t = threading.Thread(target=asyncio.run, 
+            args=(self.confirm_the_connection(),))
+        t.daemon = True
+        t.start()
+        t.join()
+        if not self._result:
+            raise RuntimeError('Incorrect address, port or password for database.')
+        self._result = None
 
-    async def confirm_the_connection(self, host: str='127.0.0.1', 
-        port: int=9980):
+    async def confirm_the_connection(self):
         reader, writer = await self._con_pool.get()
 
         client_obj = {
@@ -93,9 +105,9 @@ class DBClient:
             writer.close()
             raise RuntimeError(r['errors-code'])
         server_obj = r['content']
-        print(r)
         
         self._con_pool.put(reader, writer)
+        self._result = server_obj
 
     def send(self, data):
         pass
