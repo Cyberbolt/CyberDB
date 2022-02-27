@@ -2,9 +2,9 @@ import asyncio
 
 from obj_encrypt import Secret
 
-from . import read
+from . import read, Con
 from ..data import datas
-from ..extensions import MyThread
+from ..extensions import MyThread, CyberDBError
 from ..extensions.signature import Signature
 
 
@@ -21,7 +21,8 @@ class ConPool:
         self._port = port
         self._connections = []
 
-    async def get(self) -> tuple[asyncio.streams.StreamReader, asyncio.streams.StreamWriter]:
+    async def get(self) -> tuple[asyncio.streams.StreamReader, 
+        asyncio.streams.StreamWriter]:
         '''
             Get the connection from the connection pool.
         '''
@@ -57,7 +58,7 @@ class ConPool:
         r = self._dp.data_to_obj(data)
         if r['code'] != 1:
             self._writer.close()
-            raise RuntimeError(r['errors-code'])
+            raise CyberDBError(r['errors-code'])
         server_obj = r['content']
         print(server_obj)
         return True
@@ -68,61 +69,34 @@ class CyberDict:
     def __init__(
         self, 
         table_name: str, 
-        con_pool: ConPool, 
         dp: datas.DataParsing,
-        this_con: list[asyncio.streams.StreamReader, 
-            asyncio.streams.StreamWriter]
+        con: Con
     ):
         self._table_name = table_name
-        self._con_pool = con_pool
         self._dp = dp
-        self._reader, self._writer = this_con
-
-    async def connect(self):
-        '''
-            Get a connection from the connection pool.
-        '''
-        self._reader, self._writer = await self._con_pool.get()
-
-    async def check_connection(self):
-        # Automatic database connection for the first time.
-        if not self._writer:
-            self._reader, self._writer = await self._con_pool.get()
-            return
-
-        client_obj = {
-            'route': '/connect'
-        }
-        data = self._dp.obj_to_data(client_obj)
-        self._writer.write(data)
-        await self._writer.drain()
-
-        data = await read(self._reader, self._writer)
-        r = self._dp.data_to_obj(data)
-        if r['code'] != 1:
-            self._writer.close()
-            raise RuntimeError(r['errors-code'])
-        server_obj = r['content']
+        self._con = con
         
     async def __getitem__(self, key):
+        reader, writer = self._con.reader, self._con.writer
+
         client_obj = {
             'route': '/{}/get_key',
             'key': key
         }
         data = self._dp.obj_to_data(client_obj)
-        self._writer.write(data)
-        await self._writer.drain()
+        writer.write(data)
+        await writer.drain()
 
-        data = await read(self._reader, self._writer)
+        data = await read(reader, writer)
         r = self._dp.data_to_obj(data)
         if r['code'] != 1:
-            self._writer.close()
-            raise RuntimeError(r['errors-code'])
+            writer.close()
+            raise CyberDBError(r['errors-code'])
         server_obj = r['content']
         return server_obj
 
 
-class Data:
+class Proxy:
     '''
         Database instance per session
 
@@ -130,13 +104,40 @@ class Data:
         coroutine.
     '''
 
-    def __init__(self, con_pool: ConPool, dp: datas.DataParsing, 
-        this_con: list[asyncio.streams.StreamReader, 
-                    asyncio.streams.StreamWriter]):
+    def __init__(self, con_pool: ConPool, dp: datas.DataParsing):
         self._con_pool = con_pool
         self._dp = dp
-        # TCP connection for this instance
-        self._con = this_con
+        # The connection used by the proxy, the first is the reader and the 
+        # second is the writer.
+        self._con = Con()
+
+    async def connect(self):
+        '''
+            Get the latest connection from the connection pool.
+
+            This method does not necessarily create a new connection, if the 
+            connection of the connection pool is available, it will be 
+            obtained directly.
+        '''
+        # If the proxy already has a connection, the connection will be 
+        # returned to the connection pool first.
+        if self._con.reader != None and self._con.writer != None:
+            self._con_pool.put(self._con.reader, self._con.writer)
+            
+        reader, writer = await self._con_pool.get()
+        self._con.reader = reader
+        self._con.writer = writer
+
+    async def close(self):
+        '''
+            Return the connection to the connection pool.
+        '''
+        if self._con.reader == None or self._con == None:
+            raise CyberDBError('The connection could not be closed, the proxy has not acquired a connection.')
+
+        self._con_pool.put(self._con.reader, self._con.writer)
+        self._con.reader = None
+        self._con.writer = None
 
 
 class Client:
@@ -149,21 +150,12 @@ class Client:
         self._con_pool = con_pool
         self._dp = dp
 
-    def get_data(self):
+    def get_data(self) -> Proxy:
         '''
-            get database table
+            Get proxy data.
         '''
-        async def task():
-            reader, writer = await self._con_pool.get()
-            return reader, writer
-
-        t = MyThread(target=asyncio.run, args=(task(),))
-        t.daemon = True
-        t.join()
-        reader, writer = t.get_result()
-
-        data = Data(self._con_pool, self._dp, [reader, writer])
-        return data
+        proxy = Proxy(self._con_pool, self._dp)
+        return proxy
 
 
 def connect(host: str='127.0.0.1', port: int=9980, password: 
@@ -219,9 +211,5 @@ async def confirm_the_connection(con_pool, dp) -> dict:
     
     con_pool.put(reader, writer)
     return server_obj
-
-
-def check_the_connection(con_pool, dp):
-    pass
 
 

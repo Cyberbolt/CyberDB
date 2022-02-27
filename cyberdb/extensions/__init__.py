@@ -15,3 +15,7 @@ class MyThread(Thread):
             return self.result
         except Exception:
             return None
+
+
+class CyberDBError(RuntimeError):
+    pass

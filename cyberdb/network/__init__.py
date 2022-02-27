@@ -1,6 +1,20 @@
 import asyncio
 
 
+class Con:
+    '''
+        Asyncio TCP connection data type
+    '''
+
+    def __init__(
+        self, 
+        reader: asyncio.streams.StreamReader=None, 
+        writer: asyncio.streams.StreamWriter=None
+    ):
+        self.reader = reader
+        self.writer = writer
+
+
 async def read(reader: asyncio.streams.StreamReader, 
     writer: asyncio.streams.StreamWriter):
     # Receive data in small chunks.
