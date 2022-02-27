@@ -4,6 +4,7 @@ import threading
 
 from obj_encrypt import Secret
 
+from . import Con
 from .route import Route
 from ..data import datas
 from ..extensions.signature import Signature
@@ -82,7 +83,8 @@ class Server:
                 return
 
         # TCP route of this connection
-        route = Route(self._data['db'], self._dp, reader, writer)
+        con = Con(reader, writer)
+        route = Route(self._data['db'], self._dp, con)
         # If the timeout is set, it will automatically disconnect.
         if self._data['config']['timeout'] == 0:
             await route.find()
