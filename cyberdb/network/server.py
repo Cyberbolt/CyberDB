@@ -24,14 +24,14 @@ class Server:
         self.ips = {'127.0.0.1'} # ip whitelist
 
     def start(self, host: str='127.0.0.1', port: int=9980, 
-        password: str=None, max_con: int=300):
+        password: str=None, max_con: int=500, timeout: int=0):
         '''
             The server starts from the background.
 
                 max_con -- Maximum number of waiting connections.
         '''
         t = threading.Thread(target=self.run, 
-            args=(host, port, password, max_con))
+            args=(host, port, password, max_con, timeout))
         t.daemon = True
         t.start()
 
@@ -66,33 +66,60 @@ class Server:
             self._listener, self._data['config']['host'], 
             self._data['config']['port'], 
             limit=2 ** 16, # 64 KiB
+            # the maximum number of queued connections
             backlog=self._data['config']['max_con']
         )
-
+        
+        # async with server:
+        #     await server.serve_forever()
+        
+        async def task():
+            '''
+                If the timeout is set, it will automatically disconnect.
+            '''
+            while True:
+                async with server:
+                    if self._data['config']['timeout'] == 0:
+                        await server.serve_forever()
+                    else:
+                        try:
+                            await asyncio.wait_for(server.serve_forever(), 
+                                timeout=self._data['config']['timeout'])
+                        except asyncio.TimeoutError:
+                            pass
+        
         async with server:
             await server.serve_forever()
 
     async def _listener(self, reader: asyncio.streams.StreamReader, 
         writer: asyncio.streams.StreamWriter):
+        '''
+            This method is entered as long as a TCP connection is established,
+             even if no data is sent.
+        '''
+
         addr = writer.get_extra_info('peername')
         
         # Check if the ip is in the whitelist.
         if self.ips:
             if addr[0] not in self.ips:
+                print('The request for {}, the ip is not in the whitelist.'.format(addr[0]))
                 writer.close()
                 return
 
         # TCP route of this connection
         con = Con(reader, writer)
         route = Route(self._data['db'], self._dp, con)
+
         # If the timeout is set, it will automatically disconnect.
         if self._data['config']['timeout'] == 0:
             await route.find()
         else:
             try:
-                asyncio.wait_for(route.find(), 
+                await asyncio.wait_for(route.find(), 
                     timeout=self._data['config']['timeout'])
             except asyncio.TimeoutError:
+                print('{} connection timed out.'.format(addr[0]))
                 writer.close()
 
     def set_ip_whitelist(self, ips: list):

@@ -50,7 +50,6 @@ class Route:
         data = self._dp.obj_to_data(server_obj)
         writer.write(data)
         await writer.drain()
-        writer.close()
 
     async def exam(self):
         pass

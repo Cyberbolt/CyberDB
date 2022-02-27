@@ -188,7 +188,7 @@ def connect(host: str='127.0.0.1', port: int=9980, password:
     return client
 
 
-async def confirm_the_connection(con_pool, dp) -> dict:
+async def confirm_the_connection(con_pool: ConPool, dp) -> dict:
     '''
         The connection is detected when the database connects for the first 
         time.
