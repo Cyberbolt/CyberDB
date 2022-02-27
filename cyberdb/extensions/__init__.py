@@ -1,0 +1,17 @@
+from threading import Thread
+
+
+class MyThread(Thread):
+    def __init__(self, target, args):
+        super(MyThread, self).__init__()
+        self.target = target
+        self.args = args
+
+    def run(self):
+        self.result = self.target(*self.args)
+
+    def get_result(self):
+        try:
+            return self.result
+        except Exception:
+            return None

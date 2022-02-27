@@ -9,7 +9,7 @@ from ..data import datas
 from ..extensions.signature import Signature
 
 
-class DBServer:
+class Server:
 
     def __init__(self):
         self._data = {

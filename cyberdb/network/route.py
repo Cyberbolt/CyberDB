@@ -28,10 +28,11 @@ class Route:
         # Receive data in small chunks.
         data = await read(self._reader, self._writer)
         r = self._dp.data_to_obj(data)
-
+        
         if r['code'] != 1:
-            print('Coding exception.')
+            print(r['errors-code'])
             self._writer.close()
+            return
         
         client_obj = r['content']
         

@@ -1,11 +1,14 @@
-import threading
 import asyncio
 
 from obj_encrypt import Secret
 
 from . import read
 from ..data import datas
+from ..extensions import MyThread
 from ..extensions.signature import Signature
+
+
+result = None # Check whether the connection is successful
 
 
 class ConPool:
@@ -18,7 +21,7 @@ class ConPool:
         self._port = port
         self._connections = []
 
-    async def get(self):
+    async def get(self) -> tuple[asyncio.streams.StreamReader, asyncio.streams.StreamWriter]:
         '''
             Get the connection from the connection pool.
         '''
@@ -60,54 +63,165 @@ class ConPool:
         return True
 
 
-class DBClient:
+class CyberDict:
 
-    def connect(self, host: str='127.0.0.1', port: int=9980, password: 
-        str=None):
+    def __init__(
+        self, 
+        table_name: str, 
+        con_pool: ConPool, 
+        dp: datas.DataParsing,
+        this_con: list[asyncio.streams.StreamReader, 
+            asyncio.streams.StreamWriter]
+    ):
+        self._table_name = table_name
+        self._con_pool = con_pool
+        self._dp = dp
+        self._reader, self._writer = this_con
+
+    async def connect(self):
         '''
-            Connect to the CyberDB server via TCP, this method will run 
-            synchronously.
+            Get a connection from the connection pool.
         '''
-        if not password:
-            raise RuntimeError('The password cannot be empty.')
-        
-        # Responsible for encrypting and decrypting objects.
-        secret = Secret(key=password)
-        # for digital signature
-        signature = Signature(salt=password.encode())
-        self._dp = datas.DataParsing(secret, signature)
-        self._con_pool = ConPool(host, port)
+        self._reader, self._writer = await self._con_pool.get()
 
-        # Synchronously test whether the connection is successful.
-        self._result = None # Check whether the connection is successful
-        t = threading.Thread(target=asyncio.run, 
-            args=(self.confirm_the_connection(),))
-        t.daemon = True
-        t.start()
-        t.join()
-        if not self._result:
-            raise RuntimeError('Incorrect address, port or password for database.')
-        self._result = None
-
-    async def confirm_the_connection(self):
-        reader, writer = await self._con_pool.get()
+    async def check_connection(self):
+        # Automatic database connection for the first time.
+        if not self._writer:
+            self._reader, self._writer = await self._con_pool.get()
+            return
 
         client_obj = {
             'route': '/connect'
         }
         data = self._dp.obj_to_data(client_obj)
-        writer.write(data)
-        await writer.drain()
+        self._writer.write(data)
+        await self._writer.drain()
 
-        data = await read(reader, writer)
+        data = await read(self._reader, self._writer)
         r = self._dp.data_to_obj(data)
         if r['code'] != 1:
-            writer.close()
+            self._writer.close()
             raise RuntimeError(r['errors-code'])
         server_obj = r['content']
         
-        self._con_pool.put(reader, writer)
-        self._result = server_obj
+    async def __getitem__(self, key):
+        client_obj = {
+            'route': '/{}/get_key',
+            'key': key
+        }
+        data = self._dp.obj_to_data(client_obj)
+        self._writer.write(data)
+        await self._writer.drain()
 
-    def send(self, data):
-        pass
+        data = await read(self._reader, self._writer)
+        r = self._dp.data_to_obj(data)
+        if r['code'] != 1:
+            self._writer.close()
+            raise RuntimeError(r['errors-code'])
+        server_obj = r['content']
+        return server_obj
+
+
+class Data:
+    '''
+        Database instance per session
+
+        This object is not thread safe, please regenerate in each thread or 
+        coroutine.
+    '''
+
+    def __init__(self, con_pool: ConPool, dp: datas.DataParsing, 
+        this_con: list[asyncio.streams.StreamReader, 
+                    asyncio.streams.StreamWriter]):
+        self._con_pool = con_pool
+        self._dp = dp
+        # TCP connection for this instance
+        self._con = this_con
+
+
+class Client:
+    '''
+        This object blocks execution and is recommended to be used as a 
+        global variable instead of running in an async function.
+    '''
+    
+    def __init__(self, con_pool: ConPool, dp: datas.DataParsing):
+        self._con_pool = con_pool
+        self._dp = dp
+
+    def get_data(self):
+        '''
+            get database table
+        '''
+        async def task():
+            reader, writer = await self._con_pool.get()
+            return reader, writer
+
+        t = MyThread(target=asyncio.run, args=(task(),))
+        t.daemon = True
+        t.join()
+        reader, writer = t.get_result()
+
+        data = Data(self._con_pool, self._dp, [reader, writer])
+        return data
+
+
+def connect(host: str='127.0.0.1', port: int=9980, password: 
+    str=None) -> Client:
+    '''
+        Connect to the CyberDB server via TCP, this method will run 
+        synchronously.
+    '''
+    if not password:
+        raise RuntimeError('The password cannot be empty.')
+
+    con_pool = ConPool(host, port)
+    # Responsible for encrypting and decrypting objects.
+    secret = Secret(key=password)
+    # for digital signature
+    signature = Signature(salt=password.encode())
+    dp = datas.DataParsing(secret, signature)
+
+    # Synchronously test whether the connection is successful.
+    t = MyThread(target=asyncio.run, 
+        args=(confirm_the_connection(con_pool, dp), ) )
+    t.daemon = True
+    t.start()
+    t.join()
+    result = t.get_result()
+    if not result:
+        raise RuntimeError('Incorrect address, port or password for database.')
+    
+    client = Client(con_pool, dp)
+    return client
+
+
+async def confirm_the_connection(con_pool, dp) -> dict:
+    '''
+        The connection is detected when the database connects for the first 
+        time.
+    '''
+    reader, writer = await con_pool.get()
+
+    client_obj = {
+        'route': '/connect'
+    }
+    data = dp.obj_to_data(client_obj)
+    writer.write(data)
+    await writer.drain()
+
+    data = await read(reader, writer)
+    r = dp.data_to_obj(data)
+    if r['code'] != 1:
+        writer.close()
+        raise RuntimeError(r['errors-code'])
+    server_obj = r['content']
+    
+    con_pool.put(reader, writer)
+    return server_obj
+
+
+def check_the_connection(con_pool, dp):
+    pass
+
+
