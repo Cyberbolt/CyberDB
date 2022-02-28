@@ -47,21 +47,26 @@ class ConPool:
 
     async def exam(self, reader: asyncio.streams.StreamReader, 
         writer: asyncio.streams.StreamWriter):
-        client_obj = {
-            'route': '/exam'
-        }
-        data = self._dp.obj_to_data(client_obj)
-        writer.write(data)
-        await writer.drain()
+        '''
+            Check if the connection is valid.
+        '''
+        try:
+            client_obj = {
+                'route': '/exam'
+            }
+            data = self._dp.obj_to_data(client_obj)
+            writer.write(data)
+            await writer.drain()
 
-        data = await reader.readuntil(separator=b'exit')
-        r = self._dp.data_to_obj(data)
-        if r['code'] != 1:
-            self._writer.close()
-            raise CyberDBError(r['errors-code'])
-        server_obj = r['content']
-        print(server_obj)
-        return True
+            data = await reader.readuntil(separator=b'exit')
+            r = self._dp.data_to_obj(data)
+            if r['code'] != 1:
+                self._writer.close()
+                raise CyberDBError(r['errors-code'])
+            server_obj = r['content']
+            return True
+        except:
+            return False
 
 
 class CyberDict:
@@ -181,35 +186,50 @@ def connect(host: str='127.0.0.1', port: int=9980, password:
     t.start()
     t.join()
     result = t.get_result()
-    if not result:
-        raise RuntimeError('Incorrect address, port or password for database.')
-    
+    if result['code'] == 0:
+        raise result['Exception']
+
     client = Client(con_pool, dp)
     return client
 
 
-async def confirm_the_connection(con_pool: ConPool, dp) -> dict:
+async def confirm_the_connection(con_pool: ConPool, dp: datas.DataParsing) -> \
+    dict:
     '''
         The connection is detected when the database connects for the first 
         time.
     '''
-    reader, writer = await con_pool.get()
+    try:
+        reader, writer = await con_pool.get()
 
-    client_obj = {
-        'route': '/connect'
-    }
-    data = dp.obj_to_data(client_obj)
-    writer.write(data)
-    await writer.drain()
+        client_obj = {
+            'route': '/connect'
+        }
+        data = dp.obj_to_data(client_obj)
+        writer.write(data)
+        await writer.drain()
 
-    data = await read(reader, writer)
-    r = dp.data_to_obj(data)
-    if r['code'] != 1:
-        writer.close()
-        raise RuntimeError(r['errors-code'])
-    server_obj = r['content']
-    
-    con_pool.put(reader, writer)
-    return server_obj
+        data = await read(reader, writer)
+        r = dp.data_to_obj(data)
+        if r['code'] != 1:
+            writer.close()
+            raise CyberDBError(r['errors-code'])
+        server_obj = r['content']
+        
+        con_pool.put(reader, writer)
+        return {
+            'code': 1,
+            'content': server_obj
+        }
+    except (ConnectionRefusedError, CyberDBError) as e:
+        return {
+            'code': 0,
+            'Exception': e
+        }
+    except Exception as e:
+        return {
+            'code': 0,
+            'Exception': CyberDBError('Incorrect address, port or password for database.')
+        }
 
 
