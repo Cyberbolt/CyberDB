@@ -2,7 +2,7 @@ import asyncio
 
 from obj_encrypt import Secret
 
-from . import read, Con
+from . import read, Con, Stream
 from ..data import datas
 from ..extensions import MyThread, CyberDBError
 from ..extensions.signature import Signature
@@ -16,9 +16,10 @@ class ConPool:
         Maintain connection pool.
     '''
     
-    def __init__(self, host: str, port: str):
+    def __init__(self, host: str, port: str, dp: datas.DataParsing):
         self._host = host
         self._port = port
+        self._dp = dp
         self._connections = []
 
     async def get(self) -> tuple[asyncio.streams.StreamReader, 
@@ -33,40 +34,40 @@ class ConPool:
                 reader, writer = self._connections.pop(0)
                 if await self.exam(reader, writer):
                     return reader, writer
-        else:
-            reader, writer = await asyncio.open_connection(
-            self._host, self._port)
-            return reader, writer
+
+        reader, writer = await asyncio.open_connection(
+        self._host, self._port)
+        return reader, writer
 
     def put(self, reader: asyncio.streams.StreamReader, 
         writer: asyncio.streams.StreamWriter):
         '''
             Return the connection to the connection pool.
         '''
-        self._connections.append({'con': (reader, writer)})
+        self._connections.append((reader, writer))
 
     async def exam(self, reader: asyncio.streams.StreamReader, 
         writer: asyncio.streams.StreamWriter):
         '''
             Check if the connection is valid.
         '''
-        try:
-            client_obj = {
-                'route': '/exam'
-            }
-            data = self._dp.obj_to_data(client_obj)
-            writer.write(data)
-            await writer.drain()
+        # try:
+        client_obj = {
+            'route': '/connect'
+        }
+        data = self._dp.obj_to_data(client_obj)
+        writer.write(data)
+        await writer.drain()
 
-            data = await reader.readuntil(separator=b'exit')
-            r = self._dp.data_to_obj(data)
-            if r['code'] != 1:
-                self._writer.close()
-                raise CyberDBError(r['errors-code'])
-            server_obj = r['content']
-            return True
-        except:
-            return False
+        data = await reader.readuntil(separator=b'exit')
+        r = self._dp.data_to_obj(data)
+        if r['code'] != 1:
+            self._writer.close()
+            raise CyberDBError(r['errors-code'])
+        server_obj = r['content']
+        return True
+        # except:
+        #     return False
 
 
 class CyberDict:
@@ -80,25 +81,39 @@ class CyberDict:
         self._table_name = table_name
         self._dp = dp
         self._con = con
+        self._route = '/cyberdict'
         
     async def __getitem__(self, key):
-        reader, writer = self._con.reader, self._con.writer
+        stream = Stream(self._con.reader, self._con.writer, self._dp)
 
         client_obj = {
-            'route': '/{}/get_key',
+            'route': self._route + '/getitem',
+            'table_name': self._table_name,
             'key': key
         }
-        data = self._dp.obj_to_data(client_obj)
-        writer.write(data)
-        await writer.drain()
+        
+        await stream.write(client_obj)
 
-        data = await read(reader, writer)
-        r = self._dp.data_to_obj(data)
-        if r['code'] != 1:
-            writer.close()
-            raise CyberDBError(r['errors-code'])
-        server_obj = r['content']
-        return server_obj
+        server_obj = await stream.read()
+        if server_obj['code'] == 0:
+            self._con.writer.close()
+            raise server_obj['Exception']
+
+        return server_obj['content']
+
+
+class CyberList:
+
+    def __init__(
+        self, 
+        table_name: str, 
+        dp: datas.DataParsing,
+        con: Con
+    ):
+        self._table_name = table_name
+        self._dp = dp
+        self._con = con
+        self._route = '/cyberlist'
 
 
 class Proxy:
@@ -144,6 +159,56 @@ class Proxy:
         self._con.reader = None
         self._con.writer = None
 
+    async def create_cyberdict(self, table_name: str, content: dict={}):
+        if type(table_name) != type(''):
+            raise CyberDBError('Please use str for the table name.')
+        if type(content) != type(dict()):
+            raise CyberDBError('The input database table type is not a Python dictionary.')
+
+        reader, writer = self._con.reader, self._con.writer
+        client_obj = {
+            'route': '/create_cyberdict',
+            'table_name': table_name,
+            'content': content
+        }
+        data = self._dp.obj_to_data(client_obj)
+        writer.write(data)
+        await writer.drain()
+
+        data = await read(reader, writer)
+        r = self._dp.data_to_obj(data)
+        if r['code'] != 1:
+            writer.close()
+            raise CyberDBError(r['errors-code'])
+
+        server_obj = r['content']
+        if server_obj['code'] == 0:
+            raise CyberDBError('Duplicate table names already exist!')
+
+        return server_obj
+
+    async def get_cyberdict(self, table_name: str) -> CyberDict:
+        '''
+            Get the network object of the table from the database.
+        '''
+        if type(table_name) != type(''):
+            raise CyberDBError('Please use str for the table name.')
+        
+        stream = Stream(self._con.reader, self._con.writer, self._dp)
+
+        client_obj = {
+            'route': '/exam_cyberdict',
+            'table_name': table_name
+        }
+        await stream.write(client_obj)
+
+        server_obj = await stream.read()
+        if server_obj['code'] == 0:
+            raise CyberDBError('{} table does not exist.'.format(table_name))
+        else:
+            table = CyberDict(table_name, self._dp, self._con)
+            return table
+
 
 class Client:
     '''
@@ -155,7 +220,7 @@ class Client:
         self._con_pool = con_pool
         self._dp = dp
 
-    def get_data(self) -> Proxy:
+    def get_proxy(self) -> Proxy:
         '''
             Get proxy data.
         '''
@@ -172,12 +237,12 @@ def connect(host: str='127.0.0.1', port: int=9980, password:
     if not password:
         raise RuntimeError('The password cannot be empty.')
 
-    con_pool = ConPool(host, port)
     # Responsible for encrypting and decrypting objects.
     secret = Secret(key=password)
     # for digital signature
     signature = Signature(salt=password.encode())
     dp = datas.DataParsing(secret, signature)
+    con_pool = ConPool(host, port, dp)
 
     # Synchronously test whether the connection is successful.
     t = MyThread(target=asyncio.run, 
@@ -216,7 +281,8 @@ async def confirm_the_connection(con_pool: ConPool, dp: datas.DataParsing) -> \
             raise CyberDBError(r['errors-code'])
         server_obj = r['content']
         
-        con_pool.put(reader, writer)
+        writer.close()
+        # con_pool.put(reader, writer)
         return {
             'code': 1,
             'content': server_obj

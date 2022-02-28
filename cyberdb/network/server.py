@@ -4,7 +4,7 @@ import threading
 
 from obj_encrypt import Secret
 
-from . import Con
+from . import Con, Stream
 from .route import Route
 from ..data import datas
 from ..extensions.signature import Signature
@@ -19,7 +19,7 @@ class Server:
                 'port': None,
                 'password': None
             },
-            'db': None
+            'db': {}
         }
         self.ips = {'127.0.0.1'} # ip whitelist
 
@@ -108,8 +108,8 @@ class Server:
                 return
 
         # TCP route of this connection
-        con = Con(reader, writer)
-        route = Route(self._data['db'], self._dp, con)
+        stream = Stream(reader, writer, self._dp)
+        route = Route(self._data['db'], self._dp, stream)
 
         # If the timeout is set, it will automatically disconnect.
         if self._data['config']['timeout'] == 0:

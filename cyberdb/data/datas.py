@@ -3,9 +3,12 @@
 '''
 
 
+import pickle
+
 from obj_encrypt import Secret
 
 from ..extensions.signature import Signature
+from ..extensions import CyberDBError
 
 
 def generate_client_obj():
@@ -82,7 +85,10 @@ class DataParsing:
                 'signature': None
             }
         }
-        data['content'] = self._secret.encrypt(obj)
+        try:
+            data['content'] = self._secret.encrypt(obj)
+        except pickle.PickleError as e:
+            raise CyberDBError('CyberDB does not support this data type.')
         data['header']['signature'] = self._signature.encrypt(data['content'])
         data = self._secret.encrypt(data)
         # B 'exit' is the delimiter of the TCP stream.
