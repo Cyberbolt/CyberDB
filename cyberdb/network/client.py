@@ -52,19 +52,13 @@ class ConPool:
             Check if the connection is valid.
         '''
         # try:
+        stream = Stream(reader, writer, self._dp)
         client_obj = {
             'route': '/connect'
         }
-        data = self._dp.obj_to_data(client_obj)
-        writer.write(data)
-        await writer.drain()
+        await stream.write(client_obj)
 
-        data = await reader.readuntil(separator=b'exit')
-        r = self._dp.data_to_obj(data)
-        if r['code'] != 1:
-            self._writer.close()
-            raise CyberDBError(r['errors-code'])
-        server_obj = r['content']
+        server_obj = await stream.read()
         return True
         # except:
         #     return False
@@ -266,23 +260,17 @@ async def confirm_the_connection(con_pool: ConPool, dp: datas.DataParsing) -> \
     '''
     try:
         reader, writer = await con_pool.get()
+        stream = Stream(reader, writer, dp)
 
         client_obj = {
             'route': '/connect'
         }
-        data = dp.obj_to_data(client_obj)
-        writer.write(data)
-        await writer.drain()
+        await stream.write(client_obj)
 
-        data = await read(reader, writer)
-        r = dp.data_to_obj(data)
-        if r['code'] != 1:
-            writer.close()
-            raise CyberDBError(r['errors-code'])
-        server_obj = r['content']
+        server_obj = await stream.read()
         
         writer.close()
-        # con_pool.put(reader, writer)
+        
         return {
             'code': 1,
             'content': server_obj

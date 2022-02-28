@@ -54,7 +54,7 @@ class Route:
     async def create_cyberdict(self):
         table_name = self._client_obj['table_name']
         content = self._client_obj['content']
-        if not self._db.get(table_name):
+        if self._db.get(table_name) == None:
             # New CyberDict
             self._db[table_name] = content
             # Create table successfully.
@@ -75,7 +75,7 @@ class Route:
         '''
         
         table_name = self._client_obj['table_name']
-        if self._db.get(table_name):
+        if self._db.get(table_name) != None:
             server_obj = {
                 'code': 1
             }
