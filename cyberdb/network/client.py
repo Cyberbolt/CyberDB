@@ -159,23 +159,16 @@ class Proxy:
         if type(content) != type(dict()):
             raise CyberDBError('The input database table type is not a Python dictionary.')
 
-        reader, writer = self._con.reader, self._con.writer
+        stream = Stream(self._con.reader, self._con.writer, self._dp)
         client_obj = {
             'route': '/create_cyberdict',
             'table_name': table_name,
             'content': content
         }
-        data = self._dp.obj_to_data(client_obj)
-        writer.write(data)
-        await writer.drain()
+        await stream.write(client_obj)
 
-        data = await read(reader, writer)
-        r = self._dp.data_to_obj(data)
-        if r['code'] != 1:
-            writer.close()
-            raise CyberDBError(r['errors-code'])
+        server_obj = await stream.read()
 
-        server_obj = r['content']
         if server_obj['code'] == 0:
             raise CyberDBError('Duplicate table names already exist!')
 
