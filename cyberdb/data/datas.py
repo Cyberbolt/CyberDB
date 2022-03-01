@@ -44,13 +44,7 @@ class DataParsing:
             Restore TCP encrypted data as an object.
         '''
         # Incorrect password will cause decryption to fail
-        try:
-            data = self._secret.decrypt(data)
-        except UnicodeDecodeError:
-            return {
-                'code': 2,
-                'errors-code': errors_code[2]
-            }
+        data = pickle.loads(data)
         # Check if the dictionary is intact.
         if type(data) != type(dict()):
             return {
@@ -58,7 +52,7 @@ class DataParsing:
                 'errors-code': errors_code[2]
             }
         elif type(data.get('content')) != type(b'') or not data.get('header') or not \
-        data.get('header').get('signature'):
+            data.get('header').get('signature'):
             return {
                 'code': 2,
                 'errors-code': errors_code[2]
@@ -90,8 +84,8 @@ class DataParsing:
         except pickle.PickleError as e:
             raise CyberDBError('CyberDB does not support this data type.')
         data['header']['signature'] = self._signature.encrypt(data['content'])
-        data = self._secret.encrypt(data)
-        
+        # data = self._secret.encrypt(data)
+        data = pickle.dumps(data)
         return data
 
 

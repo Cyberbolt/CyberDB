@@ -214,6 +214,9 @@ class Client:
         proxy = Proxy(self._con_pool, self._dp)
         return proxy
 
+    def check_connection_pool(self):
+        pass
+
 
 def connect(host: str='127.0.0.1', port: int=9980, password: 
     str=None) -> Client:
@@ -273,10 +276,10 @@ async def confirm_the_connection(con_pool: ConPool, dp: datas.DataParsing) -> \
             'code': 0,
             'Exception': e
         }
-    except Exception as e:
-        return {
-            'code': 0,
-            'Exception': CyberDBError('Incorrect address, port or password for database.')
-        }
+    # except Exception as e:
+    #     return {
+    #         'code': 0,
+    #         'Exception': CyberDBError('Incorrect address, port or password for database.')
+    #     }
 
 

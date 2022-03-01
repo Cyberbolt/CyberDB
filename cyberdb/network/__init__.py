@@ -1,7 +1,8 @@
 import asyncio
 
 from ..data import datas
-from ..extensions import CyberDBError, DisconCyberDBError
+from ..extensions import CyberDBError, DisconCyberDBError, \
+    WrongPasswordCyberDBError
 
 
 class Con:
@@ -59,8 +60,8 @@ class Stream:
         buffer = []
         while True:
             try:
-                block = await reader.readuntil(separator=b'\n')
-                block = block.rstrip(b'\n')
+                block = await reader.readuntil(separator=b'\nnnn')
+                block = block.rstrip(b'\nnnn')
                 if block == b'exit':
                     break
                 buffer.append(block)
@@ -71,12 +72,12 @@ class Stream:
         r = self._dp.data_to_obj(data)
         if r['code'] != 1:
             writer.close()
-            raise CyberDBError(r['errors-code'])
+            raise WrongPasswordCyberDBError(r['errors-code'])
 
         return r['content']
 
     async def write(self, obj: dict):
-        reader, writer = self._reader, self._writer
+        writer = self._writer
 
         data = self._dp.obj_to_data(obj)
         
@@ -84,15 +85,13 @@ class Stream:
         left = 0
         i = 2048
         while i < len(data):
-            writer.write(data[left:i] + b'\n')
+            writer.write(data[left:i] + b'\nnnn')
             await writer.drain()
             left = i
             i += 2048
         
-        writer.write(data[left:i] + b'\n' + b'exit\n')
+        writer.write(data[left:i] + b'\nnnn' + b'exit\nnnn')
         await writer.drain()
-        # for i in range(0, len(data), 2048):
-
 
     def get_addr(self):
         return self._writer.get_extra_info('peername')

@@ -7,7 +7,7 @@ from obj_encrypt import Secret
 from . import Con, Stream
 from .route import Route
 from ..data import datas
-from ..extensions import DisconCyberDBError
+from ..extensions import DisconCyberDBError, WrongPasswordCyberDBError
 from ..extensions.signature import Signature
 
 
@@ -114,9 +114,13 @@ class Server:
                     if self._data['config']['print_log']:
                         print('{}:{}  connection timed out.'.format(addr[0], addr[1]))
                     writer.close()
+
         except DisconCyberDBError:
             if self._data['config']['print_log']:
                 print('{}:{}  Client disconnected.'.format(addr[0], addr[1]))
+        except WrongPasswordCyberDBError:
+            if self._data['config']['print_log']:
+                print('{}:{}  The password entered by the client is incorrect.'.format(addr[0], addr[1]))
 
     def set_ip_whitelist(self, ips: list):
         for ip in ips:

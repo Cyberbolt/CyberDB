@@ -37,7 +37,7 @@ class Route:
         while True:
             client_obj = await self._stream.read()
             if self._print_log:
-                print('{}  {}'.format(addr, client_obj))
+                print('{}  {}'.format(addr, client_obj['route']))
 
             # Jump to the specified function by routing.
             routes = client_obj['route'].split('/')[1:]

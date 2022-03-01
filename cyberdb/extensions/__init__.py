@@ -30,3 +30,6 @@ class DisconCyberDBError(CyberDBError):
     '''
     pass
 
+
+class WrongPasswordCyberDBError(CyberDBError):
+    pass

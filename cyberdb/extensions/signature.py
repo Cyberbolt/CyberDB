@@ -6,7 +6,7 @@ class Signature:
         This class is based on the SHA-256 algorithm for signing and checking data integrity.
     '''
 
-    def __init__(self, salt: bytes, iterations: int=10):
+    def __init__(self, salt: bytes, iterations: int=1):
         '''
             salt -- SHA-256 salt\n
             iterations -- The number of iterations of the SHA-256 algorithm.

@@ -1,3 +1,2 @@
-aes-everywhere==1.2.10
-obj-encrypt==0.1.2
-pycryptodomex==3.14.1
+obj-encrypt==0.2.0
+APScheduler==3.9.1
