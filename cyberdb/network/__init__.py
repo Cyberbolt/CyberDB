@@ -55,13 +55,13 @@ class Stream:
     async def read(self) -> dict:
         reader, writer = self._reader, self._writer
 
-        # Receive data according to the separator b'\n' and concatenate it, 
-        # and b'exit\n' is the terminator.
+        # Receive data according to the separator b'\&' and concatenate it, 
+        # and b'exit\&' is the terminator.
         buffer = []
         while True:
             try:
-                block = await reader.readuntil(separator=b'\nnnn')
-                block = block.rstrip(b'\nnnn')
+                block = await reader.readuntil(separator=b'\&')
+                block = block.rstrip(b'\&')
                 if block == b'exit':
                     break
                 buffer.append(block)
@@ -85,12 +85,12 @@ class Stream:
         left = 0
         i = 2048
         while i < len(data):
-            writer.write(data[left:i] + b'\nnnn')
+            writer.write(data[left:i] + b'\&')
             await writer.drain()
             left = i
             i += 2048
         
-        writer.write(data[left:i] + b'\nnnn' + b'exit\nnnn')
+        writer.write(data[left:i] + b'\&' + b'exit\&')
         await writer.drain()
 
     def get_addr(self):
