@@ -1,7 +1,7 @@
 import asyncio
 
 from ..data import datas
-from ..extensions import CyberDBError
+from ..extensions import CyberDBError, DisconCyberDBError
 
 
 class Con:
@@ -54,17 +54,19 @@ class Stream:
     async def read(self) -> dict:
         reader, writer = self._reader, self._writer
 
-        # Receive data in small chunks.
+        # Receive data according to the separator b'\n' and concatenate it, 
+        # and b'exit\n' is the terminator.
         buffer = []
         while True:
             try:
-                block = await reader.readuntil(separator=b'exit')
+                block = await reader.readuntil(separator=b'\n')
+                block = block.rstrip(b'\n')
+                if block == b'exit':
+                    break
                 buffer.append(block)
-                break
-            except asyncio.LimitOverrunError:
-                block = await reader.read()
+            except asyncio.exceptions.IncompleteReadError:
+                raise DisconCyberDBError('The TCP connection was disconnected by the other end.')
         data = b''.join(buffer) # Splice into complete data.
-        data = data.rstrip(b'exit')
 
         r = self._dp.data_to_obj(data)
         if r['code'] != 1:
@@ -77,8 +79,20 @@ class Stream:
         reader, writer = self._reader, self._writer
 
         data = self._dp.obj_to_data(obj)
-        writer.write(data)
+        
+        # Divide and send every 2048 B.
+        left = 0
+        i = 2048
+        while i < len(data):
+            writer.write(data[left:i] + b'\n')
+            await writer.drain()
+            left = i
+            i += 2048
+        
+        writer.write(data[left:i] + b'\n' + b'exit\n')
         await writer.drain()
+        # for i in range(0, len(data), 2048):
+
 
     def get_addr(self):
         return self._writer.get_extra_info('peername')

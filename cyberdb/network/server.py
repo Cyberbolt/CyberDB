@@ -7,6 +7,7 @@ from obj_encrypt import Secret
 from . import Con, Stream
 from .route import Route
 from ..data import datas
+from ..extensions import DisconCyberDBError
 from ..extensions.signature import Signature
 
 
@@ -84,33 +85,38 @@ class Server:
              even if no data is sent.
         '''
 
-        addr = writer.get_extra_info('peername')
-        if self._data['config']['print_log']:
-            print('{}:{}  establishes a connection.'.format(addr[0], addr[1]))
+        try:
+            addr = writer.get_extra_info('peername')
+            if self._data['config']['print_log']:
+                print('{}:{}  establishes a connection.'.format(addr[0], addr[1]))
 
-        # Check if the ip is in the whitelist.
-        if self.ips:
-            if addr[0] not in self.ips:
-                if self._data['config']['print_log']:
-                    print('The request for {}, the ip is not in the whitelist.'.format(addr[0]))
-                writer.close()
-                return
+            # Check if the ip is in the whitelist.
+            if self.ips:
+                if addr[0] not in self.ips:
+                    if self._data['config']['print_log']:
+                        print('The request for {}, the ip is not in the whitelist.'.format(addr[0]))
+                    writer.close()
+                    return
 
-        # TCP route of this connection
-        stream = Stream(reader, writer, self._dp)
-        route = Route(self._data['db'], self._dp, stream, 
-            print_log=self._data['config']['print_log'])
+            # TCP route of this connection
+            stream = Stream(reader, writer, self._dp)
+            route = Route(self._data['db'], self._dp, stream, 
+                print_log=self._data['config']['print_log'])
 
-        # If the timeout is set, it will automatically disconnect.
-        if self._data['config']['timeout'] == 0:
-            await route.find()
-        else:
-            try:
-                await asyncio.wait_for(route.find(), 
-                    timeout=self._data['config']['timeout'])
-            except asyncio.TimeoutError:
-                print('{} connection timed out.'.format(addr[0]))
-                writer.close()
+            # If the timeout is set, it will automatically disconnect.
+            if self._data['config']['timeout'] == 0:
+                await route.find()
+            else:
+                try:
+                    await asyncio.wait_for(route.find(), 
+                        timeout=self._data['config']['timeout'])
+                except asyncio.TimeoutError:
+                    if self._data['config']['print_log']:
+                        print('{}:{}  connection timed out.'.format(addr[0], addr[1]))
+                    writer.close()
+        except DisconCyberDBError:
+            if self._data['config']['print_log']:
+                print('{}:{}  Client disconnected.'.format(addr[0], addr[1]))
 
     def set_ip_whitelist(self, ips: list):
         for ip in ips:

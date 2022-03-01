@@ -91,7 +91,7 @@ class DataParsing:
             raise CyberDBError('CyberDB does not support this data type.')
         data['header']['signature'] = self._signature.encrypt(data['content'])
         data = self._secret.encrypt(data)
-        # B 'exit' is the delimiter of the TCP stream.
-        return data + b'exit'
+        
+        return data
 
 
