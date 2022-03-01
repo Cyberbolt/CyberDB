@@ -18,4 +18,15 @@ class MyThread(Thread):
 
 
 class CyberDBError(RuntimeError):
+    '''
+        CyberDB basic error
+    '''
     pass
+
+
+class DisconCyberDBError(CyberDBError):
+    '''
+        TCP connection has been disconnected.
+    '''
+    pass
+

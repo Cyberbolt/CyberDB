@@ -11,10 +11,12 @@ class Route:
         TCP event mapping.
     '''
     
-    def __init__(self, db: dict, dp: datas.DataParsing, stream: Stream):
+    def __init__(self, db: dict, dp: datas.DataParsing, stream: Stream, 
+        print_log: bool=False):
         self._db = db
         self._dp = dp
         self._stream = stream
+        self._print_log = print_log
         # TCP Jump path
         self._map = {
             '/connect': self.connect,
@@ -29,9 +31,13 @@ class Route:
         '''
             Loop accepting client requests.
         '''
+        addr = self._stream.get_addr()
+        addr = '{}:{}'.format(addr[0], addr[1])
+
         while True:
             client_obj = await self._stream.read()
-            print(client_obj)
+            if self._print_log:
+                print('{}  {}'.format(addr, client_obj))
 
             # Jump to the specified function by routing.
             routes = client_obj['route'].split('/')[1:]

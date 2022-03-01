@@ -24,24 +24,27 @@ class Server:
         self.ips = {'127.0.0.1'} # ip whitelist
 
     def start(self, host: str='127.0.0.1', port: int=9980, 
-        password: str=None, max_con: int=500, timeout: int=0):
+        password: str=None, max_con: int=500, timeout: int=0, 
+        print_log: bool=False):
         '''
             The server starts from the background.
 
                 max_con -- Maximum number of waiting connections.
         '''
         t = threading.Thread(target=self.run, 
-            args=(host, port, password, max_con, timeout))
+            args=(host, port, password, max_con, timeout, print_log))
         t.daemon = True
         t.start()
 
     def run(self, host: str='127.0.0.1', port: int=9980, 
-        password: str=None, max_con: int=500, timeout: int=0):
+        password: str=None, max_con: int=500, timeout: int=0, 
+        print_log: bool=False):
         '''
             The server runs in the foreground.
 
                 max_con -- Maximum number of waiting connections.
                 timeout -- Connection timeout time, the default is not timeout.
+                print_log -- Whether to print the log, the default is False.
         '''
         if not password:
             raise RuntimeError('The password cannot be empty.')
@@ -51,6 +54,7 @@ class Server:
         self._data['config']['password'] = password
         self._data['config']['max_con'] = max_con
         self._data['config']['timeout'] = timeout
+        self._data['config']['print_log'] = print_log
 
         # Responsible for encrypting and decrypting objects.
         secret = Secret(key=password)
@@ -70,24 +74,6 @@ class Server:
             backlog=self._data['config']['max_con']
         )
         
-        # async with server:
-        #     await server.serve_forever()
-        
-        async def task():
-            '''
-                If the timeout is set, it will automatically disconnect.
-            '''
-            while True:
-                async with server:
-                    if self._data['config']['timeout'] == 0:
-                        await server.serve_forever()
-                    else:
-                        try:
-                            await asyncio.wait_for(server.serve_forever(), 
-                                timeout=self._data['config']['timeout'])
-                        except asyncio.TimeoutError:
-                            pass
-        
         async with server:
             await server.serve_forever()
 
@@ -99,17 +85,21 @@ class Server:
         '''
 
         addr = writer.get_extra_info('peername')
-        
+        if self._data['config']['print_log']:
+            print('{}:{}  establishes a connection.'.format(addr[0], addr[1]))
+
         # Check if the ip is in the whitelist.
         if self.ips:
             if addr[0] not in self.ips:
-                print('The request for {}, the ip is not in the whitelist.'.format(addr[0]))
+                if self._data['config']['print_log']:
+                    print('The request for {}, the ip is not in the whitelist.'.format(addr[0]))
                 writer.close()
                 return
 
         # TCP route of this connection
         stream = Stream(reader, writer, self._dp)
-        route = Route(self._data['db'], self._dp, stream)
+        route = Route(self._data['db'], self._dp, stream, 
+            print_log=self._data['config']['print_log'])
 
         # If the timeout is set, it will automatically disconnect.
         if self._data['config']['timeout'] == 0:
