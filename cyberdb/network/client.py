@@ -22,8 +22,7 @@ class ConPool:
         self._dp = dp
         self._connections = []
 
-    async def get(self) -> tuple[asyncio.streams.StreamReader, 
-        asyncio.streams.StreamWriter]:
+    async def get(self):
         '''
             Get the connection from the connection pool.
         '''
