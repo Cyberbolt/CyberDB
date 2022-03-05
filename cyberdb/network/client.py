@@ -2,7 +2,7 @@ import asyncio
 
 from obj_encrypt import Secret
 
-from . import read, Con, Stream
+from . import Connection, Stream
 from ..data import datas
 from ..extensions import MyThread, CyberDBError
 from ..extensions.signature import Signature
@@ -69,7 +69,7 @@ class CyberDict:
         self, 
         table_name: str, 
         dp: datas.DataParsing,
-        con: Con
+        con: Connection
     ):
         self._table_name = table_name
         self._dp = dp
@@ -101,7 +101,7 @@ class CyberList:
         self, 
         table_name: str, 
         dp: datas.DataParsing,
-        con: Con
+        con: Connection
     ):
         self._table_name = table_name
         self._dp = dp
@@ -122,7 +122,7 @@ class Proxy:
         self._dp = dp
         # The connection used by the proxy, the first is the reader and the 
         # second is the writer.
-        self._con = Con()
+        self._con = Connection()
 
     async def connect(self):
         '''

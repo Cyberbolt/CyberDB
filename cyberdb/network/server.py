@@ -4,7 +4,7 @@ import threading
 
 from obj_encrypt import Secret
 
-from . import Con, Stream
+from . import Connection, Stream
 from .route import Route
 from ..data import datas
 from ..extensions import DisconCyberDBError, WrongPasswordCyberDBError
