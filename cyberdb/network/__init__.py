@@ -95,7 +95,6 @@ class Stream:
         
         writer.write(data)
         await writer.drain()
-        
 
     def get_addr(self):
         return self._writer.get_extra_info('peername')
