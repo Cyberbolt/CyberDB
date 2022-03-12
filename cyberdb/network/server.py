@@ -4,7 +4,7 @@ import threading
 
 from obj_encrypt import Secret
 
-from . import Connection, Stream
+from . import Connection, AioStream
 from .route import Route
 from ..data import datas
 from ..extensions import DisconCyberDBError, WrongPasswordCyberDBError
@@ -99,7 +99,7 @@ class Server:
                     return
 
             # TCP route of this connection
-            stream = Stream(reader, writer, self._dp)
+            stream = AioStream(reader, writer, self._dp)
             route = Route(self._data['db'], self._dp, stream, 
                 print_log=self._data['config']['print_log'])
 

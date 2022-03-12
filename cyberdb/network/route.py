@@ -1,7 +1,7 @@
 import time
 import asyncio
 
-from . import Connection, Stream
+from . import Connection, AioStream
 from ..data import datas
 from ..extensions import nonce
 
@@ -11,8 +11,8 @@ class Route:
         TCP event mapping.
     '''
     
-    def __init__(self, db: dict, dp: datas.DataParsing, stream: Stream, 
-        print_log: bool=False):
+    def __init__(self, db: dict, dp: datas.DataParsing, stream: AioStream,
+                 print_log: bool=False):
         self._db = db
         self._dp = dp
         self._stream = stream
