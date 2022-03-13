@@ -1,6 +1,3 @@
-import time
-import asyncio
-
 from . import AioStream
 from ..data import datas
 from ..extensions import nonce
@@ -10,9 +7,9 @@ class Route:
     '''
         TCP event mapping.
     '''
-    
+
     def __init__(self, db: dict, dp: datas.DataParsing, stream: AioStream,
-                 print_log: bool=False):
+                 print_log: bool = False):
         self._db = db
         self._dp = dp
         self._stream = stream
@@ -41,7 +38,7 @@ class Route:
 
             # Jump to the specified function by routing.
             routes = client_obj['route'].split('/')[1:]
-            func = self._map # objective function
+            func = self._map  # objective function
             for route in routes:
                 func = func['/' + route]
 
@@ -74,12 +71,12 @@ class Route:
             }
 
         await self._stream.write(server_obj)
-        
+
     async def exam_cyberdict(self):
         '''
             Check if the table in the database exists.
         '''
-        
+
         table_name = self._client_obj['table_name']
         if self._db.get(table_name) != None:
             server_obj = {
@@ -108,4 +105,3 @@ class Route:
             }
 
         await self._stream.write(server_obj)
-

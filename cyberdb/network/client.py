@@ -16,7 +16,7 @@ class Connection:
 
     def __init__(
         self,
-        s: socket.socket=None,
+        s: socket.socket = None,
     ):
         self.s = s
 
@@ -25,21 +25,21 @@ class ConPool:
     '''
         Maintain connection pool.
     '''
-    
-    def __init__(self, host: str, port: str, dp: datas.DataParsing, 
-        time_out: int=None):
+
+    def __init__(self, host: str, port: str, dp: datas.DataParsing,
+                 time_out: int = None):
         self._host = host
         self._port = port
         self._dp = dp
         self._time_out = time_out
         self._connections = []
-        
+
     def get(self):
         '''
             Get the connection from the connection pool.
         '''
         while self._connections:
-            # If the connection is full, the loop waits until a connection 
+            # If the connection is full, the loop waits until a connection
             # is free.
             connection = self._connections.pop()
             time_now = int(time.time())
@@ -50,12 +50,12 @@ class ConPool:
                         pass
                     else:
                         return connection['s']
-        
+
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((self._host, self._port))
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         return s
-    
+
     def put(self, s: socket.socket):
         '''
             Return the connection to the connection pool.
@@ -64,7 +64,7 @@ class ConPool:
         timestamp = None
         if self._time_out:
             timestamp = int(time.time())
-            
+
         self._connections.insert(0, {
             's': s,
             'timestamp': timestamp
@@ -74,8 +74,8 @@ class ConPool:
 class CyberDict:
 
     def __init__(
-        self, 
-        table_name: str, 
+        self,
+        table_name: str,
         dp: datas.DataParsing,
         con: Connection
     ):
@@ -83,7 +83,7 @@ class CyberDict:
         self._dp = dp
         self._con = con
         self._route = '/cyberdict'
-        
+
     def __getitem__(self, key):
         stream = Stream(self._con.s, self._dp)
 
@@ -92,7 +92,7 @@ class CyberDict:
             'table_name': self._table_name,
             'key': key
         }
-        
+
         stream.write(client_obj)
 
         server_obj = stream.read()
@@ -106,8 +106,8 @@ class CyberDict:
 class CyberList:
 
     def __init__(
-        self, 
-        table_name: str, 
+        self,
+        table_name: str,
         dp: datas.DataParsing,
         con: Connection
     ):
@@ -128,7 +128,7 @@ class Proxy:
     def __init__(self, con_pool: ConPool, dp: datas.DataParsing):
         self._con_pool = con_pool
         self._dp = dp
-        # The connection used by the proxy, the first is the reader and the 
+        # The connection used by the proxy, the first is the reader and the
         # second is the writer.
         self._con = Connection()
 
@@ -140,11 +140,11 @@ class Proxy:
             connection of the connection pool is available, it will be 
             obtained directly.
         '''
-        # If the proxy already has a connection, the connection will be 
+        # If the proxy already has a connection, the connection will be
         # returned to the connection pool first.
         if self._con.s != None:
             self._con_pool.put(self._con.reader, self._con.writer)
-            
+
         s = self._con_pool.get()
         self._con.s = s
 
@@ -153,16 +153,18 @@ class Proxy:
             Return the connection to the connection pool.
         '''
         if self._con.reader == None or self._con == None:
-            raise CyberDBError('The connection could not be closed, the proxy has not acquired a connection.')
+            raise CyberDBError(
+                'The connection could not be closed, the proxy has not acquired a connection.')
 
         self._con_pool.put(self._con.reader, self._con.writer)
         self._con.s = None
 
-    def create_cyberdict(self, table_name: str, content: dict={}):
+    def create_cyberdict(self, table_name: str, content: dict = {}):
         if type(table_name) != type(''):
             raise CyberDBError('Please use str for the table name.')
         if type(content) != type(dict()):
-            raise CyberDBError('The input database table type is not a Python dictionary.')
+            raise CyberDBError(
+                'The input database table type is not a Python dictionary.')
 
         stream = Stream(self._con.s, self._dp)
         client_obj = {
@@ -185,7 +187,7 @@ class Proxy:
         '''
         if type(table_name) != type(''):
             raise CyberDBError('Please use str for the table name.')
-        
+
         stream = Stream(self._con.s, self._dp)
 
         client_obj = {
@@ -207,7 +209,7 @@ class Client:
         This object blocks execution and is recommended to be used as a 
         global variable instead of running in an async function.
     '''
-    
+
     def __init__(self, con_pool: ConPool, dp: datas.DataParsing):
         self._con_pool = con_pool
         self._dp = dp
@@ -221,10 +223,10 @@ class Client:
 
     def check_connection_pool(self):
         pass
-    
 
-def connect(host: str='127.0.0.1', port: int=9980, password: 
-    str=None):
+
+def connect(host: str = '127.0.0.1', port: int = 9980, password:
+            str = None):
     '''
         Connect to the CyberDB server via TCP, this method will run 
         synchronously.
@@ -245,7 +247,7 @@ def connect(host: str='127.0.0.1', port: int=9980, password:
     client = Client(con_pool, dp)
     return client
 
-      
+
 def confirm_the_connection(con_pool: ConPool, dp: datas.DataParsing) -> dict:
     '''
         The connection is detected when the database connects for the first 
@@ -261,9 +263,9 @@ def confirm_the_connection(con_pool: ConPool, dp: datas.DataParsing) -> dict:
         stream.write(client_obj)
 
         server_obj = stream.read()
-        
+
         con_pool.put(s)
-        
+
         return {
             'code': 1,
             'content': server_obj
@@ -273,4 +275,3 @@ def confirm_the_connection(con_pool: ConPool, dp: datas.DataParsing) -> dict:
             'code': 0,
             'Exception': e
         }
-        

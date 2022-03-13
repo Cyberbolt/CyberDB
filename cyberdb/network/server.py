@@ -22,24 +22,24 @@ class Server:
             },
             'db': {}
         }
-        self.ips = {'127.0.0.1'} # ip whitelist
+        self.ips = {'127.0.0.1'}  # ip whitelist
 
-    def start(self, host: str='127.0.0.1', port: int=9980, 
-        password: str=None, max_con: int=500, timeout: int=0, 
-        print_log: bool=False):
+    def start(self, host: str = '127.0.0.1', port: int = 9980,
+              password: str = None, max_con: int = 500, timeout: int = 0,
+              print_log: bool = False):
         '''
             The server starts from the background.
 
                 max_con -- Maximum number of waiting connections.
         '''
-        t = threading.Thread(target=self.run, 
-            args=(host, port, password, max_con, timeout, print_log))
+        t = threading.Thread(target=self.run,
+                             args=(host, port, password, max_con, timeout, print_log))
         t.daemon = True
         t.start()
 
-    def run(self, host: str='127.0.0.1', port: int=9980, 
-        password: str=None, max_con: int=500, timeout: int=0, 
-        print_log: bool=False):
+    def run(self, host: str = '127.0.0.1', port: int = 9980,
+            password: str = None, max_con: int = 500, timeout: int = 0,
+            print_log: bool = False):
         '''
             The server runs in the foreground.
 
@@ -68,18 +68,18 @@ class Server:
 
     async def _main(self):
         server = await asyncio.start_server(
-            self._listener, self._data['config']['host'], 
-            self._data['config']['port'], 
-            limit=2 ** 16, # 64 KiB
+            self._listener, self._data['config']['host'],
+            self._data['config']['port'],
+            limit=2 ** 16,  # 64 KiB
             # the maximum number of queued connections
             backlog=self._data['config']['max_con']
         )
-        
+
         async with server:
             await server.serve_forever()
 
-    async def _listener(self, reader: asyncio.streams.StreamReader, 
-        writer: asyncio.streams.StreamWriter):
+    async def _listener(self, reader: asyncio.streams.StreamReader,
+                        writer: asyncio.streams.StreamWriter):
         '''
             This method is entered as long as a TCP connection is established,
              even if no data is sent.
@@ -88,31 +88,34 @@ class Server:
         try:
             addr = writer.get_extra_info('peername')
             if self._data['config']['print_log']:
-                print('{}:{}  establishes a connection.'.format(addr[0], addr[1]))
+                print('{}:{}  establishes a connection.'.format(
+                    addr[0], addr[1]))
 
             # Check if the ip is in the whitelist.
             if self.ips:
                 if addr[0] not in self.ips:
                     if self._data['config']['print_log']:
-                        print('The request for {}, the ip is not in the whitelist.'.format(addr[0]))
+                        print(
+                            'The request for {}, the ip is not in the whitelist.'.format(addr[0]))
                     writer.close()
                     return
 
             # TCP route of this connection
             stream = AioStream(reader, writer, self._dp)
-            route = Route(self._data['db'], self._dp, stream, 
-                print_log=self._data['config']['print_log'])
+            route = Route(self._data['db'], self._dp, stream,
+                          print_log=self._data['config']['print_log'])
 
             # If the timeout is set, it will automatically disconnect.
             if self._data['config']['timeout'] == 0:
                 await route.find()
             else:
                 try:
-                    await asyncio.wait_for(route.find(), 
-                        timeout=self._data['config']['timeout'])
+                    await asyncio.wait_for(route.find(),
+                                           timeout=self._data['config']['timeout'])
                 except asyncio.TimeoutError:
                     if self._data['config']['print_log']:
-                        print('{}:{}  connection timed out.'.format(addr[0], addr[1]))
+                        print('{}:{}  connection timed out.'.format(
+                            addr[0], addr[1]))
                     writer.close()
 
         except DisconCyberDBError:
@@ -120,7 +123,8 @@ class Server:
                 print('{}:{}  Client disconnected.'.format(addr[0], addr[1]))
         except WrongPasswordCyberDBError:
             if self._data['config']['print_log']:
-                print('{}:{}  The password entered by the client is incorrect.'.format(addr[0], addr[1]))
+                print('{}:{}  The password entered by the client is incorrect.'.format(
+                    addr[0], addr[1]))
 
     def set_ip_whitelist(self, ips: list):
         for ip in ips:
@@ -136,4 +140,3 @@ class Server:
             raise RuntimeError('Duplicate table names already exist!')
 
         self._data['db'][name] = {}
-
