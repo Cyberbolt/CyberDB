@@ -1,2 +1,3 @@
 from .network.server import Server
-from .network.aioclient import connect
+from .network.client import connect
+from .network.aioclient import connect as aioconnect

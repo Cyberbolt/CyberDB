@@ -1,7 +1,7 @@
 import time
 import asyncio
 
-from . import Connection, AioStream
+from . import AioStream
 from ..data import datas
 from ..extensions import nonce
 

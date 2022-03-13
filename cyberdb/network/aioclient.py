@@ -2,13 +2,27 @@ import asyncio
 
 from obj_encrypt import Secret
 
-from . import Connection, AioStream
+from . import AioStream
 from ..data import datas
 from ..extensions import MyThread, CyberDBError
 from ..extensions.signature import Signature
 
 
 result = None # Check whether the connection is successful
+
+
+class Connection:
+    '''
+        Asyncio TCP connection data type
+    '''
+
+    def __init__(
+        self,
+        reader: asyncio.streams.StreamReader=None,
+        writer: asyncio.streams.StreamWriter=None
+    ):
+        self.reader = reader
+        self.writer = writer
 
 
 class ConPool:

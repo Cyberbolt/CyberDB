@@ -4,7 +4,7 @@ import threading
 
 from obj_encrypt import Secret
 
-from . import Connection, AioStream
+from . import AioStream
 from .route import Route
 from ..data import datas
 from ..extensions import DisconCyberDBError, WrongPasswordCyberDBError
