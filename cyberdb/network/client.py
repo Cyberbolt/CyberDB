@@ -72,6 +72,28 @@ class ConPool:
         })
 
 
+def network(func):
+    '''
+        Network operations before and after encapsulating CyberDB data 
+        structure methods.
+    '''
+
+    def wrapper(self, *args, **kw):
+        stream = Stream(self._con.s, self._dp)
+        client_obj = func(self, *args, **kw)
+        stream.write(client_obj)
+
+        server_obj = stream.read()
+        if server_obj['code'] == 0:
+            self._con.s.close()
+            raise server_obj['Exception']
+
+        if server_obj.get('content'):
+            return server_obj['content']
+
+    return wrapper
+
+
 class CyberDict:
 
     def __init__(
@@ -85,75 +107,39 @@ class CyberDict:
         self._con = con
         self._route = '/cyberdict'
 
+    @network
     def __getitem__(self, key):
-        stream = Stream(self._con.s, self._dp)
-
-        client_obj = {
+        return {
             'route': self._route + '/getitem',
             'table_name': self._table_name,
             'key': key
         }
 
-        stream.write(client_obj)
-
-        server_obj = stream.read()
-        if server_obj['code'] == 0:
-            self._con.writer.close()
-            raise server_obj['Exception']
-
-        return server_obj['content']
-
+    @network
     def __setitem__(self, key, value):
-        stream = Stream(self._con.s, self._dp)
-
-        client_obj = {
+        return {
             'route': self._route + '/setitem',
             'table_name': self._table_name,
             'key': key,
             'value': value
         }
 
-        stream.write(client_obj)
-
-        server_obj = stream.read()
-        if server_obj['code'] == 0:
-            self._con.writer.close()
-            raise server_obj['Exception']
-        
+    @network
     def __delitem__(self, key):
-        stream = Stream(self._con.s, self._dp)
-
-        client_obj = {
+        return {
             'route': self._route + '/delitem',
             'table_name': self._table_name,
             'key': key
         }
 
-        stream.write(client_obj)
-
-        server_obj = stream.read()
-        if server_obj['code'] == 0:
-            self._con.writer.close()
-            raise server_obj['Exception']
-
+    @network
     def get(self, key, default=None):
-        stream = Stream(self._con.s, self._dp)
-        
-        client_obj = {
+        return {
             'route': self._route + '/get',
             'table_name': self._table_name,
             'key': key,
             'default': default
         }
-        
-        stream.write(client_obj)
-        
-        server_obj = stream.read()
-        if server_obj['code'] == 0:
-            self._con.s.close()
-            raise server_obj['Exception']
-
-        return server_obj['content']
 
 
 class CyberList:
