@@ -103,6 +103,39 @@ class CyberDict:
 
         return server_obj['content']
 
+    def __setitem__(self, key, value):
+        stream = Stream(self._con.s, self._dp)
+
+        client_obj = {
+            'route': self._route + '/setitem',
+            'table_name': self._table_name,
+            'key': key,
+            'value': value
+        }
+
+        stream.write(client_obj)
+
+        server_obj = stream.read()
+        if server_obj['code'] == 0:
+            self._con.writer.close()
+            raise server_obj['Exception']
+        
+    def __delitem__(self, key):
+        stream = Stream(self._con.s, self._dp)
+
+        client_obj = {
+            'route': self._route + '/delitem',
+            'table_name': self._table_name,
+            'key': key
+        }
+
+        stream.write(client_obj)
+
+        server_obj = stream.read()
+        if server_obj['code'] == 0:
+            self._con.writer.close()
+            raise server_obj['Exception']
+
     def get(self, key, default=None):
         stream = Stream(self._con.s, self._dp)
         

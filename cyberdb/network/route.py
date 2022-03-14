@@ -21,6 +21,8 @@ class Route:
             '/exam_cyberdict': self.exam_cyberdict,
             '/cyberdict': {
                 '/getitem': self.dict_getitem,
+                '/setitem': self.dict_setitem,
+                '/delitem': self.dict_delitem,
                 '/get': self.dict_get,
             }
         }
@@ -107,6 +109,38 @@ class Route:
 
         await self._stream.write(server_obj)
 
+    async def dict_setitem(self):
+        table_name = self._client_obj['table_name']
+        key = self._client_obj['key']
+        value = self._client_obj['value']
+        try:
+            self._db[table_name][key] = value
+            server_obj = {
+                'code': 1,
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    async def dict_delitem(self):
+        table_name = self._client_obj['table_name']
+        key = self._client_obj['key']
+        try:
+            del self._db[table_name][key]
+            server_obj = {
+                'code': 1,
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
 
     async def dict_get(self):
         table_name = self._client_obj['table_name']
