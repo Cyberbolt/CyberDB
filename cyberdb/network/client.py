@@ -44,12 +44,13 @@ class ConPool:
             connection = self._connections.pop()
             time_now = int(time.time())
             if self._time_out:
-                if connection['timestamp'] + self._time_out <= time_now:
-                    # Check if the server is down.
-                    if getattr(connection['s'], '_closed'):
-                        pass
-                    else:
-                        return connection['s']
+                if connection['timestamp'] + self._time_out > time_now:
+                    continue
+            # Check if the server is down.
+            if getattr(connection['s'], '_closed'):
+                pass
+            else:
+                return connection['s']
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((self._host, self._port))
@@ -102,6 +103,25 @@ class CyberDict:
 
         return server_obj['content']
 
+    def get(self, key, default=None):
+        stream = Stream(self._con.s, self._dp)
+        
+        client_obj = {
+            'route': self._route + '/get',
+            'table_name': self._table_name,
+            'key': key,
+            'default': default
+        }
+        
+        stream.write(client_obj)
+        
+        server_obj = stream.read()
+        if server_obj['code'] == 0:
+            self._con.s.close()
+            raise server_obj['Exception']
+
+        return server_obj['content']
+
 
 class CyberList:
 
@@ -143,7 +163,7 @@ class Proxy:
         # If the proxy already has a connection, the connection will be
         # returned to the connection pool first.
         if self._con.s != None:
-            self._con_pool.put(self._con.reader, self._con.writer)
+            self._con_pool.put(self._con.s)
 
         s = self._con_pool.get()
         self._con.s = s

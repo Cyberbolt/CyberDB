@@ -20,7 +20,8 @@ class Route:
             '/create_cyberdict': self.create_cyberdict,
             '/exam_cyberdict': self.exam_cyberdict,
             '/cyberdict': {
-                '/getitem': self.dict_getitem
+                '/getitem': self.dict_getitem,
+                '/get': self.dict_get,
             }
         }
 
@@ -94,6 +95,25 @@ class Route:
         key = self._client_obj['key']
         try:
             r = self._db[table_name][key]
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+
+    async def dict_get(self):
+        table_name = self._client_obj['table_name']
+        key = self._client_obj['key']
+        default = self._client_obj['default']
+        try:
+            r = self._db[table_name].get(key, default)
             server_obj = {
                 'code': 1,
                 'content': r
