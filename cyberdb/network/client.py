@@ -121,6 +121,9 @@ class CyberDict:
             'table_name': self._table_name
         }
 
+    def __iter__(self):
+        return self.generate()
+
     @network
     def __getitem__(self, key):
         return {
@@ -222,6 +225,10 @@ class CyberDict:
             'route': self._route + '/clear',
             'table_name': self._table_name
         }
+
+    def generate(self):
+        for key in self.keys():
+            yield key
 
 
 class CyberList:
