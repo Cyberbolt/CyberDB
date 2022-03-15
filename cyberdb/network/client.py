@@ -108,6 +108,20 @@ class CyberDict:
         self._route = '/cyberdict'
 
     @network
+    def __repr__(self):
+        return {
+            'route': self._route + '/repr',
+            'table_name': self._table_name
+        }
+    
+    @network
+    def __str__(self):
+        return {
+            'route': self._route + '/str',
+            'table_name': self._table_name
+        }
+
+    @network
     def __getitem__(self, key):
         return {
             'route': self._route + '/getitem',
@@ -130,6 +144,13 @@ class CyberDict:
             'route': self._route + '/delitem',
             'table_name': self._table_name,
             'key': key
+        }
+
+    @network
+    def todict(self):
+        return {
+            'route': self._route + '/todict',
+            'table_name': self._table_name
         }
 
     @network
@@ -217,8 +238,6 @@ class Proxy:
 
         if server_obj['code'] == 0:
             raise CyberDBError('Duplicate table names already exist!')
-
-        return server_obj
 
     def get_cyberdict(self, table_name: str) -> CyberDict:
         '''
