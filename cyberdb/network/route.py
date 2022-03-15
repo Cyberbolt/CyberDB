@@ -1,3 +1,5 @@
+import datetime
+
 from . import AioStream
 from ..data import datas
 from ..extensions import nonce
@@ -9,7 +11,7 @@ MAP = {}
 def bind(path):
     def decorator(func):
         MAP[path] = func
-        
+
         def wrapper(*args, **kw):
             return func(*args, **kw)
         return wrapper
@@ -38,9 +40,11 @@ class Route:
         while True:
             client_obj = await self._stream.read()
             self._client_obj = client_obj
-            
+
             if self._print_log:
-                print('{}  {}'.format(addr, client_obj['route']))
+                print('{}  {}  {}'.format(
+                    datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    addr, client_obj['route']))
 
             # Jump to the specified function by routing.
             func = MAP[client_obj['route']]
@@ -63,12 +67,10 @@ class Route:
         if self._db.get(table_name) == None:
             # New CyberDict
             self._db[table_name] = content
-            # Create table successfully.
             server_obj = {
                 'code': 1
             }
         else:
-            # Failed to create table.
             server_obj = {
                 'code': 0
             }
@@ -91,7 +93,7 @@ class Route:
                 'code': 0
             }
 
-        data = await self._stream.write(server_obj)
+        await self._stream.write(server_obj)
 
     @bind('/cyberdict/getitem')
     async def dict_getitem(self):

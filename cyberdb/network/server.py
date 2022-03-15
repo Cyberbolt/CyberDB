@@ -1,4 +1,5 @@
 import re
+import datetime
 import asyncio
 import threading
 
@@ -88,15 +89,17 @@ class Server:
         try:
             addr = writer.get_extra_info('peername')
             if self._data['config']['print_log']:
-                print('{}:{}  establishes a connection.'.format(
+                print('{}  {}:{}  establishes a connection.'.format(
+                    datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                     addr[0], addr[1]))
 
             # Check if the ip is in the whitelist.
             if self.ips:
                 if addr[0] not in self.ips:
                     if self._data['config']['print_log']:
-                        print(
-                            'The request for {}, the ip is not in the whitelist.'.format(addr[0]))
+                        print('{}  The request for {}, the ip is not in the whitelist.'.format(
+                            datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                            addr[0]))
                     writer.close()
                     return
 
@@ -114,16 +117,21 @@ class Server:
                                            timeout=self._data['config']['timeout'])
                 except asyncio.TimeoutError:
                     if self._data['config']['print_log']:
-                        print('{}:{}  connection timed out.'.format(
+                        print('{}  {}:{}  connection timed out.'.format(
+                            datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                             addr[0], addr[1]))
                     writer.close()
 
         except DisconCyberDBError:
             if self._data['config']['print_log']:
-                print('{}:{}  Client disconnected.'.format(addr[0], addr[1]))
+                print('{}  {}:{}  Client disconnected.'.format(
+                    datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    addr[0], addr[1])
+                )
         except WrongPasswordCyberDBError:
             if self._data['config']['print_log']:
-                print('{}:{}  The password entered by the client is incorrect.'.format(
+                print('{}  {}:{}  The password entered by the client is incorrect.'.format(
+                    datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                     addr[0], addr[1]))
 
     def set_ip_whitelist(self, ips: list):
