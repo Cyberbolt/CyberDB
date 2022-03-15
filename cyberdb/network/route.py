@@ -3,6 +3,19 @@ from ..data import datas
 from ..extensions import nonce
 
 
+MAP = {}
+
+
+def bind(path):
+    def decorator(func):
+        MAP[path] = func
+        
+        def wrapper(*args, **kw):
+            return func(*args, **kw)
+        return wrapper
+    return decorator
+
+
 class Route:
     '''
         TCP event mapping.
@@ -14,18 +27,6 @@ class Route:
         self._dp = dp
         self._stream = stream
         self._print_log = print_log
-        # TCP Jump path
-        self._map = {
-            '/connect': self.connect,
-            '/create_cyberdict': self.create_cyberdict,
-            '/exam_cyberdict': self.exam_cyberdict,
-            '/cyberdict': {
-                '/getitem': self.dict_getitem,
-                '/setitem': self.dict_setitem,
-                '/delitem': self.dict_delitem,
-                '/get': self.dict_get,
-            }
-        }
 
     async def find(self):
         '''
@@ -36,19 +37,17 @@ class Route:
 
         while True:
             client_obj = await self._stream.read()
+            self._client_obj = client_obj
+            
             if self._print_log:
                 print('{}  {}'.format(addr, client_obj['route']))
 
             # Jump to the specified function by routing.
-            routes = client_obj['route'].split('/')[1:]
-            func = self._map  # objective function
-            for route in routes:
-                func = func['/' + route]
-
+            func = MAP[client_obj['route']]
             # Go to the corresponding routing function.
-            self._client_obj = client_obj
-            await func()
+            await func(self)
 
+    @bind('/connect')
     async def connect(self):
         server_obj = {
             'code': 1,
@@ -57,6 +56,7 @@ class Route:
 
         await self._stream.write(server_obj)
 
+    @bind('/create_cyberdict')
     async def create_cyberdict(self):
         table_name = self._client_obj['table_name']
         content = self._client_obj['content']
@@ -75,6 +75,7 @@ class Route:
 
         await self._stream.write(server_obj)
 
+    @bind('/exam_cyberdict')
     async def exam_cyberdict(self):
         '''
             Check if the table in the database exists.
@@ -92,6 +93,7 @@ class Route:
 
         data = await self._stream.write(server_obj)
 
+    @bind('/cyberdict/getitem')
     async def dict_getitem(self):
         table_name = self._client_obj['table_name']
         key = self._client_obj['key']
@@ -109,6 +111,7 @@ class Route:
 
         await self._stream.write(server_obj)
 
+    @bind('/cyberdict/setitem')
     async def dict_setitem(self):
         table_name = self._client_obj['table_name']
         key = self._client_obj['key']
@@ -126,6 +129,7 @@ class Route:
 
         await self._stream.write(server_obj)
 
+    @bind('/cyberdict/delitem')
     async def dict_delitem(self):
         table_name = self._client_obj['table_name']
         key = self._client_obj['key']
@@ -142,6 +146,7 @@ class Route:
 
         await self._stream.write(server_obj)
 
+    @bind('/cyberdict/get')
     async def dict_get(self):
         table_name = self._client_obj['table_name']
         key = self._client_obj['key']
