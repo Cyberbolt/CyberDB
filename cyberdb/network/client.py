@@ -162,6 +162,67 @@ class CyberDict:
             'default': default
         }
 
+    @network
+    def setdefault(self, key, default=None):
+        return {
+            'route': self._route + '/setdefault',
+            'table_name': self._table_name,
+            'key': key,
+            'default': default
+        }
+
+    @network
+    def update(self, dict2):
+        return {
+            'route': self._route + '/update',
+            'table_name': self._table_name,
+            'dict2': dict2,
+        }
+
+    @network
+    def keys(self):
+        return {
+            'route': self._route + '/keys',
+            'table_name': self._table_name
+        }
+        
+    @network
+    def values(self):
+        return {
+            'route': self._route + '/values',
+            'table_name': self._table_name
+        }
+        
+    @network
+    def items(self):
+        return {
+            'route': self._route + '/items',
+            'table_name': self._table_name
+        }
+        
+    @network
+    def pop(self, key, default=None):
+        return {
+            'route': self._route + '/pop',
+            'table_name': self._table_name,
+            'key': key,
+            'default': default
+        }
+
+    @network
+    def popitem(self):
+        return {
+            'route': self._route + '/popitem',
+            'table_name': self._table_name
+        }
+        
+    @network
+    def clear(self):
+        return {
+            'route': self._route + '/clear',
+            'table_name': self._table_name
+        }
+
 
 class CyberList:
 

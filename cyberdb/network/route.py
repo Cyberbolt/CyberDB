@@ -111,7 +111,7 @@ class Route:
             }
 
         await self._stream.write(server_obj)
-        
+
     @bind('/cyberdict/str')
     async def dict_str(self):
         table_name = self._client_obj['table_name']
@@ -209,6 +209,146 @@ class Route:
             server_obj = {
                 'code': 1,
                 'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberdict/setdefault')
+    async def dict_setdefault(self):
+        table_name = self._client_obj['table_name']
+        key = self._client_obj['key']
+        default = self._client_obj['default']
+        try:
+            r = self._db[table_name].setdefault(key, default)
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberdict/update')
+    async def dict_update(self):
+        table_name = self._client_obj['table_name']
+        dict2 = self._client_obj['dict2']
+        try:
+            self._db[table_name].update(dict2)
+            server_obj = {
+                'code': 1
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberdict/keys')
+    async def dict_keys(self):
+        table_name = self._client_obj['table_name']
+        try:
+            r = list(self._db[table_name].keys())
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+        
+    @bind('/cyberdict/values')
+    async def dict_values(self):
+        table_name = self._client_obj['table_name']
+        try:
+            r = list(self._db[table_name].values())
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberdict/items')
+    async def dict_items(self):
+        table_name = self._client_obj['table_name']
+        try:
+            r = list(self._db[table_name].items())
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberdict/pop')
+    async def dict_pop(self):
+        table_name = self._client_obj['table_name']
+        key = self._client_obj['key']
+        default = self._client_obj['default']
+        
+        try:
+            r = self._db[table_name].pop(key, default)
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberdict/popitem')
+    async def dict_popitem(self):
+        table_name = self._client_obj['table_name']
+        try:
+            r = self._db[table_name].popitem()
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberdict/clear')
+    async def dict_clear(self):
+        table_name = self._client_obj['table_name']
+        try:
+            self._db[table_name].clear()
+            server_obj = {
+                'code': 1
             }
         except Exception as e:
             server_obj = {
