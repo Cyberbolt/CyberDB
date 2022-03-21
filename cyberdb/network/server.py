@@ -40,7 +40,7 @@ class Server:
 
     def run(self, host: str = '127.0.0.1', port: int = 9980,
             password: str = None, max_con: int = 500, timeout: int = 0,
-            print_log: bool = False):
+            print_log: bool = False, encrypt: bool=False):
         '''
             The server runs in the foreground.
 
@@ -63,7 +63,7 @@ class Server:
         # for digital signature
         signature = Signature(salt=password.encode())
         # Convert TCP data and encrypted objects to each other.
-        self._dp = datas.DataParsing(secret, signature)
+        self._dp = datas.DataParsing(secret, signature, encrypt=encrypt)
 
         asyncio.run(self._main())
 
