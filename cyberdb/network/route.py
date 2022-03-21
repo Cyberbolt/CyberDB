@@ -2,7 +2,7 @@ import datetime
 
 from . import AioStream
 from ..data import datas
-from ..extensions import nonce
+from ..extensions import nonce, WrongPasswordCyberDBError
 
 
 MAP = {}
@@ -41,6 +41,11 @@ class Route:
             client_obj = await self._stream.read()
             self._client_obj = client_obj
 
+            # Check if the password is correct.
+            if self._stream._dp._secret.key != client_obj['password']:
+                self._stream._writer.close()
+                raise WrongPasswordCyberDBError('The password entered by the client is incorrect.')
+            
             if self._print_log:
                 print('{}  {}  {}'.format(
                     datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -57,7 +62,6 @@ class Route:
             'code': 1,
             'message': 'connection succeeded.'
         }
-
         await self._stream.write(server_obj)
 
     @bind('/create_cyberdict')

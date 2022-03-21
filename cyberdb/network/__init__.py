@@ -125,6 +125,8 @@ class Stream:
         return r['content']
     
     def write(self, obj: dict):
+        obj['password'] = self._dp._secret.key
+        
         data = self._dp.obj_to_data(obj)
         
         # The number of times the other end TCP loops to 
