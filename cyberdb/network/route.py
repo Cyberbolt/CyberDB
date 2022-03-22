@@ -81,8 +81,43 @@ class Route:
 
         await self._stream.write(server_obj)
 
+    @bind('/create_cyberlist')
+    async def create_cyberlist(self):
+        table_name = self._client_obj['table_name']
+        content = self._client_obj['content']
+        if self._db.get(table_name) == None:
+            # New CyberList
+            self._db[table_name] = content
+            server_obj = {
+                'code': 1
+            }
+        else:
+            server_obj = {
+                'code': 0
+            }
+
+        await self._stream.write(server_obj)
+
     @bind('/exam_cyberdict')
     async def exam_cyberdict(self):
+        '''
+            Check if the table in the database exists.
+        '''
+
+        table_name = self._client_obj['table_name']
+        if self._db.get(table_name) != None:
+            server_obj = {
+                'code': 1
+            }
+        else:
+            server_obj = {
+                'code': 0
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/exam_cyberlist')
+    async def exam_cyberlist(self):
         '''
             Check if the table in the database exists.
         '''
@@ -353,6 +388,93 @@ class Route:
             self._db[table_name].clear()
             server_obj = {
                 'code': 1
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/repr')
+    async def list_repr(self):
+        table_name = self._client_obj['table_name']
+        try:
+            r = repr(self._db[table_name])
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/str')
+    async def list_str(self):
+        table_name = self._client_obj['table_name']
+        try:
+            r = str(self._db[table_name])
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/getitem')
+    async def list_getitem(self):
+        table_name = self._client_obj['table_name']
+        index = self._client_obj['index']
+        try:
+            r = self._db[table_name][index]
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/setitem')
+    async def list_setitem(self):
+        table_name = self._client_obj['table_name']
+        index = self._client_obj['index']
+        value = self._client_obj['value']
+        try:
+            self._db[table_name][index] = value
+            server_obj = {
+                'code': 1,
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/delitem')
+    async def list_delitem(self):
+        table_name = self._client_obj['table_name']
+        index = self._client_obj['index']
+        try:
+            del self._db[table_name][index]
+            server_obj = {
+                'code': 1,
             }
         except Exception as e:
             server_obj = {
