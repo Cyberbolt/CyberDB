@@ -483,3 +483,37 @@ class Route:
             }
 
         await self._stream.write(server_obj)
+
+    @bind('/cyberlist/tolist')
+    async def tolist(self):
+        table_name = self._client_obj['table_name']
+        try:
+            r = self._db[table_name]
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/append')
+    async def append(self):
+        table_name = self._client_obj['table_name']
+        value = self._client_obj['value']
+        try:
+            self._db[table_name].append(value)
+            server_obj = {
+                'code': 1
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)

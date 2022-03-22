@@ -283,6 +283,21 @@ class CyberList:
             'index': index
         }
 
+    @network
+    def tolist(self):
+        return {
+            'route': self._route + '/tolist',
+            'table_name': self._table_name
+        }
+
+    @network
+    def append(self, value):
+        return {
+            'route': self._route + '/append',
+            'table_name': self._table_name,
+            'value': value
+        }
+
 
 class Proxy:
     '''
@@ -388,7 +403,7 @@ class Proxy:
         if server_obj['code'] == 0:
             raise CyberDBError('Duplicate table names already exist!')
 
-    def get_cyberlist(self, table_name: str) -> CyberDict:
+    def get_cyberlist(self, table_name: str) -> CyberList:
         '''
             Get the network object of the table from the database.
         '''
