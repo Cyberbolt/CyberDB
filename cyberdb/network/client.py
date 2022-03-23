@@ -266,6 +266,13 @@ class CyberList:
         }
 
     @network
+    def __len__(self):
+        return {
+            'route': self._route + '/len',
+            'table_name': self._table_name
+        }
+
+    @network
     def __getitem__(self, index):
         return {
             'route': self._route + '/getitem',

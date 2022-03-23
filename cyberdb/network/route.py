@@ -448,6 +448,23 @@ class Route:
 
         await self._stream.write(server_obj)
 
+    @bind('/cyberlist/len')
+    async def list_len(self):
+        table_name = self._client_obj['table_name']
+        try:
+            r = len(self._db[table_name])
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
     @bind('/cyberlist/getitem')
     async def list_getitem(self):
         table_name = self._client_obj['table_name']
