@@ -312,6 +312,17 @@ class CyberList:
             'value': value
         }
 
+    @network
+    def extend(self, obj):
+        if type(obj) == CyberList:
+            obj = obj.tolist()
+        
+        return {
+            'route': self._route + '/extend',
+            'table_name': self._table_name,
+            'obj': obj
+        }
+
 
 class Proxy:
     '''

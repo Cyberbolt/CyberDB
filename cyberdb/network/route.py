@@ -551,3 +551,20 @@ class Route:
             }
 
         await self._stream.write(server_obj)
+
+    @bind('/cyberlist/extend')
+    async def extend(self):
+        table_name = self._client_obj['table_name']
+        obj = self._client_obj['obj']
+        try:
+            self._db[table_name].extend(obj)
+            server_obj = {
+                'code': 1
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
