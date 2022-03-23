@@ -168,6 +168,23 @@ class Route:
 
         await self._stream.write(server_obj)
 
+    @bind('/cyberdict/len')
+    async def dict_len(self):
+        table_name = self._client_obj['table_name']
+        try:
+            r = len(self._db[table_name])
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
     @bind('/cyberdict/getitem')
     async def dict_getitem(self):
         table_name = self._client_obj['table_name']

@@ -121,6 +121,13 @@ class CyberDict:
             'table_name': self._table_name
         }
 
+    @network
+    def __len__(self):
+        return {
+            'route': self._route + '/len',
+            'table_name': self._table_name
+        }
+
     def __iter__(self):
         return self.generate()
 
