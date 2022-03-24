@@ -158,7 +158,7 @@ class Server:
         #     print('Backup closed.')
         #     return
         # The time here is for looping only and does not affect usage anywhere in the world.
-        sched = BackgroundScheduler()
+        sched = BackgroundScheduler(timezone='Asia/Shanghai')
         sched.add_job(self.save_db, 'interval', seconds=period, args=[file_name])
         sched.start()
         # t = threading.Thread(target=self.__start_backup, args=(file_name, period,))
