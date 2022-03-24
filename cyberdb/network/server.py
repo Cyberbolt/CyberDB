@@ -57,6 +57,7 @@ class Server:
         self._data['config']['max_con'] = max_con
         self._data['config']['timeout'] = timeout
         self._data['config']['print_log'] = print_log
+        self._data['config']['encrypt'] = encrypt
 
         # Responsible for encrypting and decrypting objects.
         secret = Secret(key=password)
@@ -93,15 +94,16 @@ class Server:
                     datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                     addr[0], addr[1]))
 
-            # Check if the ip is in the whitelist.
-            if self.ips:
-                if addr[0] not in self.ips:
-                    if self._data['config']['print_log']:
-                        print('{}  The request for {}, the ip is not in the whitelist.'.format(
-                            datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                            addr[0]))
-                    writer.close()
-                    return
+            if self._data['config']['encrypt']:
+                # Check if the ip is in the whitelist.
+                if self.ips:
+                    if addr[0] not in self.ips:
+                        if self._data['config']['print_log']:
+                            print('{}  The request for {}, the ip is not in the whitelist.'.format(
+                                datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                                addr[0]))
+                        writer.close()
+                        return
 
             # TCP route of this connection
             stream = AioStream(reader, writer, self._dp)

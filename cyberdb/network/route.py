@@ -45,8 +45,9 @@ class Route:
             # Check if the password is correct.
             if self._stream._dp._secret.key != client_obj['password']:
                 self._stream._writer.close()
-                raise WrongPasswordCyberDBError('The password entered by the client is incorrect.')
-            
+                raise WrongPasswordCyberDBError(
+                    'The password entered by the client is incorrect.')
+
             if self._print_log:
                 print('{}  {}  {}'.format(
                     datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -327,7 +328,7 @@ class Route:
             }
 
         await self._stream.write(server_obj)
-        
+
     @bind('/cyberdict/values')
     async def dict_values(self):
         table_name = self._client_obj['table_name']
@@ -367,7 +368,7 @@ class Route:
         table_name = self._client_obj['table_name']
         key = self._client_obj['key']
         default = self._client_obj['default']
-        
+
         try:
             r = self._db[table_name].pop(key, default)
             server_obj = {

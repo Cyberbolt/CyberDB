@@ -114,7 +114,7 @@ class CyberDict:
             'route': self._route + '/repr',
             'table_name': self._table_name
         }
-    
+
     @network
     def __str__(self):
         return {
@@ -196,21 +196,21 @@ class CyberDict:
             'route': self._route + '/keys',
             'table_name': self._table_name
         }
-        
+
     @network
     def values(self):
         return {
             'route': self._route + '/values',
             'table_name': self._table_name
         }
-        
+
     @network
     def items(self):
         return {
             'route': self._route + '/items',
             'table_name': self._table_name
         }
-        
+
     @network
     def pop(self, key, default=None):
         return {
@@ -226,7 +226,7 @@ class CyberDict:
             'route': self._route + '/popitem',
             'table_name': self._table_name
         }
-        
+
     @network
     def clear(self):
         return {
@@ -258,7 +258,7 @@ class CyberList:
             'route': self._route + '/repr',
             'table_name': self._table_name
         }
-    
+
     @network
     def __str__(self):
         return {
@@ -272,6 +272,9 @@ class CyberList:
             'route': self._route + '/len',
             'table_name': self._table_name
         }
+
+    def __iter__(self):
+        return self.generate()
 
     @network
     def __getitem__(self, index):
@@ -317,7 +320,7 @@ class CyberList:
     def extend(self, obj):
         if type(obj) == CyberList:
             obj = obj.tolist()
-        
+
         return {
             'route': self._route + '/extend',
             'table_name': self._table_name,
@@ -332,15 +335,15 @@ class CyberList:
             'index': index,
             'value': value
         }
-        
+
     @network
-    def pop(self, index: int=-1):
+    def pop(self, index: int = -1):
         return {
             'route': self._route + '/pop',
             'table_name': self._table_name,
             'index': index
         }
-        
+
     @network
     def remove(self, value):
         return {
@@ -356,7 +359,7 @@ class CyberList:
             'table_name': self._table_name,
             'value': value
         }
-        
+
     @network
     def index(self, value):
         return {
@@ -376,7 +379,8 @@ class CyberList:
     def sort(self, key=None, reverse=False):
         # Reference the lambda part to func.
         if key.__code__.co_name == '<lambda>':
-            key = 'func = ' + inspect.getsource(key).split('=')[1].rsplit(')')[0]
+            key = 'func = ' + \
+                inspect.getsource(key).split('=')[1].rsplit(')')[0]
         # De-indent the code and reference the function to the func.
         elif key.__code__.co_name:
             code = inspect.getsource(key)
@@ -392,7 +396,7 @@ class CyberList:
             else:
                 code_new = code
             key = code_new + '\nfunc = {}'.format(key.__code__.co_name)
-        
+
         return {
             'route': self._route + '/sort',
             'table_name': self._table_name,
@@ -406,6 +410,10 @@ class CyberList:
             'route': self._route + '/clear',
             'table_name': self._table_name,
         }
+
+    def generate(self):
+        for i in range(self.__len__()):
+            yield self.__getitem__(i)
 
 
 class Proxy:
@@ -557,7 +565,7 @@ class Client:
 
 
 def connect(host: str = '127.0.0.1', port: int = 9980, password:
-            str = None, encrypt: bool=False):
+            str = None, encrypt: bool = False):
     '''
         Connect to the CyberDB server via TCP, this method will run 
         synchronously.
