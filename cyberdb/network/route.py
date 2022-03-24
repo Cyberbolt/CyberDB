@@ -11,10 +11,12 @@ MAP = {}
 
 def bind(path):
     def decorator(func):
-        MAP[path] = func
+        async def wrapper(self, *args, **kw):
+            server_obj = await func(self, *args, **kw)
+            server_obj['password'] = self._dp._secret.key
+            await self._stream.write(server_obj)
 
-        def wrapper(*args, **kw):
-            return func(*args, **kw)
+        MAP[path] = wrapper
         return wrapper
     return decorator
 
@@ -64,7 +66,7 @@ class Route:
             'code': 1,
             'message': 'connection succeeded.'
         }
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/create_cyberdict')
     async def create_cyberdict(self):
@@ -81,7 +83,7 @@ class Route:
                 'code': 0
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/create_cyberlist')
     async def create_cyberlist(self):
@@ -98,7 +100,7 @@ class Route:
                 'code': 0
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/exam_cyberdict')
     async def exam_cyberdict(self):
@@ -116,7 +118,7 @@ class Route:
                 'code': 0
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/exam_cyberlist')
     async def exam_cyberlist(self):
@@ -134,7 +136,7 @@ class Route:
                 'code': 0
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/repr')
     async def dict_repr(self):
@@ -151,7 +153,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/str')
     async def dict_str(self):
@@ -168,7 +170,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/len')
     async def dict_len(self):
@@ -185,7 +187,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/getitem')
     async def dict_getitem(self):
@@ -203,7 +205,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/setitem')
     async def dict_setitem(self):
@@ -221,7 +223,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/delitem')
     async def dict_delitem(self):
@@ -238,7 +240,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/todict')
     async def todict(self):
@@ -255,7 +257,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/get')
     async def dict_get(self):
@@ -274,7 +276,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/setdefault')
     async def dict_setdefault(self):
@@ -293,7 +295,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/update')
     async def dict_update(self):
@@ -310,7 +312,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/keys')
     async def dict_keys(self):
@@ -327,7 +329,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/values')
     async def dict_values(self):
@@ -344,7 +346,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/items')
     async def dict_items(self):
@@ -361,7 +363,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/pop')
     async def dict_pop(self):
@@ -381,7 +383,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/popitem')
     async def dict_popitem(self):
@@ -398,7 +400,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberdict/clear')
     async def dict_clear(self):
@@ -414,7 +416,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/repr')
     async def list_repr(self):
@@ -431,7 +433,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/str')
     async def list_str(self):
@@ -448,7 +450,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/len')
     async def list_len(self):
@@ -465,7 +467,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/getitem')
     async def list_getitem(self):
@@ -483,7 +485,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/setitem')
     async def list_setitem(self):
@@ -501,7 +503,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/delitem')
     async def list_delitem(self):
@@ -518,7 +520,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/tolist')
     async def tolist(self):
@@ -535,7 +537,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/append')
     async def list_append(self):
@@ -552,7 +554,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/extend')
     async def list_extend(self):
@@ -569,7 +571,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/insert')
     async def list_insert(self):
@@ -587,7 +589,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/pop')
     async def list_pop(self):
@@ -604,7 +606,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/remove')
     async def list_remove(self):
@@ -621,7 +623,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/count')
     async def list_count(self):
@@ -639,7 +641,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/index')
     async def list_index(self):
@@ -657,7 +659,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/reverse')
     async def list_reverse(self):
@@ -673,7 +675,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/sort')
     async def list_sort(self):
@@ -695,7 +697,7 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
 
     @bind('/cyberlist/clear')
     async def list_clear(self):
@@ -711,4 +713,4 @@ class Route:
                 'Exception': e
             }
 
-        await self._stream.write(server_obj)
+        return server_obj
