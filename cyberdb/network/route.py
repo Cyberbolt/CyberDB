@@ -536,7 +536,7 @@ class Route:
         await self._stream.write(server_obj)
 
     @bind('/cyberlist/append')
-    async def append(self):
+    async def list_append(self):
         table_name = self._client_obj['table_name']
         value = self._client_obj['value']
         try:
@@ -553,11 +553,131 @@ class Route:
         await self._stream.write(server_obj)
 
     @bind('/cyberlist/extend')
-    async def extend(self):
+    async def list_extend(self):
         table_name = self._client_obj['table_name']
         obj = self._client_obj['obj']
         try:
             self._db[table_name].extend(obj)
+            server_obj = {
+                'code': 1
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/insert')
+    async def list_insert(self):
+        table_name = self._client_obj['table_name']
+        index = self._client_obj['index']
+        value = self._client_obj['value']
+        try:
+            self._db[table_name].insert(index, value)
+            server_obj = {
+                'code': 1
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/pop')
+    async def list_pop(self):
+        table_name = self._client_obj['table_name']
+        index = self._client_obj['index']
+        try:
+            self._db[table_name].pop(index)
+            server_obj = {
+                'code': 1
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/remove')
+    async def list_remove(self):
+        table_name = self._client_obj['table_name']
+        value = self._client_obj['value']
+        try:
+            self._db[table_name].remove(value)
+            server_obj = {
+                'code': 1
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/count')
+    async def list_count(self):
+        table_name = self._client_obj['table_name']
+        value = self._client_obj['value']
+        try:
+            r = self._db[table_name].count(value)
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/index')
+    async def list_index(self):
+        table_name = self._client_obj['table_name']
+        value = self._client_obj['value']
+        try:
+            r = self._db[table_name].index(value)
+            server_obj = {
+                'code': 1,
+                'content': r
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/reverse')
+    async def list_reverse(self):
+        table_name = self._client_obj['table_name']
+        try:
+            self._db[table_name].reverse()
+            server_obj = {
+                'code': 1
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/clear')
+    async def list_clear(self):
+        table_name = self._client_obj['table_name']
+        try:
+            self._db[table_name].clear()
             server_obj = {
                 'code': 1
             }

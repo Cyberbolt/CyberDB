@@ -323,6 +323,61 @@ class CyberList:
             'obj': obj
         }
 
+    @network
+    def insert(self, index, value):
+        return {
+            'route': self._route + '/insert',
+            'table_name': self._table_name,
+            'index': index,
+            'value': value
+        }
+        
+    @network
+    def pop(self, index: int=-1):
+        return {
+            'route': self._route + '/pop',
+            'table_name': self._table_name,
+            'index': index
+        }
+        
+    @network
+    def remove(self, value):
+        return {
+            'route': self._route + '/remove',
+            'table_name': self._table_name,
+            'value': value
+        }
+
+    @network
+    def count(self, value):
+        return {
+            'route': self._route + '/count',
+            'table_name': self._table_name,
+            'value': value
+        }
+        
+    @network
+    def index(self, value):
+        return {
+            'route': self._route + '/index',
+            'table_name': self._table_name,
+            'value': value
+        }
+
+    @network
+    def reverse(self):
+        return {
+            'route': self._route + '/reverse',
+            'table_name': self._table_name
+        }
+
+    @network
+    def clear(self):
+        return {
+            'route': self._route + '/clear',
+            'table_name': self._table_name,
+        }
+
 
 class Proxy:
     '''
