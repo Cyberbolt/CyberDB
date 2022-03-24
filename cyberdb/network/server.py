@@ -4,6 +4,7 @@ import asyncio
 import threading
 
 from obj_encrypt import Secret
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from . import AioStream
 from .route import Route
@@ -144,10 +145,18 @@ class Server:
         ips.add('127.0.0.1')
         self.ips = ips
 
-    def create_cyberdict(self, name: str):
-        if type(name) != type(''):
-            raise RuntimeError('Please use str for the table name.')
-        if name in self._data['db']:
-            raise RuntimeError('Duplicate table names already exist!')
-
-        self._data['db'][name] = {}
+    def set_backup(self, period: int = 900):
+        '''
+            Set the backup period.
+        '''
+        if self._process.get('backup'):
+            self._process['backup'].terminate()
+        if not period:
+            print('Backup closed.')
+            return
+        # The time here is for looping only and does not affect usage anywhere in the world.
+        sched = BackgroundScheduler(timezone="Asia/Shanghai")
+        # Unit: second
+        sched.add_job(self.save_db, 'interval', seconds=period)
+        sched.start()
+        print('The backup cycle: {}s'.format(period))
