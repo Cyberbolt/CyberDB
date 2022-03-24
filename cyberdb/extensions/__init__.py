@@ -33,3 +33,6 @@ class DisconCyberDBError(CyberDBError):
 
 class WrongPasswordCyberDBError(CyberDBError):
     pass
+
+class WrongFilenameCyberDBError(CyberDBError):
+    pass

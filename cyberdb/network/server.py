@@ -1,4 +1,7 @@
 import re
+import shutil
+import pickle
+import time
 import datetime
 import asyncio
 import threading
@@ -9,7 +12,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from . import AioStream
 from .route import Route
 from ..data import datas
-from ..extensions import DisconCyberDBError, WrongPasswordCyberDBError
+from ..extensions import DisconCyberDBError, WrongFilenameCyberDBError, WrongPasswordCyberDBError
 from ..extensions.signature import Signature
 
 
@@ -145,18 +148,45 @@ class Server:
         ips.add('127.0.0.1')
         self.ips = ips
 
-    def set_backup(self, period: int = 900):
+    def set_backup(self, file_name: str = 'data.cdb', period: int = 900):
         '''
             Set the backup period.
         '''
-        if self._process.get('backup'):
-            self._process['backup'].terminate()
-        if not period:
-            print('Backup closed.')
-            return
+        # if self._process.get('backup'):
+        #     self._process['backup'].terminate()
+        # if not period:
+        #     print('Backup closed.')
+        #     return
         # The time here is for looping only and does not affect usage anywhere in the world.
-        sched = BackgroundScheduler(timezone="Asia/Shanghai")
-        # Unit: second
-        sched.add_job(self.save_db, 'interval', seconds=period)
+        sched = BackgroundScheduler()
+        sched.add_job(self.save_db, 'interval', seconds=period, args=[file_name])
         sched.start()
-        print('The backup cycle: {}s'.format(period))
+        # t = threading.Thread(target=self.__start_backup, args=(file_name, period,))
+        # t.daemon = True
+        # t.start()
+        # self._process['backup'] = p
+        # print('The backup cycle: {}s'.format(period))
+
+    def save_db(self, file_name: str = 'data.cdb'):
+        prefix_name, suffix_name = file_name.rsplit('.', 1)
+        
+        if suffix_name != 'cdb':
+            raise WrongFilenameCyberDBError(
+                'Please enter a filename with a .cdb suffix.')
+
+        # save to hard drive
+        file_name_backup = prefix_name + '_temp.cdb'
+        with open(file_name, 'wb') as f:
+            pickle.dump(self._data, f)
+        shutil.copyfile(file_name, file_name_backup)
+
+    def load_db(self, file_name: str = 'data.cdb'):
+        prefix_name, suffix_name = file_name.rsplit('.', 1)
+        
+        if suffix_name != 'cdb':
+            raise WrongFilenameCyberDBError('The file suffix must be cdb.')
+
+        with open(file_name, 'wb') as f:
+            self._data = pickle.load(f)
+
+        # print('File {} loaded successfully.'.format(file_name))
