@@ -1,3 +1,4 @@
+import inspect
 import datetime
 
 from . import AioStream
@@ -662,6 +663,28 @@ class Route:
         table_name = self._client_obj['table_name']
         try:
             self._db[table_name].reverse()
+            server_obj = {
+                'code': 1
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+
+        await self._stream.write(server_obj)
+
+    @bind('/cyberlist/sort')
+    async def list_sort(self):
+        table_name = self._client_obj['table_name']
+        key = self._client_obj['key']
+        # Dynamic get function.
+        loc = locals()
+        key = exec('{}'.format(key))
+        key = loc['func']
+        reverse = self._client_obj['reverse']
+        try:
+            self._db[table_name].sort(key=key, reverse=reverse)
             server_obj = {
                 'code': 1
             }
