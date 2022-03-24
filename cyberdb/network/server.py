@@ -27,20 +27,20 @@ class Server:
 
     def start(self, host: str = '127.0.0.1', port: int = 9980,
               password: str = None, max_con: int = 500, timeout: int = 0,
-              print_log: bool = False):
+              print_log: bool = False, encrypt: bool = False):
         '''
             The server starts from the background.
 
                 max_con -- Maximum number of waiting connections.
         '''
         t = threading.Thread(target=self.run,
-                             args=(host, port, password, max_con, timeout, print_log))
+                             args=(host, port, password, max_con, timeout, print_log, encrypt))
         t.daemon = True
         t.start()
 
     def run(self, host: str = '127.0.0.1', port: int = 9980,
             password: str = None, max_con: int = 500, timeout: int = 0,
-            print_log: bool = False, encrypt: bool=False):
+            print_log: bool = False, encrypt: bool = False):
         '''
             The server runs in the foreground.
 
@@ -138,10 +138,11 @@ class Server:
 
     def set_ip_whitelist(self, ips: list):
         for ip in ips:
-            if not re.match(r'((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})\
-            (\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}', ip):
+            if not re.match(r'^((2((5[0-5])|([0-4]\d)))|([0-1]?\d{1,2}))(\.((2((5[0-5])|([0-4]\d)))|([0-1]?\d{1,2}))){3}$', ip):
                 raise RuntimeError('Please enter a valid ipv4 address.')
-        self.ips = set(ips)
+        ips = set(ips)
+        ips.add('127.0.0.1')
+        self.ips = ips
 
     def create_cyberdict(self, name: str):
         if type(name) != type(''):
