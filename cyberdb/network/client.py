@@ -380,24 +380,25 @@ class CyberList:
     @network
     def sort(self, key=None, reverse=False) -> None:
         # Reference the lambda part to func.
-        if key.__code__.co_name == '<lambda>':
-            key = 'func = ' + \
-                inspect.getsource(key).split('=')[1].rsplit(')')[0]
-        # De-indent the code and reference the function to the func.
-        elif key.__code__.co_name:
-            code = inspect.getsource(key)
-            num = 0
-            for i in range(len(code)):
-                if code[i] != ' ':
-                    num = i
-                    break
-            if i != 0:
-                code_new = ''
-                for line in code.splitlines():
-                    code_new += line[num:] + '\n'
-            else:
-                code_new = code
-            key = code_new + '\nfunc = {}'.format(key.__code__.co_name)
+        if key:
+            if key.__code__.co_name == '<lambda>':
+                key = 'func = ' + \
+                    inspect.getsource(key).split('=')[1].rsplit(')')[0]
+            # De-indent the code and reference the function to the func.
+            elif key.__code__.co_name:
+                code = inspect.getsource(key)
+                num = 0
+                for i in range(len(code)):
+                    if code[i] != ' ':
+                        num = i
+                        break
+                if i != 0:
+                    code_new = ''
+                    for line in code.splitlines():
+                        code_new += line[num:] + '\n'
+                else:
+                    code_new = code
+                key = code_new + '\nfunc = {}'.format(key.__code__.co_name)
 
         return {
             'route': self._route + '/sort',

@@ -149,7 +149,7 @@ class Server:
         ips.add('127.0.0.1')
         self.ips = ips
 
-    def set_backup(self, file_name: str = 'data.cdb', period: int = 900):
+    def set_backup(self, file_name: str = 'data.cdb', cycle: int = 900):
         '''
             Set the backup period.
         '''
@@ -159,8 +159,8 @@ class Server:
             raise WrongFilenameCyberDBError(
                 'Please enter a filename with a .cdb suffix.')
 
-        if type(period) != int:
-            raise TypeCyberDBError('The type of period is not an integer.')
+        if type(cycle) != int:
+            raise TypeCyberDBError('The type of cycle is not an integer.')
 
         # If the scheduled task exists, reset it.
         if self.sched:
@@ -169,7 +169,7 @@ class Server:
         # The time here is for looping only and does not affect usage anywhere in the world.
         self.sched = BackgroundScheduler(timezone='Asia/Shanghai')
         self.sched.add_job(self.save_db, 'interval',
-                           seconds=period, args=[file_name])
+                           seconds=cycle, args=[file_name])
         self.sched.start()
 
     def save_db(self, file_name: str = 'data.cdb'):

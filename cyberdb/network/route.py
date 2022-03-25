@@ -715,10 +715,13 @@ class Route:
     async def list_sort(self):
         table_name = self._client_obj['table_name']
         key = self._client_obj['key']
-        # Dynamic get function.
-        loc = locals()
-        key = exec('{}'.format(key))
-        key = loc['func']
+        
+        if key:
+            # Dynamic get function.
+            loc = locals()
+            key = exec('{}'.format(key))
+            key = loc['func']
+            
         reverse = self._client_obj['reverse']
         try:
             self._db[table_name].sort(key=key, reverse=reverse)
