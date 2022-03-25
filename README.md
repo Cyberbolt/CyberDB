@@ -1,6 +1,6 @@
 # CyberDB
 
-[Chinese Version](https://github.com/Cyberbolt/obj_encrypt/blob/main/README_CHN.md)
+[Chinese Version](https://github.com/Cyberbolt/CyberDB/blob/main/README_CHN.md)
 
 CyberDB is a lightweight Python in-memory database. It is designed to use Python's built-in data structures Dictionaries, Lists for data storage, efficient communication through Socket TCP, and provide data persistence. This module is often used in Gunicorn inter-process communication, distributed computing and other fields.
 
