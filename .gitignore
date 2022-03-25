@@ -1,6 +1,7 @@
 #自定义忽略
 macvenv
 .idea
+dist
 
 
 # Byte-compiled / optimized / DLL files
