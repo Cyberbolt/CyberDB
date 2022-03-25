@@ -48,10 +48,11 @@ class ConPool:
                 if time_now > connection['timestamp'] + self._time_out:
                     continue
             # Check if the server is down.
-            if getattr(connection['s'], '_closed'):
-                pass
-            else:
+            r = confirm_the_connection(connection['s'], self._dp)
+            if r['code'] == 1:
                 return connection['s']
+            else:
+                pass
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((self._host, self._port))
@@ -583,19 +584,20 @@ def connect(host: str = '127.0.0.1', port: int = 9980, password:
     con_pool = ConPool(host, port, dp, time_out=time_out)
 
     # Synchronously test whether the connection is successful.
-    confirm_the_connection(con_pool, dp)
-
+    s = con_pool.get()
+    confirm_the_connection(s, dp)
+    con_pool.put(s)
+    
     client = Client(con_pool, dp)
     return client
 
 
-def confirm_the_connection(con_pool: ConPool, dp: datas.DataParsing) -> dict:
+def confirm_the_connection(s: socket.socket, dp: datas.DataParsing) -> dict:
     '''
         The connection is detected when the database connects for the first 
         time.
     '''
     try:
-        s = con_pool.get()
         stream = Stream(s, dp)
 
         client_obj = {
@@ -605,13 +607,11 @@ def confirm_the_connection(con_pool: ConPool, dp: datas.DataParsing) -> dict:
 
         server_obj = stream.read()
 
-        con_pool.put(s)
-
         return {
             'code': 1,
             'content': server_obj
         }
-    except (ConnectionRefusedError, CyberDBError) as e:
+    except Exception as e:
         return {
             'code': 0,
             'Exception': e
