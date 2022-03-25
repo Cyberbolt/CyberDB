@@ -1,6 +1,7 @@
 import time
 import inspect
 import socket
+from typing import List, Tuple, Dict
 
 from obj_encrypt import Secret
 
@@ -159,14 +160,14 @@ class CyberDict:
         }
 
     @network
-    def todict(self):
+    def todict(self) -> Dict:
         return {
             'route': self._route + '/todict',
             'table_name': self._table_name
         }
 
     @network
-    def get(self, key, default=None):
+    def get(self, key, default=None) -> any:
         return {
             'route': self._route + '/get',
             'table_name': self._table_name,
@@ -175,7 +176,7 @@ class CyberDict:
         }
 
     @network
-    def setdefault(self, key, default=None):
+    def setdefault(self, key, default=None) -> None:
         return {
             'route': self._route + '/setdefault',
             'table_name': self._table_name,
@@ -184,7 +185,7 @@ class CyberDict:
         }
 
     @network
-    def update(self, dict2):
+    def update(self, dict2) -> None:
         return {
             'route': self._route + '/update',
             'table_name': self._table_name,
@@ -192,28 +193,28 @@ class CyberDict:
         }
 
     @network
-    def keys(self):
+    def keys(self) -> List:
         return {
             'route': self._route + '/keys',
             'table_name': self._table_name
         }
 
     @network
-    def values(self):
+    def values(self) -> List:
         return {
             'route': self._route + '/values',
             'table_name': self._table_name
         }
 
     @network
-    def items(self):
+    def items(self) -> List[Tuple]:
         return {
             'route': self._route + '/items',
             'table_name': self._table_name
         }
 
     @network
-    def pop(self, key, default=None):
+    def pop(self, key, default=None) -> any:
         return {
             'route': self._route + '/pop',
             'table_name': self._table_name,
@@ -222,14 +223,14 @@ class CyberDict:
         }
 
     @network
-    def popitem(self):
+    def popitem(self) -> Tuple[any, any]:
         return {
             'route': self._route + '/popitem',
             'table_name': self._table_name
         }
 
     @network
-    def clear(self):
+    def clear(self) -> None:
         return {
             'route': self._route + '/clear',
             'table_name': self._table_name
@@ -303,14 +304,14 @@ class CyberList:
         }
 
     @network
-    def tolist(self):
+    def tolist(self) -> List:
         return {
             'route': self._route + '/tolist',
             'table_name': self._table_name
         }
 
     @network
-    def append(self, value):
+    def append(self, value) -> None:
         return {
             'route': self._route + '/append',
             'table_name': self._table_name,
@@ -318,7 +319,7 @@ class CyberList:
         }
 
     @network
-    def extend(self, obj):
+    def extend(self, obj) -> None:
         if type(obj) == CyberList:
             obj = obj.tolist()
 
@@ -329,7 +330,7 @@ class CyberList:
         }
 
     @network
-    def insert(self, index, value):
+    def insert(self, index, value) -> None:
         return {
             'route': self._route + '/insert',
             'table_name': self._table_name,
@@ -338,7 +339,7 @@ class CyberList:
         }
 
     @network
-    def pop(self, index: int = -1):
+    def pop(self, index: int = -1) -> any:
         return {
             'route': self._route + '/pop',
             'table_name': self._table_name,
@@ -346,7 +347,7 @@ class CyberList:
         }
 
     @network
-    def remove(self, value):
+    def remove(self, value) -> None:
         return {
             'route': self._route + '/remove',
             'table_name': self._table_name,
@@ -354,7 +355,7 @@ class CyberList:
         }
 
     @network
-    def count(self, value):
+    def count(self, value) -> int:
         return {
             'route': self._route + '/count',
             'table_name': self._table_name,
@@ -362,7 +363,7 @@ class CyberList:
         }
 
     @network
-    def index(self, value):
+    def index(self, value) -> int:
         return {
             'route': self._route + '/index',
             'table_name': self._table_name,
@@ -370,14 +371,14 @@ class CyberList:
         }
 
     @network
-    def reverse(self):
+    def reverse(self) -> None:
         return {
             'route': self._route + '/reverse',
             'table_name': self._table_name
         }
 
     @network
-    def sort(self, key=None, reverse=False):
+    def sort(self, key=None, reverse=False) -> None:
         # Reference the lambda part to func.
         if key.__code__.co_name == '<lambda>':
             key = 'func = ' + \
@@ -406,7 +407,7 @@ class CyberList:
         }
 
     @network
-    def clear(self):
+    def clear(self) -> None:
         return {
             'route': self._route + '/clear',
             'table_name': self._table_name,
