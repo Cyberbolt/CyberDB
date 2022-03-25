@@ -5,7 +5,7 @@ import socket
 from obj_encrypt import Secret
 
 from ..data import datas
-from ..extensions import CyberDBError
+from ..extensions import CyberDBError, WrongPasswordCyberDBError
 from ..extensions.signature import Signature
 from . import Stream
 
@@ -45,7 +45,7 @@ class ConPool:
             connection = self._connections.pop()
             time_now = int(time.time())
             if self._time_out:
-                if connection['timestamp'] + self._time_out > time_now:
+                if time_now > connection['timestamp'] + self._time_out:
                     continue
             # Check if the server is down.
             if getattr(connection['s'], '_closed'):
@@ -451,11 +451,11 @@ class Proxy:
         '''
             Return the connection to the connection pool.
         '''
-        if self._con.reader == None or self._con == None:
+        if self._con == None:
             raise CyberDBError(
                 'The connection could not be closed, the proxy has not acquired a connection.')
 
-        self._con_pool.put(self._con.reader, self._con.writer)
+        self._con_pool.put(self._con.s)
         self._con.s = None
 
     def create_cyberdict(self, table_name: str, content: dict = {}):
@@ -565,20 +565,22 @@ class Client:
 
 
 def connect(host: str = '127.0.0.1', port: int = 9980, password:
-            str = None, encrypt: bool = False):
+            str = None, encrypt: bool = False, time_out: int=None):
     '''
         Connect to the CyberDB server via TCP, this method will run 
         synchronously.
     '''
     if not password:
-        raise RuntimeError('The password cannot be empty.')
+        raise WrongPasswordCyberDBError('The password cannot be empty.')
+    if time_out and type(time_out) != int:
+        raise CyberDBError('time_out must be an integer.')
 
     # Responsible for encrypting and decrypting objects.
     secret = Secret(key=password)
     # for digital signature
     signature = Signature(salt=password.encode())
     dp = datas.DataParsing(secret, signature, encrypt=encrypt)
-    con_pool = ConPool(host, port, dp)
+    con_pool = ConPool(host, port, dp, time_out=time_out)
 
     # Synchronously test whether the connection is successful.
     confirm_the_connection(con_pool, dp)
