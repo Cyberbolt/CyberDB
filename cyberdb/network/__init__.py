@@ -134,11 +134,18 @@ class Stream:
         number_of_times = self._dp.obj_to_data(
             math.ceil(len(data) / SLICE_SIZE)
         )
-        self._s.sendall(number_of_times)
+        try:
+            self._s.sendall(number_of_times)
+        except BrokenPipeError as e:
+            raise DisconCyberDBError('The TCP connection has been lost, please run proxy.connect() to regain the connection.')
         
         # Get the client's readiness status.
         ready = self._s.recv(SLICE_SIZE)
-        r = self._dp.data_to_obj(ready)
+        try:
+            r = self._dp.data_to_obj(ready)
+        except EOFError as e:
+            raise DisconCyberDBError('The TCP connection has been lost, please run proxy.connect() to regain the connection.')
+        
         if r['code'] != 1:
             self._s.close()
             raise WrongPasswordCyberDBError(r['errors-code'])

@@ -566,7 +566,7 @@ class Client:
 
 
 def connect(host: str = '127.0.0.1', port: int = 9980, password:
-            str = None, encrypt: bool = False, time_out: int=None):
+            str = None, encrypt: bool = False, time_out: int = None):
     '''
         Connect to the CyberDB server via TCP, this method will run 
         synchronously.
@@ -587,7 +587,7 @@ def connect(host: str = '127.0.0.1', port: int = 9980, password:
     s = con_pool.get()
     confirm_the_connection(s, dp)
     con_pool.put(s)
-    
+
     client = Client(con_pool, dp)
     return client
 
