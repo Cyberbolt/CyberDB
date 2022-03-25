@@ -36,3 +36,9 @@ class WrongPasswordCyberDBError(CyberDBError):
 
 class WrongFilenameCyberDBError(CyberDBError):
     pass
+
+class BackupCyberDBError(CyberDBError):
+    pass
+
+class TypeCyberDBError(CyberDBError):
+    pass
