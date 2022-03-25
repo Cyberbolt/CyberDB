@@ -6,7 +6,7 @@ from typing import List, Tuple, Dict
 from obj_encrypt import Secret
 
 from ..data import datas
-from ..extensions import CyberDBError, WrongPasswordCyberDBError
+from ..extensions import CyberDBError, WrongInputCyberDBError, WrongPasswordCyberDBError, WrongTableNameCyberDBError
 from ..extensions.signature import Signature
 from . import Stream
 
@@ -461,10 +461,10 @@ class Proxy:
         self._con.s = None
 
     def create_cyberdict(self, table_name: str, content: dict = {}):
-        if type(table_name) != type(''):
-            raise CyberDBError('Please use str for the table name.')
-        if type(content) != type(dict()):
-            raise CyberDBError(
+        if type(table_name) != str:
+            raise WrongInputCyberDBError('Please use str for the table name.')
+        if type(content) != dict:
+            raise WrongInputCyberDBError(
                 'The input database table type is not a Python dictionary.')
 
         stream = Stream(self._con.s, self._dp)
@@ -478,14 +478,14 @@ class Proxy:
         server_obj = stream.read()
 
         if server_obj['code'] == 0:
-            raise CyberDBError('Duplicate table names already exist!')
+            raise WrongTableNameCyberDBError('Duplicate table names already exist!')
 
     def get_cyberdict(self, table_name: str) -> CyberDict:
         '''
             Get the network object of the table from the database.
         '''
-        if type(table_name) != type(''):
-            raise CyberDBError('Please use str for the table name.')
+        if type(table_name) != str:
+            raise WrongInputCyberDBError('Please use str for the table name.')
 
         stream = Stream(self._con.s, self._dp)
 
@@ -497,16 +497,16 @@ class Proxy:
 
         server_obj = stream.read()
         if server_obj['code'] == 0:
-            raise CyberDBError('{} table does not exist.'.format(table_name))
+            raise WrongTableNameCyberDBError('{} table does not exist.'.format(table_name))
         else:
             table = CyberDict(table_name, self._dp, self._con)
             return table
 
     def create_cyberlist(self, table_name: str, content: list = []):
-        if type(table_name) != type(''):
-            raise CyberDBError('Please use str for the table name.')
+        if type(table_name) != str:
+            raise WrongInputCyberDBError('Please use str for the table name.')
         if type(content) != type(list()):
-            raise CyberDBError(
+            raise WrongInputCyberDBError(
                 'The input database table type is not a Python dictionary.')
 
         stream = Stream(self._con.s, self._dp)
@@ -520,14 +520,14 @@ class Proxy:
         server_obj = stream.read()
 
         if server_obj['code'] == 0:
-            raise CyberDBError('Duplicate table names already exist!')
+            raise WrongTableNameCyberDBError('Duplicate table names already exist!')
 
     def get_cyberlist(self, table_name: str) -> CyberList:
         '''
             Get the network object of the table from the database.
         '''
-        if type(table_name) != type(''):
-            raise CyberDBError('Please use str for the table name.')
+        if type(table_name) != str:
+            raise WrongInputCyberDBError('Please use str for the table name.')
 
         stream = Stream(self._con.s, self._dp)
 
@@ -539,10 +539,44 @@ class Proxy:
 
         server_obj = stream.read()
         if server_obj['code'] == 0:
-            raise CyberDBError('{} table does not exist.'.format(table_name))
+            raise WrongTableNameCyberDBError('{} table does not exist.'.format(table_name))
         else:
             table = CyberList(table_name, self._dp, self._con)
             return table
+
+    def print_tables(self):
+        @network
+        def get_tables(self):
+            return {
+                'route': '/print_tables'
+            }
+            
+        r = get_tables(self)
+        for line in r:
+            print('table name: {}  type name: {}'.format(line[0], line[1]))
+
+    def delete_table(self, table_name: str):
+        if type(table_name) != str:
+            raise WrongInputCyberDBError('Please use str for the table name.')
+
+        stream = Stream(self._con.s, self._dp)
+
+        client_obj = {
+            'route': '/exam_cyberlist',
+            'table_name': table_name
+        }
+        stream.write(client_obj)
+
+        server_obj = stream.read()
+        if server_obj['code'] == 0:
+            raise WrongTableNameCyberDBError('{} table does not exist.'.format(table_name))
+        
+        client_obj = {
+            'route': '/delete_table',
+            'table_name': table_name
+        }
+        stream.write(client_obj)
+        stream.read()
 
 
 class Client:

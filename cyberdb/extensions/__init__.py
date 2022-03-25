@@ -42,3 +42,9 @@ class BackupCyberDBError(CyberDBError):
 
 class TypeCyberDBError(CyberDBError):
     pass
+
+class WrongTableNameCyberDBError(CyberDBError):
+    pass
+
+class WrongInputCyberDBError(CyberDBError):
+    pass

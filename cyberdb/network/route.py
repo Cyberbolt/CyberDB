@@ -14,6 +14,7 @@ def bind(path):
         async def wrapper(self, *args, **kw):
             server_obj = await func(self, *args, **kw)
             server_obj['password'] = self._dp._secret.key
+            
             await self._stream.write(server_obj)
 
         MAP[path] = wrapper
@@ -136,6 +137,39 @@ class Route:
                 'code': 0
             }
 
+        return server_obj
+
+    @bind('/print_tables')
+    async def print_tables(self):
+        inform = []
+        for table_name in self._db:
+            if type(self._db[table_name]) == dict:
+                type_name = 'CyberDict'
+            elif type(self._db[table_name]) == list:
+                type_name = 'CyberList'
+            inform.append((table_name, type_name))
+            
+        server_obj = {
+            'code': 1,
+            'content': inform
+        }
+        
+        return server_obj
+
+    @bind('/delete_table')
+    async def delete_table(self):
+        table_name = self._client_obj['table_name']
+        try:
+            del self._db[table_name]
+            server_obj = {
+                'code': 1
+            }
+        except Exception as e:
+            server_obj = {
+                'code': 0,
+                'Exception': e
+            }
+        
         return server_obj
 
     @bind('/cyberdict/repr')
