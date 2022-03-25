@@ -1,2 +1,2 @@
-obj-encrypt==0.2.0
-APScheduler==3.9.1
+obj-encrypt==0.3.0
+APScheduler>=3.9.1
