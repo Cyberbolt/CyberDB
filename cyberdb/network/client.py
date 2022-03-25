@@ -433,6 +433,12 @@ class Proxy:
         # second is the writer.
         self._con = Connection()
 
+    def __enter__(self):
+        self.connect()
+        
+    def __exit__(self):
+        self.close()
+
     def connect(self):
         '''
             Get the latest connection from the connection pool.
@@ -595,9 +601,6 @@ class Client:
         '''
         proxy = Proxy(self._con_pool, self._dp)
         return proxy
-
-    def check_connection_pool(self):
-        pass
 
 
 def connect(host: str = '127.0.0.1', port: int = 9980, password:
