@@ -180,10 +180,10 @@ class Server:
                 'Please enter a filename with a .cdb suffix.')
 
         # save to hard drive
-        file_name_backup = prefix_name + '_backup.cdb'
-        with open(file_name, 'wb') as f:
+        file_name_temp = prefix_name + '_temp.cdb'
+        with open(file_name_temp, 'wb') as f:
             pickle.dump(self._data, f)
-        shutil.copyfile(file_name, file_name_backup)
+        shutil.move(file_name_temp, file_name)
 
     def load_db(self, file_name: str = 'data.cdb'):
         prefix_name, suffix_name = file_name.rsplit('.', 1)
