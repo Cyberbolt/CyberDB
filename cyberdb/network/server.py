@@ -82,6 +82,11 @@ class Server:
             backlog=self._data['config']['max_con']
         )
 
+        print('CyberDB server is starting, please wait a few seconds before operation!\n* Started at {}:{}'.format(
+            self._data['config']['host'],
+            self._data['config']['port']
+        ))
+
         async with server:
             await server.serve_forever()
 
