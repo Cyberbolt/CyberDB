@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="None">
+        
+        <link rel="canonical" href="https://example.com/">
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>CyberDB</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css">
+
+        <script src="js/jquery-1.10.2.min.js" defer></script>
+        <script src="js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body class="homepage">
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href=".">CyberDB</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem active">
+                                <a href="." class="nav-link">Home</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="API/" class="nav-link">API</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" class="nav-link disabled">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="API/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#cyberdb" class="nav-link">CyberDB</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#installation" class="nav-link">Installation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#links" class="nav-link">Links</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#quick-to-use" class="nav-link">Quick to Use</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#generalize" class="nav-link">Generalize</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#notice" class="nav-link">Notice</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="cyberdb">CyberDB</h1>
+<p><a href="https://github.com/Cyberbolt/CyberDB/blob/main/README_CHN.md">Chinese Version</a></p>
+<p>CyberDB is a lightweight Python in-memory database. It is designed to use Python's built-in data structures Dictionaries, Lists for data storage, efficient communication through Socket TCP, and provide data persistence. This module is often used in Gunicorn inter-process communication, distributed computing and other fields.</p>
+<h2 id="installation">Installation</h2>
+<ol>
+<li>Enter the command window, create a virtual environment, and enter the following commands in turn</li>
+</ol>
+<p>Linux and macOS:</p>
+<pre><code class="language-python">python3 -m venv venv # Create a virtual environment.
+. venv/bin/activate # Activate the virtual environment.
+</code></pre>
+<p>Windows:</p>
+<pre><code class="language-python">python -m venv venv # Create a virtual environment.
+venv\Scripts\activate # Activate the virtual environment.
+</code></pre>
+<p>2.Install CyberDB, enter</p>
+<pre><code class="language-python">pip install --upgrade pip
+pip install cyberdb
+</code></pre>
+<p>If your server and client are running in two different project directories, please install CyberDB in the virtual environment of the server and client respectively.</p>
+<h2 id="links">Links</h2>
+<ul>
+<li>GitHub: <a href="https://github.com/Cyberbolt/CyberDB">https://github.com/Cyberbolt/CyberDB</a> </li>
+<li>PyPI: <a href="https://pypi.org/project/CyberDB/">https://pypi.org/project/CyberDB/</a></li>
+<li>Documentation: In progress</li>
+<li>CyberLight: <a href="https://www.cyberlight.xyz/">https://www.cyberlight.xyz/</a></li>
+</ul>
+<h2 id="quick-to-use">Quick to Use</h2>
+<p>In this module, please use CyberDict and CyberList instead of dict and list (a TCP-based Dictionaries-like, Lists-like object).</p>
+<h3 id="server">Server</h3>
+<p>Run the database server.</p>
+<pre><code class="language-python">import time
+import cyberdb
+
+db = cyberdb.Server()
+# The data is persistent, the backup file is data.cdb, and the backup cycle is every 900 seconds.
+db.set_backup('data.cdb', cycle=900)
+# Set the TCP address, port number, and password.
+# The start method will not block the operation. If you want the operation to block, please use the run method instead of start, and the parameters remain unchanged.
+db.start(host='127.0.0.1', port=9980, password='123456')
+
+while True:
+    time.sleep(10000)
+</code></pre>
+<p>After the above server runs, data.cdb and data_backup.cdb (backup files) will be generated (or overwritten) in the project root directory every 900 seconds. The file can be read the next time the database is started using the load method.</p>
+<h3 id="client">Client</h3>
+<h4 id="connect-to-the-database">Connect to the Database</h4>
+<pre><code class="language-python">import cyberdb
+
+# Generate a client instance and connect.
+client = cyberdb.connect(host='127.0.0.1', port=9980, password='123456')
+</code></pre>
+<h4 id="generate-proxy-object">Generate proxy Object</h4>
+<pre><code class="language-python"># Generate proxy for this request.
+proxy = client.get_proxy()
+# Automatically obtain database connections from the connection pool.
+proxy.connect()
+</code></pre>
+<p>The proxy object is not thread-safe, please generate the proxy object separately in each thread (or coroutine), and obtain the database connection through the connect method. You only need to use the close method to return the connection after the operation is completed, and the returned connection is managed intelligently by the client object.</p>
+<h4 id="manipulate-proxy-objects">Manipulate proxy Objects</h4>
+<p>Create CyberDict and CyberList</p>
+<pre><code class="language-python"># Create dict1 and dict2 tables of type CyberDict and 
+# list1 table of type CyberList in the database respectively.
+proxy.create_cyberdict('dict1')
+proxy.create_cyberdict('dict2')
+proxy.create_cyberlist('list1')
+</code></pre>
+<pre><code class="language-python">dict1 = proxy.get_cyberdict('dict1')
+dict2 = proxy.get_cyberdict('dict2')
+list1 = proxy.get_cyberlist('list1')
+</code></pre>
+<p>The dict1, dict2, and list1 obtained here are all network objects, and the data is transmitted through TCP. The three objects are controlled by the proxy, and when proxy.close() is called to return the connection, the three objects will also be invalid. Similarly, use proxy.connect() to get connections from the connection pool again, and dict1, dict2, list1 also become available.</p>
+<p>Once you understand this operation, you can operate dict1, dict2 like Dictionaries, and list1 like Lists! (CyberDict and CyberList support most methods of Dictionaries, Lists)</p>
+<p>Examples are as follows</p>
+<h5 id="common-operations-of-cyberdict">Common Operations of CyberDict</h5>
+<p>Add key-value pairs in dict1 and dict2</p>
+<pre><code class="language-python">dict1[0] = 100
+dict1['test'] = 'Hello CyberDB!'
+dict2[0] = 200
+</code></pre>
+<p>Get the corresponding value</p>
+<pre><code class="language-python">dict1.get(0)
+</code></pre>
+<pre><code>100
+</code></pre>
+<pre><code class="language-python">dict2[0]
+</code></pre>
+<pre><code>200
+</code></pre>
+<p>View dict1 and dict2 (can also be printed with print )</p>
+<pre><code class="language-python">dict1
+</code></pre>
+<pre><code>{0: 100, 'test': 'Hello CyberDB!'}
+</code></pre>
+<pre><code class="language-python">dict2
+</code></pre>
+<pre><code>{0: 200}
+</code></pre>
+<p>Get length</p>
+<pre><code class="language-python">len(dict1)
+</code></pre>
+<pre><code>2
+</code></pre>
+<p>Delete key-value pair</p>
+<pre><code class="language-python">del dict1[0]
+</code></pre>
+<pre><code class="language-python">dict1
+</code></pre>
+<pre><code>{'test': 'Hello CyberDB!'}
+</code></pre>
+<p>Empty dict1</p>
+<pre><code class="language-python">dict1.clear()
+dict1
+</code></pre>
+<pre><code>{}
+</code></pre>
+<h5 id="common-operations-of-cyberlist">Common Operations of CyberList</h5>
+<p>Generate the contents of list1</p>
+<pre><code class="language-python">for i in range(5):
+    list1.append(99)
+
+list1
+</code></pre>
+<pre><code>[99, 99, 99, 99, 99]
+</code></pre>
+<p>Change coordinate values</p>
+<pre><code class="language-python">list1[3] = 100
+list1
+</code></pre>
+<pre><code>[99, 99, 99, 100, 99]
+</code></pre>
+<p>To slice</p>
+<pre><code class="language-python">list1[3:]
+</code></pre>
+<pre><code>[100, 99]
+</code></pre>
+<p>Get the length of list1</p>
+<pre><code class="language-python">len(list1)
+</code></pre>
+<pre><code>5
+</code></pre>
+<p>Print each element of list1 by iterating</p>
+<pre><code class="language-python">for v in list1:
+    print(v)
+</code></pre>
+<pre><code>99
+99
+99
+100
+99
+</code></pre>
+<p>It is strongly recommended to use a for loop to iterate CyberDict, each iteration will get v from the server, and the space complexity of the client is o(1). Iteration can also be used for CyberDict. In the iteration of CyberDict, the client space complexity is o(n), and n is the size of CyberDict.keys().</p>
+<h4 id="release-the-proxy-object">Release the Proxy Object</h4>
+<p>After the use is complete, return the connection of the proxy to the connection pool.</p>
+<pre><code class="language-python">proxy.close()
+</code></pre>
+<p>The proxy object also supports context managers, such as</p>
+<pre><code class="language-python">with client.get_proxy() as proxy:
+    list1 = proxy.get_cyberlist('list1')
+    print(list1)
+</code></pre>
+<pre><code>[99, 99, 99, 100, 99]
+</code></pre>
+<h2 id="generalize">Generalize</h2>
+<p>With CyberDB, memory performance can be fully utilized, and different processes (or even different hosts) can communicate through Python's data structures. Thank you!</p>
+<h2 id="notice">Notice</h2>
+<p>Due to encoding limitations, CyberDB will recognize 0 as None, but it does not affect the calculation, please convert None to 0 in the desired position.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js" defer></script>
+        <script src="search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.2.3
+Build Date UTC : 2022-03-30 08:26:59.416174+00:00
+-->

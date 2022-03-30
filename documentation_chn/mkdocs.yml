@@ -1,0 +1,6 @@
+site_name: CyberDB
+site_url: https://example.com/
+
+nav:
+- 主页: index.md
+- API: API.md

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://example.com/API/">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>API - CyberDB</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css">
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">CyberDB</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">API</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href=".." class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#api" class="nav-link">API</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#cyberdbserver-class" class="nav-link">cyberdb.Server Class</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#cyberdbconnect-function" class="nav-link">cyberdb.connect Function</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#cyberdbclient-class" class="nav-link">cyberdb.Client Class</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#proxy-class" class="nav-link">Proxy Class</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#cyberdbcyberdict-class" class="nav-link">cyberdb.CyberDict Class</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#cyberdbcyberlist" class="nav-link">cyberdb.CyberList 类</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="api">API</h1>
+<p>This part of the documentation covers all the interfaces of CyberDB. For the parts of CyberDB that depend on external libraries, we document the most important parts here and provide a link to the specification document.</p>
+<h2 id="cyberdbserver-class">cyberdb.Server Class</h2>
+<p><strong>class cyberdb.Server</strong></p>
+<p>This class is used to create CyberDB server objects.</p>
+<pre><code class="language-python">def start(self, host: str = '127.0.0.1', port: int = 9980,
+            password: str = None, max_con: int = 500, timeout: int = 0,
+            print_log: bool = False, encrypt: bool = False):
+'''
+    Starts the CyberDB server in the background, which does not block 
+    foreground tasks.
+
+    Parameters:
+
+        host -- TCP listening host address, such as 127.0.0.1.
+
+        port – TCP listening port.
+
+        password -- TCP communication password, it is recommended to use 
+        a combination of English letters and numbers,
+        Up to 32 characters long.
+
+        max_con -- the maximum number of concurrency.
+
+        timeout -- The timeout for a single connection, in seconds.
+
+        print_log -- whether to print the communication log, Fasle does not 
+        print it.
+
+        encrypt -- Whether to encrypt the communication content, Fasle is 
+        not encrypted. The encryption algorithm is AES-256 and the key is 
+        password.
+
+    Return Type: None
+'''
+</code></pre>
+<pre><code class="language-python">def run(self, host: str = '127.0.0.1', port: int = 9980,
+        password: str = None, max_con: int = 500, timeout: int = 0,
+        print_log: bool = False, encrypt: bool = False):
+'''
+    Running the CyberDB server in the foreground blocks foreground tasks.
+    The parameters are the same as the start method.
+
+    Return Type: None
+'''
+</code></pre>
+<pre><code class="language-python">def set_ip_whitelist(self, ips: list):
+'''
+    Set the ip whitelist. When CyberDB encrypts communication, only 
+    whitelisted ip connections are allowed.
+
+    This method only works if cyberdb.Server.start(encrypt=True) or 
+    cyberdb.Server.run(encrypt=True) are enabled.
+
+    Parameters:
+
+        ips -- the type is a list, the format is ['192.168.1.1', 
+        '118.123.89.137']
+
+    Return Type: None
+'''
+</code></pre>
+<pre><code class="language-python">def set_backup(self, file_name: str = 'data.cdb', cycle: int = 900):
+'''
+    Set timed backup. After this operation is set, data persistent backup 
+    will be performed at the specified period, and the CyberDB database 
+    will be saved to the hard disk.
+
+    parameter:
+
+        file_name -- the name of the file generated by the backup, the file 
+        suffix must be .cdb.
+
+        cycle -- The cycle of the cyclic backup, in seconds.
+
+    Return Type: None
+'''
+</code></pre>
+<pre><code class="language-python">def save_db(self, file_name: str = 'data.cdb'):
+'''
+    Data persistence, save the CyberDB database to the hard disk.
+
+    parameter:
+
+        file_name -- the name of the file generated by the backup, the file 
+        suffix must be .cdb.
+
+    Return Type: None
+'''
+</code></pre>
+<pre><code class="language-python">def load_db(self, file_name: str = 'data.cdb'):
+'''
+    Load a file in .cdb format to load the CyberDB database backed up from 
+    the hard disk back into memory.
+
+    parameter:
+        file_name -- the file name generated by data persistence, the file 
+        suffix must be .cdb.
+
+    Return Type: None
+'''
+</code></pre>
+<h2 id="cyberdbconnect-function">cyberdb.connect Function</h2>
+<pre><code class="language-python">def cyberdb.connect(host: str = '127.0.0.1', port: int = 9980, password:
+            str = None, encrypt: bool = False, time_out: int = None) -&gt; Client:
+'''
+    Connect the client to the CyberDB server.
+
+    Parameters:
+
+        host -- the connection address, such as 127.0.0.1
+
+        port -- connection port
+
+        password -- connection password
+
+        encrypt -- Whether to encrypt communication, if the server enables 
+        encrypt to be True, it must be True here, and vice versa.
+
+        time_out -- The timeout for each connection in the connection pool, 
+        in seconds. Connections in the connection pool will be discarded 
+        after time_out seconds of inactivity, and a new connection will be 
+        generated next time. The connection pool will manage the 
+        connections automatically, and the developer does not need to pay 
+        attention to the details. If this parameter is None, there will be 
+        no timeout, and the connection pool will maintain the connection 
+        until it expires, after which a new connection will be regenerated.
+
+    Return Type: Client
+'''
+</code></pre>
+<h2 id="cyberdbclient-class">cyberdb.Client Class</h2>
+<p><strong>class cyberdb.Client</strong></p>
+<p>The cyberdb.Client object returned by the cyberdb.connect function is used to generate the Proxy object.</p>
+<pre><code class="language-python">def get_proxy(self) -&gt; Proxy:
+'''
+    Generate a Proxy object.
+
+    Return Type: None
+'''
+</code></pre>
+<h2 id="proxy-class">Proxy Class</h2>
+<p>The Proxy object generated by the cyberdb.Client.get_proxy method can operate on the CyberDB database and manage the TCP connections of the CyberDict and CyberList sub-objects generated by the Proxy. After the Proxy object is initialized, it can be used after executing the Proxy.connect method. The Proxy object and its sub-objects will perform remote operations on the server-side CyberDB database.</p>
+<p><strong>class Proxy</strong></p>
+<pre><code class="language-python">def connect(self):
+'''
+    Get a TCP connection from the connection pool and bind it to the Proxy 
+    object.
+
+    Return Type: None
+'''
+</code></pre>
+<pre><code class="language-python">def close(self):
+'''
+    Cancel the TCP connection bound to the Proxy object and return it to 
+    the connection pool. It needs to be reset before the next operation.
+    Execute the Proxy.connect method.
+
+    Return Type: None
+'''
+</code></pre>
+<pre><code class="language-python">def create_cyberdict(self, table_name: str, content: dict = {}):
+'''
+    Create a CyberDict table.
+    Parameters:
+        table_name – table name.
+        content -- table content, needs to be a dictionary type, the 
+        default is an empty dictionary.
+    Return Type: None
+'''
+</code></pre>
+<pre><code class="language-python">def create_cyberlist(self, table_name: str, content: list = []):
+'''
+    Create the CyberList table.
+
+    Parameters:
+
+        table_name – table name.
+
+        content -- table content, it needs to be a list type, the default 
+        is an empty list.
+
+    Return Type: None
+'''
+</code></pre>
+<pre><code class="language-python">def get_cyberdict(self, table_name: str) -&gt; CyberDict:
+'''
+    Get the CyberDict table.
+
+    Parameters:
+
+        table_name – table name.
+
+    Return Type: CyberDict, which is a sub-object generated by Proxy, 
+    which controls the TCP connection.
+'''
+</code></pre>
+<pre><code class="language-python">def get_cyberlist(self, table_name: str) -&gt; CyberList:
+'''
+    Get the CyberList table.
+
+    Parameters:
+
+        table_name – table name.
+
+    Return type: CyberList, which is a sub-object generated by Proxy, which 
+    controls the TCP connection.
+'''
+</code></pre>
+<pre><code class="language-python">def print_tables(self):
+'''
+    Print all tables in the CyberDB database.
+
+    Return Type: None
+'''
+</code></pre>
+<pre><code class="language-python">def delete_table(self, table_name: str):
+'''
+    Drop the table_name table in the CyberDB database.
+
+    Parameters:
+
+        table_name – the name of the table to drop.
+
+    Return Type: None
+'''
+</code></pre>
+<h2 id="cyberdbcyberdict-class">cyberdb.CyberDict Class</h2>
+<p><strong>class cyberdb.CyberDict</strong></p>
+<p>A child object generated by a Proxy object for performing Dictionaries operations. This object will perform remote operations on the server-side CyberDB database. Shares the same TCP connection with the Proxy object. The connection will follow the connection of the Proxy. After the Proxy releases the connection, the object will also lose the connection. CyberDict can execute the get, setdefault, update, keys, values, items, pop, popitem, clear methods and common magic methods of Dictionaries, please refer to <a href="https://docs.python.org/3/library/stdtypes.html#mapping-types-dict">Python dictionary official documentation</a>.</p>
+<p>Iterate over CyberDict using a for loop with client space complexity o(n), where n is the length of CyberDict.keys() .</p>
+<pre><code class="language-python">def todict(self) -&gt; Dict:
+'''
+    Convert CyberDict to Dictionaries.
+
+    Return Type: Dict
+'''
+</code></pre>
+<h2 id="cyberdbcyberlist">cyberdb.CyberList 类</h2>
+<p><strong>class cyberdb.CyberList</strong></p>
+<p>A child object generated by a Proxy object for performing Lists operations. This object will perform remote operations on the server-side CyberDB database. Shares the same TCP connection with the Proxy object. The connection will follow the connection of the Proxy. After the Proxy releases the connection, the object will also lose the connection. CyberList can execute the append, extend, insert, pop, remove, count, index, reverse, sort, clear methods and common magic methods of Lists, please refer to <a href="https://docs.python.org/3/tutorial/datastructures.html#more-on-lists">Python List Official Documentation</a>.</p>
+<p>The CyberList is iterated using a for loop, each iteration will fetch the content from the server, and the space complexity of the client is o(1).</p>
+<pre><code class="language-python">def tolist(self) -&gt; List:
+'''
+    Convert CyberList to Lists.
+
+    Return Type: List
+'''
+</code></pre></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
