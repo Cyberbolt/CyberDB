@@ -51,6 +51,7 @@ In this module, please use CyberDict and CyberList instead of dict and list (a T
 Run the database server.
 
 ```python
+import time
 import cyberdb
 
 db = cyberdb.Server()
@@ -59,6 +60,9 @@ db.set_backup('data.cdb', cycle=900)
 # Set the TCP address, port number, and password.
 # The start method will not block the operation. If you want the operation to block, please use the run method instead of start, and the parameters remain unchanged.
 db.start(host='127.0.0.1', port=9980, password='123456')
+
+while True:
+    time.sleep(10000)
 ```
 
 After the above server runs, data.cdb and data_backup.cdb (backup files) will be generated (or overwritten) in the project root directory every 900 seconds. The file can be read the next time the database is started using the load method.

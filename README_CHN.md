@@ -51,6 +51,7 @@ pip install cyberdb
 
 
 ```python
+import time
 import cyberdb
 
 db = cyberdb.Server()
@@ -59,6 +60,9 @@ db.set_backup('data.cdb', cycle=900)
 # 设置 TCP 地址、端口号、密码，生产环境中密码建议使用大小写字母和数字的组合。
 # start 方法不会阻塞运行，若希望该操作阻塞，请使用 run 方法代替 start，参数不变。
 db.start(host='127.0.0.1', port=9980, password='123456')
+
+while True:
+    time.sleep(10000)
 ```
 
 上述服务端运行后，每 900 秒将在此项目根目录生成（或覆盖）data.cdb。下次启动数据库可使用 load 方法读取该文件。
