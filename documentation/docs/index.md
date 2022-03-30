@@ -305,7 +305,7 @@ for v in list1:
     99
 
 
-It is strongly recommended to use a for loop to iterate CyberDict, each iteration will get v from the server, and the space complexity of the client is o(1). Iteration can also be used for CyberDict. In the iteration of CyberDict, the client space complexity is o(n), and n is the size of CyberDict.keys().
+It is strongly recommended to use a for loop to iterate CyberList, each iteration will get v from the server, and the space complexity of the client is o(1). Iteration can also be used for CyberDict. In the iteration of CyberDict, the client space complexity is o(n), and n is the size of CyberDict.keys().
 
 #### Release the Proxy Object
 

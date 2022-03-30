@@ -301,7 +301,7 @@ for v in list1:
     99
 
 
-强烈推荐使用 for 循环迭代 CyberDict，每次迭代将从服务端获取 v，客户端的空间复杂度为 o(1)。迭代同样可用于 CyberDict，CyberDict 的迭代中，客户端空间复杂度为 o(n), n 为 CyberDict.keys() 的长度。
+强烈推荐使用 for 循环迭代 CyberList，每次迭代将从服务端获取 v，客户端的空间复杂度为 o(1)。迭代同样可用于 CyberDict，CyberDict 的迭代中，客户端空间复杂度为 o(n), n 为 CyberDict.keys() 的长度。
 
 #### 释放 proxy 对象
 
