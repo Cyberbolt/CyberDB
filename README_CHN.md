@@ -37,7 +37,7 @@ pip install cyberdb
 
 - GitHub: [https://github.com/Cyberbolt/CyberDB](https://github.com/Cyberbolt/CyberDB) 
 - PyPI: [https://pypi.org/project/CyberDB/](https://pypi.org/project/CyberDB/)
-- 文档: 正在撰写中
+- 文档: [https://www.cyberlight.xyz/cyberdb-chn](https://www.cyberlight.xyz/cyberdb-chn)
 - 电光笔记: [https://www.cyberlight.xyz/](https://www.cyberlight.xyz/)
 
 ## 快速使用
