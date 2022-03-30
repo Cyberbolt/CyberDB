@@ -38,7 +38,7 @@ pip install cyberdb
 - GitHub: [https://github.com/Cyberbolt/CyberDB](https://github.com/Cyberbolt/CyberDB) 
 - PyPI: [https://pypi.org/project/CyberDB/](https://pypi.org/project/CyberDB/)
 - 文档: 正在撰写中
-- 电光笔记 [https://www.cyberlight.xyz/](https://www.cyberlight.xyz/)
+- 电光笔记: [https://www.cyberlight.xyz/](https://www.cyberlight.xyz/)
 
 ## 快速使用
 
@@ -47,7 +47,7 @@ pip install cyberdb
 ### 服务端
 
 
-首先单独开一个 py 文件，用于服务端初始化时创建数据库表，运行服务端后保存所建表到本地。（该文件只在建表时使用，后续将不会运行）
+服务端初始化，设置备份和 TCP 监听地址。
 
 
 ```python
@@ -61,7 +61,7 @@ db.set_backup('data.cdb', cycle=900)
 db.start(host='127.0.0.1', port=9980, password='123456')
 ```
 
-上述服务端运行后，每 900 秒将在此项目根目录生成（或覆盖） data.cdb 和 data_backup.cdb (备用文件)。下次启动数据库可使用 load 方法读取该文件。
+上述服务端运行后，每 900 秒将在此项目根目录生成（或覆盖）data.cdb。下次启动数据库可使用 load 方法读取该文件。
 
 ### 客户端
 
@@ -85,7 +85,7 @@ proxy = client.get_proxy()
 proxy.connect()
 ```
 
-proxy 对象是线程不安全的，请在每个线程(或协程)中单独生成 proxy 对象，并通过 connect 方法获取数据库连接。你只需在操作完成后使用 close 方法归还连接即可，归还后的连接由 client 对象智能管理。
+建议在每个线程(或协程)中单独生成 proxy 对象，并通过 connect 方法获取数据库连接。你只需在操作完成后使用 close 方法归还连接即可，归还后的连接由 client 对象智能管理。
 
 #### 操作 proxy 对象
 
@@ -195,10 +195,6 @@ len(dict1)
 
 ```python
 del dict1[0]
-```
-
-
-```python
 dict1
 ```
 
@@ -301,7 +297,7 @@ for v in list1:
     99
 
 
-强烈推荐使用 for 循环迭代 CyberDict，每次迭代将从服务端获取 v，客户端的空间复杂度为 o(1)。迭代同样可用于 CyberDict，CyberDict 的迭代中，客户端空间复杂度为 o(n), n 为 CyberDict.keys() 的大小。
+强烈推荐使用 for 循环迭代 CyberDict，每次迭代将从服务端获取 v，客户端的空间复杂度为 o(1)。迭代同样可用于 CyberDict，CyberDict 的迭代中，客户端空间复杂度为 o(n), n 为 CyberDict.keys() 的长度。
 
 #### 释放 proxy 对象
 

@@ -40,7 +40,7 @@ If your server and client are running in two different project directories, plea
 - GitHub: [https://github.com/Cyberbolt/CyberDB](https://github.com/Cyberbolt/CyberDB) 
 - PyPI: [https://pypi.org/project/CyberDB/](https://pypi.org/project/CyberDB/)
 - Documentation: In progress
-- CyberLight [https://www.cyberlight.xyz/](https://www.cyberlight.xyz/)
+- CyberLight: [https://www.cyberlight.xyz/](https://www.cyberlight.xyz/)
 
 ## Quick to Use
 

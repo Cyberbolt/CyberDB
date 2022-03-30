@@ -40,7 +40,7 @@ If your server and client are running in two different project directories, plea
 - GitHub: [https://github.com/Cyberbolt/CyberDB](https://github.com/Cyberbolt/CyberDB) 
 - PyPI: [https://pypi.org/project/CyberDB/](https://pypi.org/project/CyberDB/)
 - Documentation: In progress
-- CyberLight [https://www.cyberlight.xyz/](https://www.cyberlight.xyz/)
+- CyberLight: [https://www.cyberlight.xyz/](https://www.cyberlight.xyz/)
 
 ## Quick to Use
 
@@ -48,7 +48,7 @@ In this module, please use CyberDict and CyberList instead of dict and list (a T
 
 ### Server
 
-Run the database server.
+Server initialization, setting backup and TCP listening address.
 
 ```python
 import cyberdb
@@ -61,7 +61,7 @@ db.set_backup('data.cdb', cycle=900)
 db.start(host='127.0.0.1', port=9980, password='123456')
 ```
 
-After the above server runs, data.cdb and data_backup.cdb (backup files) will be generated (or overwritten) in the project root directory every 900 seconds. The file can be read the next time the database is started using the load method.
+After the above server runs, data.cdb will be generated (or overwritten) in the project root directory every 900 seconds. The file can be read the next time the database is started using the load method.
 
 ### Client
 
@@ -195,10 +195,6 @@ Delete key-value pair
 
 ```python
 del dict1[0]
-```
-
-
-```python
 dict1
 ```
 
@@ -301,7 +297,7 @@ for v in list1:
     99
 
 
-It is strongly recommended to use a for loop to iterate CyberDict, each iteration will get v from the server, and the space complexity of the client is o(1). Iteration can also be used for CyberDict. In the iteration of CyberDict, the client space complexity is o(n), and n is the size of CyberDict.keys().
+It is recommended to generate proxy objects separately in each thread (or coroutine) and obtain the database connection through the connect method. You only need to use the close method to return the connection after the operation is completed, and the returned connection is managed intelligently by the client object.
 
 #### Release the Proxy Object
 
