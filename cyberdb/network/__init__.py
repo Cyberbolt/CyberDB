@@ -102,7 +102,7 @@ class Stream:
 
         # The client actively disconnects.
         if number_of_times == b'':
-            raise DisconCyberDBError('The TCP connection was disconnected by the other end.')
+            raise DisconCyberDBError('The TCP connection was disconnected by the other end. It is also possible that the password entered by the client is incorrect.')
 
         r = self._dp.data_to_obj(number_of_times)
         if r['code'] != 1:

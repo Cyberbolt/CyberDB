@@ -3,7 +3,6 @@
 '''
 
 
-import base64
 import pickle
 
 from obj_encrypt import Secret
@@ -57,20 +56,7 @@ class DataParsing:
 
             try:
                 data = self._secret.decrypt(data)
-            except UnicodeDecodeError:
-                return {
-                    'code': 2,
-                    'errors-code': errors_code[2]
-                }
-
-            # Check if the dictionary is intact.
-            if type(data) != type(dict()):
-                return {
-                    'code': 2,
-                    'errors-code': errors_code[2]
-                }
-            elif type(data.get('content')) != type(b'') or not data.get('header') or not \
-                data.get('header').get('signature'):
+            except (UnicodeDecodeError, KeyError):
                 return {
                     'code': 2,
                     'errors-code': errors_code[2]
@@ -130,10 +116,8 @@ class DataParsing:
             
             data['header']['signature'] = self._signature.encrypt(data['content'])
             data = self._secret.encrypt(data)
-            # data = base64.b64encode(data)
             
         else:
-            # data = base64.b64encode(pickle.dumps(obj))
             data = pickle.dumps(obj)
 
         return data
