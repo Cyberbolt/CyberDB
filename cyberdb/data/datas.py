@@ -47,13 +47,13 @@ class DataParsing:
         '''
         # Determine whether to decrypt and verify the signature.
         if self._encrypt:
-            try:
-                data = base64.b64decode(data)
-            except:
-                return {
-                    'code': 2,
-                    'errors-code': errors_code[2]
-                }
+            # try:
+            #     data = base64.b64decode(data)
+            # except:
+            #     return {
+            #         'code': 2,
+            #         'errors-code': errors_code[2]
+            #     }
 
             try:
                 data = self._secret.decrypt(data)
@@ -90,13 +90,13 @@ class DataParsing:
             }
             
         else:
-            try:
-                data = base64.b64decode(data)
-            except:
-                return {
-                    'code': 2,
-                    'errors-code': errors_code[2]
-                }
+            # try:
+            #     data = base64.b64decode(data)
+            # except:
+            #     return {
+            #         'code': 2,
+            #         'errors-code': errors_code[2]
+            #     }
             
             try:
                 obj = pickle.loads(data)
@@ -130,10 +130,11 @@ class DataParsing:
             
             data['header']['signature'] = self._signature.encrypt(data['content'])
             data = self._secret.encrypt(data)
-            data = base64.b64encode(data)
+            # data = base64.b64encode(data)
             
         else:
-            data = base64.b64encode(pickle.dumps(obj))
+            # data = base64.b64encode(pickle.dumps(obj))
+            data = pickle.dumps(obj)
 
         return data
 
