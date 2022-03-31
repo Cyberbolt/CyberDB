@@ -136,7 +136,7 @@ class Stream:
         )
         try:
             self._s.sendall(number_of_times)
-        except BrokenPipeError as e:
+        except BrokenPipeError:
             raise DisconCyberDBError('The TCP connection has been lost, please run proxy.connect() to regain the connection.')
         except AttributeError:
             raise DisconCyberDBError('There is no connection to the CyberDB server.')
