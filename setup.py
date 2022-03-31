@@ -6,10 +6,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="CyberDB",
-    version="0.6.0",
+    version="0.6.2",
     author="Cyberbolt",
     author_email="dtconlyone@gmail.com",
-    description="CyberDB is a lightweight Python in-memory database. It is designed to use Python's built-in data structures Dictionaries, Lists for data storage, efficient communication through Socket TCP, and provide data persistence. This module is often used in Gunicorn inter-process communication, distributed computing and other fields.",
+    description="CyberDB is a lightweight Python in-memory database. It is designed to use Python's built-in data structures Dictionaries, Lists for data storage, efficient communication through Socket TCP, and provide data persistence. This module can be used in hard disk database caching, Gunicorn inter-process communication, distributed computing and other fields.",
     long_description=long_description,
     long_description_content_type="text/markdown",    
     packages=setuptools.find_packages(),

@@ -107,8 +107,8 @@
 <h1 id="cyberdb">CyberDB</h1>
 <p><a href="https://github.com/Cyberbolt/CyberDB/blob/main/README_CHN.md">Chinese Version</a></p>
 <p>CyberDB is a lightweight Python in-memory database. It is designed to use Python's built-in data structures Dictionaries, Lists for data storage, efficient communication through Socket TCP, and provide data persistence. This module can be used in hard disk database caching, Gunicorn inter-process communication, distributed computing and other fields.</p>
-<p>The CyberDB server uses Asyncio for TCP communication. The client is developed based on sockets, so it supports Gevent coroutines, and has not yet adapted to Asyncio. Both the server and the client support PyPy, and it is recommended to use PyPy to run for better performance.</p>
-<p>In high concurrency scenarios, the performance bottleneck of traditional databases is mainly the hard disk I/O. Even if CyberDB is developed based on the dynamic language Python, the speed is still much faster than that of hard disk databases (such as MySQL), and CyberDB can be used as its cache. In addition, the core of CyberDB lies in programming in a Pythonic way, you can use CyberDB like Dictionaries and Lists.</p>
+<p>The CyberDB server uses Asyncio for TCP communication. The client is developed based on Socket, so it supports the Gevent coroutine, but it has not yet adapted to Asyncio. Both the server and the client support PyPy, and it is recommended to use PyPy to run for better performance.</p>
+<p>In high concurrency scenarios, the performance bottleneck of traditional databases is mainly hard disk I/O. Even if CyberDB is developed based on the dynamic language Python, the speed is still much faster than that of hard disk databases (such as MySQL), and CyberDB can be used as its cache. In addition, the core of CyberDB lies in programming in a Pythonic way, you can use CyberDB like Dictionaries and Lists.</p>
 <h2 id="installation">Installation</h2>
 <ol>
 <li>Enter the command window, create a virtual environment, and enter the following commands in turn</li>
@@ -353,5 +353,5 @@ list1
 
 <!--
 MkDocs version : 1.3.0
-Build Date UTC : 2022-03-31 07:37:31.905664+00:00
+Build Date UTC : 2022-03-31 07:50:00.927380+00:00
 -->

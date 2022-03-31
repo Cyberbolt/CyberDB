@@ -4,9 +4,9 @@
 
 CyberDB is a lightweight Python in-memory database. It is designed to use Python's built-in data structures Dictionaries, Lists for data storage, efficient communication through Socket TCP, and provide data persistence. This module can be used in hard disk database caching, Gunicorn inter-process communication, distributed computing and other fields.
 
-The CyberDB server uses Asyncio for TCP communication. The client is developed based on sockets, so it supports Gevent coroutines, and has not yet adapted to Asyncio. Both the server and the client support PyPy, and it is recommended to use PyPy to run for better performance.
+The CyberDB server uses Asyncio for TCP communication. The client is developed based on Socket, so it supports the Gevent coroutine, but it has not yet adapted to Asyncio. Both the server and the client support PyPy, and it is recommended to use PyPy to run for better performance.
 
-In high concurrency scenarios, the performance bottleneck of traditional databases is mainly the hard disk I/O. Even if CyberDB is developed based on the dynamic language Python, the speed is still much faster than that of hard disk databases (such as MySQL), and CyberDB can be used as its cache. In addition, the core of CyberDB lies in programming in a Pythonic way, you can use CyberDB like Dictionaries and Lists.
+In high concurrency scenarios, the performance bottleneck of traditional databases is mainly hard disk I/O. Even if CyberDB is developed based on the dynamic language Python, the speed is still much faster than that of hard disk databases (such as MySQL), and CyberDB can be used as its cache. In addition, the core of CyberDB lies in programming in a Pythonic way, you can use CyberDB like Dictionaries and Lists.
 
 ## Installation
 

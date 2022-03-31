@@ -2,9 +2,9 @@
 
 CyberDB 是一个轻量级的 Python 内存数据库。它旨在利用 Python 内置数据结构 Dictionaries、Lists 作数据存储，通过 Socket TCP 高效通信，并提供数据持久化。该模块可用于 硬盘数据库缓存、Gunicorn 进程间通信、分布式计算 等领域。
 
-CyberDB 服务端使用 Asyncio 进行 TCP 通信。客户端基于 socket 开发，所以支持 Gevent 协程，暂未适配 Asyncio。服务端和客户端均支持 PyPy，推荐使用 PyPy 运行，以获得更好的性能。
+CyberDB 服务端使用 Asyncio 进行 TCP 通信。客户端基于 Socket 开发，所以支持 Gevent 协程，暂未适配 Asyncio。服务端和客户端均支持 PyPy，推荐使用 PyPy 运行，以获得更好的性能。
 
-高并发场景下，传统数据库的性能瓶颈主要在硬盘 I\O，即便 CyberDB 基于动态语言 Python 开发，速度仍然远快于硬盘数据库(如 MySQL)，CyberDB 可以作为它的缓存。此外，CyberDB 的核心在于使用 Pythonic 的方式编程，你可以像使用 Dictionaries 和 Lists 一样使用 CyberDB。
+高并发场景下，传统数据库的性能瓶颈主要在硬盘 I/O，即便 CyberDB 基于动态语言 Python 开发，速度仍然远快于硬盘数据库(如 MySQL)，CyberDB 可以作为它的缓存。此外，CyberDB 的核心在于使用 Pythonic 的方式编程，你可以像使用 Dictionaries 和 Lists 一样使用 CyberDB。
 
 ## 安装方法
 
