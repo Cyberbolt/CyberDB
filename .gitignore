@@ -3,6 +3,7 @@ macvenv
 .idea
 dist
 pyvenv
+site
 
 
 # Byte-compiled / optimized / DLL files
