@@ -90,10 +90,8 @@ class Server:
 
         # Responsible for encrypting and decrypting objects.
         secret = Secret(key=password)
-        # for digital signature
-        signature = Signature(salt=password.encode())
         # Convert TCP data and encrypted objects to each other.
-        self._dp = datas.DataParsing(secret, signature, encrypt=encrypt)
+        self._dp = datas.DataParsing(secret, encrypt=encrypt)
 
         asyncio.run(self._main())
 

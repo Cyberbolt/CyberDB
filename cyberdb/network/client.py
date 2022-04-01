@@ -741,9 +741,7 @@ def connect(host: str = '127.0.0.1', port: int = 9980, password:
 
     # Responsible for encrypting and decrypting objects.
     secret = Secret(key=password)
-    # for digital signature
-    signature = Signature(salt=password.encode())
-    dp = datas.DataParsing(secret, signature, encrypt=encrypt)
+    dp = datas.DataParsing(secret, encrypt=encrypt)
     con_pool = ConPool(host, port, dp, time_out=time_out)
 
     # Synchronously test whether the connection is successful.

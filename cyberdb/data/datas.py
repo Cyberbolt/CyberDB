@@ -35,9 +35,8 @@ class DataParsing:
         Convert TCP data and encrypted objects to each other.
     '''
 
-    def __init__(self, secret: Secret, signature: Signature, encrypt: bool=False):
+    def __init__(self, secret: Secret, encrypt: bool=False):
         self._secret = secret
-        self._signature = signature
         self._encrypt = encrypt
 
     def data_to_obj(self, data):
@@ -46,24 +45,10 @@ class DataParsing:
         '''
         # Determine whether to decrypt and verify the signature.
         if self._encrypt:
-            # try:
-            #     data = base64.b64decode(data)
-            # except:
-            #     return {
-            #         'code': 2,
-            #         'errors-code': errors_code[2]
-            #     }
 
             try:
                 data = self._secret.decrypt(data)
             except (UnicodeDecodeError, KeyError):
-                return {
-                    'code': 2,
-                    'errors-code': errors_code[2]
-                }
-
-            # Verify signature
-            if self._signature.encrypt(data['content']) != data['header']['signature']:
                 return {
                     'code': 2,
                     'errors-code': errors_code[2]
@@ -76,13 +61,6 @@ class DataParsing:
             }
             
         else:
-            # try:
-            #     data = base64.b64decode(data)
-            # except:
-            #     return {
-            #         'code': 2,
-            #         'errors-code': errors_code[2]
-            #     }
             
             try:
                 obj = pickle.loads(data)
@@ -101,10 +79,7 @@ class DataParsing:
             Convert object to TCP transmission data.
         '''
         data = {
-            'content': None,
-            'header': {
-                'signature': None
-            }
+            'content': None
         }
         
         # Determine whether to encrypt and sign.
@@ -113,8 +88,7 @@ class DataParsing:
                 data['content'] = pickle.dumps(obj)
             except pickle.PickleError as e:
                 raise CyberDBError('CyberDB does not support this data type.')
-            
-            data['header']['signature'] = self._signature.encrypt(data['content'])
+
             data = self._secret.encrypt(data)
             
         else:
