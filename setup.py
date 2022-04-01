@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="CyberDB",
-    version="0.8.0",
+    version="0.9.0",
     author="Cyberbolt",
     author_email="dtconlyone@gmail.com",
     description="CyberDB is a lightweight Python in-memory database. It is designed to use Python's built-in data structures Dictionaries, Lists for data storage, efficient communication through Socket TCP, and provide data persistence. This module can be used in hard disk database caching, Gunicorn inter-process communication, distributed computing and other fields.",
@@ -20,6 +20,6 @@ setuptools.setup(
     ],
     install_requires=[
         'APScheduler>=3.9.1',
-        'obj-encrypt==0.6.0'
+        'obj-encrypt==0.7.0'
     ]    
 )
