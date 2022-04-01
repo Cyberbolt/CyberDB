@@ -2,5 +2,7 @@ site_name: CyberDB
 site_url: https://example.com/
 
 nav:
-- Home: index.md
+- Getting Started: index.md
+- Tutorial:
+  - Flask multi-process access: tutorial/flask.md
 - API: API.md
