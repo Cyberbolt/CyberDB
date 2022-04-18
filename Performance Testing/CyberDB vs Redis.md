@@ -189,7 +189,7 @@ Test steps:
 
 3. Run `gunicorn -w 3 -b 127.0.0.1:8000 -k gevent app:app` (Flask runs CyberDB), then use `wrk -t8 -c100 -d120s --latency http://127.0.0.1:8000 ` test. The result is as follows:
 
-```bash
+```
 Running 2m test @ http://127.0.0.1:8000
   8 threads and 100 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
@@ -205,7 +205,7 @@ Requests/sec:   4020.84
 Transfer/sec:    738.20KB
 ```
 
-4. Run `gunicorn -w 3 -b 127.0.0.1:8000 -k gevent app_redis:app` (Flask runs Redis), then use `wrk -t8 -c100 -d120s --latency http://127.0.0.1:8000 ` test. The result is as follows:
+1. Run `gunicorn -w 3 -b 127.0.0.1:8000 -k gevent app_redis:app` (Flask runs Redis), then use `wrk -t8 -c100 -d120s --latency http://127.0.0.1:8000 ` test. The result is as follows:
 
 ```
 Running 2m test @ http://127.0.0.1:8000

@@ -189,7 +189,7 @@ zope.interface==5.4.0
 
 3.运行 `gunicorn -w 3 -b 127.0.0.1:8000 -k gevent app:app` (Flask 运行 CyberDB)，之后使用 `wrk -t8 -c100 -d120s --latency  http://127.0.0.1:8000` 测试。结果如下:
 
-```bash
+```
 Running 2m test @ http://127.0.0.1:8000
   8 threads and 100 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
