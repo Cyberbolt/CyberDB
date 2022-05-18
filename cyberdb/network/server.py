@@ -92,8 +92,10 @@ class Server:
         secret = Secret(key=password)
         # Convert TCP data and encrypted objects to each other.
         self._dp = datas.DataParsing(secret, encrypt=encrypt)
-
-        asyncio.run(self._main())
+        
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self._main())
+        loop.close()
 
     async def _main(self):
         server = await asyncio.start_server(
