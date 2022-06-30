@@ -5,6 +5,15 @@ dist
 pyvenv
 site
 .DS_Store
+data.cdb
+backup.py
+app.py
+test1.ipynb
+test1.py
+test2.ipynb
+test2.py
+test3.ipynb
+test3.py
 
 
 # Byte-compiled / optimized / DLL files
