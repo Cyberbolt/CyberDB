@@ -4,6 +4,7 @@ macvenv
 dist
 pyvenv
 site
+.DS_Store
 
 
 # Byte-compiled / optimized / DLL files
